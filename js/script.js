@@ -1,3 +1,20 @@
+// Handlebar extension
+Handlebars.getTemplate = function(name) {
+  if (Handlebars.templates === undefined || Handlebars.templates[name] === undefined) {
+    $.ajax({
+      url : 'template/' + name + '.handlebars',
+      success : function(data) {
+        if (Handlebars.templates === undefined) {
+          Handlebars.templates = {};
+        }
+        Handlebars.templates[name] = Handlebars.compile(data);
+      },
+      async : false
+    });
+  }
+  return Handlebars.templates[name];
+};
+
 /* Make something awesome! */
 $('#expandStories').click(function() {
         var newstate = $(this).attr('state') ^ 1,
@@ -67,26 +84,13 @@ $('#storyEdit').click(function() {
   $(this).attr('state',newstate)
 });
 
-Handlebars.getTemplate = function(name) {
-  if (Handlebars.templates === undefined || Handlebars.templates[name] === undefined) {
-    $.ajax({
-      url : 'template/' + name + '.handlebars',
-      success : function(data) {
-        if (Handlebars.templates === undefined) {
-          Handlebars.templates = {};
-        }
-        Handlebars.templates[name] = Handlebars.compile(data);
-      },
-      async : false
-    });
-  }
-  return Handlebars.templates[name];
-};
 
+
+// Intial loading of templates
 $('#nav').ready( function() {
   $('#nav').html(Handlebars.getTemplate('nav'));
 });
 
-$('#content').ready( function() {
-  $('#content').html(Handlebars.getTemplate('login'));
-});
+
+
+

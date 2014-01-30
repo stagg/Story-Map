@@ -1,11 +1,10 @@
 <h1>Select a project..</h1>
 <ul class="list-group">
-  <a href="map.html">
-    <li class="list-group-item">Project 1</li>
-  <a href="map.html">
-    <li class="list-group-item">Project 2</li>
-  </a>
-  <a href="map.html">
-    <li class="list-group-item">Project 3</li>
-  </a>
+	{{#each project}}
+	  	<a href="{{link}}">
+	      <li class="list-group-item">{{name}}</li>
+		</a>
+	{{else}}
+	  <p>Sorry, no public repos</p>
+	{{/each}}  
 </ul>
