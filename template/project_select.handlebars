@@ -1,0 +1,10 @@
+<h1>Select a repository..</h1>
+<ul class="list-group">
+	{{#each project}}
+	  	<a href="{{link}}">
+	      <li class="list-group-item">{{name}}</li>
+		</a>
+	{{else}}
+	  <p>Sorry, no repositories</p>
+	{{/each}}  
+</ul>

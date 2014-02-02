@@ -1,0 +1,478 @@
+<div class="navbar navbar-default">
+        <div class="container">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#sprintModal">Create Sprint</a>
+            </li>
+            <li>
+              <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#epicModal">Create Epic</a>
+            </li>
+            <li>
+              <a href="#" id="createStory" class="btn btn-link btn-xs" data-toggle="modal" data-target="#storyModal">Create Story</a>
+            </li>
+          </ul>
+          <p></p>
+          <a id="expandStories" class="btn btn-primary btn-md pull-right" state="0">Expand</a>
+        </div>
+      </div>
+      <div class="row heading">
+        <div class="col-md-2">
+          <p class="text-center">Unassigned</p>
+        </div>
+        <div class="col-md-2">
+          <p class="text-center">Sprint</p>
+        </div>
+        <div class="col-md-8">
+          <p class="text-center">Epic's</p>
+        </div>
+      </div>
+      <div class="row epics">
+        <div class="col-md-2"></div>
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading">Epic 1
+              <div class="progress">
+                <div class="progress-bar" style="width: 66%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading">Epic 3
+              <div class="progress">
+                <div class="progress-bar" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading">Epic 4
+              <div class="progress">
+                <div class="progress-bar" style="width: 50%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading">Epic 5
+              <div class="progress">
+                <div class="progress-bar" style="width: 33%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row sprint1">
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>              Story Title              <a class="pull-right issueid">#12</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-success">Open</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">-</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="panel panel-success">
+            <div class="panel-heading">Sprint 1
+              <div class="progress">
+                <div class="progress-bar" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>              Story Title              <a class="pull-right issueid">#2</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">4</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>              Story Title              <a class="pull-right issueid">#10</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">3</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>              Story Title              <a class="pull-right issueid">#8</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">1</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>              Story Title              <a class="pull-right issueid">#4</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">CLOSED</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">2</span><span class="commentIcon"></span><small>No Comments</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row sprint2 a">
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+          <div class="panel panel-info">
+            <div class="panel-heading">Sprint 2
+              <div class="progress">
+                <div class="progress-bar" style="width: 50%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>              Story Title              <a class="pull-right issueid">#18</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">2</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>              Story Title              <a class="pull-right issueid">#20</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">4</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>              Story Title              <a class="pull-right issueid">#14</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-success">Open</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">3</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row sprint2 b">
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+          <!-- Sprint 2 -->
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>              Story Title              <a class="pull-right issueid">#23</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">1</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+          <div class="panel panel-default" data-toggle="modal" data-target="#storyModal">
+            <div class="panel-heading story">
+              <span>              Story Title              <a class="pull-right issueid">#15</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-success">Open</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">4</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row sprint3">
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+          <div class="panel panel-danger">
+            <div class="panel-heading">Sprint 3
+              <div class="progress">
+                <div class="progress-bar" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>              Story Title              <a class="pull-right issueid">#30</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-success">Open</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">-</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+          <div class="panel panel-default">
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>              Story Title              <a class="pull-right issueid">#32</a>            </span>
+            </div>
+            <div class="panel-body">
+              <span>                              <a>Assignee</a>                              <span class="label pull-right label-success">Open</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">-</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+      </div>
+    </div>
+    <!-- /container -->
+    <!-- Modal epic-->
+    <div class="modal fade" id="epicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Create new Epic</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <input type="text" class="form-control" placeholder="Title">
+              <p></p>
+              <textarea class="form-control" placeholder="Description"></textarea>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal">Create</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal epic-->
+    <!-- Modal sprint-->
+    <div class="modal fade" id="sprintModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Create a new sprint</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <input type="text" class="form-control" placeholder="Title">
+              <p></p>
+              <textarea class="form-control" placeholder="Description"></textarea>
+              <p></p>
+              <div class="btn-toolbar">
+                <div class="btn-group">
+                  <a class="btn btn-success">Green</a><a class="btn btn-warning">Yellow</a><a class="btn btn-danger">Red</a><a class="btn btn-primary">Dark Blue</a><a class="btn btn-info">Light Blue</a>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal">Create</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal sprint-->
+    <!-- Modal story-->
+    <div class="modal fade" id="storyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <button id="storyEdit" state="0" type="button" class="btn btn-defualt edit-button pull-right btn-xs hidden" aria-hidden="true">Edit</button>
+            <h4 class="modal-title" id="storyTitle">Story Title</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="row">
+                <div class="col-md-12">
+                  <input id="storyTitleEdit" type="text" class="edit form-control hidden" placeholder="Title">
+                </div>
+              </div>
+              <p></p>
+              <div class="row">
+                <div class="col-md-3">
+                <span id="storyAsignee" class="not-edit hidden"><a>Asignee</a></span>
+                  <select id="storyAsigneeEdit" class="form-control edit" name="Asignee">
+                    <option selected disabled>Asignee</option>
+                    <option>User 1</option>
+                    <option>User 2</option>
+                    <option>User 3</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                <span id="storySprint" class="not-edit label label-success hidden">Sprint 1</span>
+                  <select id="storySprintEdit" class="form-control edit" name="Sprint">
+                    <option selected disabled>Sprint</option>
+                    <option>Sprint 1</option>
+                    <option>Sprint 2</option>
+                    <option>Sprint 3</option>
+                  </select>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-3">    
+                  <span id="storyPoints" class="not-edit label label-default hidden pull-right">4</span>
+                  <select id="storyPointsEdit" class="form-control edit" name="Story Points">
+                    <option selected disabled>Story Points</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>5</option>
+                    <option>8</option>
+                    <option>13</option>
+                    <option>20</option>
+                    <option>40</option>
+                    <option>100</option>
+                    <option>?</option>
+                  </select>
+                </div>
+              </div>
+              <p></p>
+              <div class="row">
+                <div class="col-md-12">
+                  <p id="storyDesc" class="not-edit">Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.</p>
+                  <textarea id="storyDescEdit" class="edit form-control hidden" placeholder="Description"></textarea>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <span class="help-block">Labels</span><span class="label-cloud label label-default">Label 1</span><span class="label-cloud label label-success">Label 2</span><span class="label-cloud label label-warning">Label 3</span><span class="label-cloud label label-info">Lablel 4</span>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="storySubmit" class="edit btn btn-success pull-right" data-dismiss="modal">Update</button>
+            <button type="button" id="storyCancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" id="storyComments" class="btn btn-primary pull-left" data-toggle="collapse" data-parent="#accordion" href="#collapseComments">Comments</button>
+          </div>
+          <p style="margin:10px"></p>
+          <div id="collapseComments" class="panel-collapse collapse out" style="padding:10px">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <a>User 1</a><hr>
+                <p>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.</p>
+              </li>
+              <li class="list-group-item">
+                <a>User 2</a><hr>
+                <p>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.</p>
+              </li>
+              <li class="list-group-item">
+                <a>User 1</a><hr>
+                <p>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.</p>
+              </li>
+              <li class="list-group-item">
+                <form>
+                  <textarea class="form-control" placeholder="Leave a comment"></textarea>
+                  <p></p>
+                  <button type="button" class="btn btn-success btn-sm">Comment</button>
+                </form>
+              </li>
+            </ul>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal story-->
