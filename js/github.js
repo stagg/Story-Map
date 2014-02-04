@@ -733,13 +733,107 @@
     // ==========
 
     Github.Issue = function(options) {
-      var path = "/repos/" + options.user + "/" + options.repo + "/issues";
-
+      var user = options.user;
+      var repo = options.repo;
+      
       this.list = function(options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues";
         _request("GET", path, options, function(err, res) {
           cb(err,res)
         });
       };
+
+      this.assignees = function(options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/assignees";
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.event = function(id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/events/" + id;
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.repoEvents = function(options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/events";
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.issueEvents = function(id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/" + id + "/events";
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.comment = function(id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/comments/" + id;
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.repoComments = function(options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/comments";
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.issueComments = function(id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/" + id + "/comments";
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.label = function(name, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/labels/" + name;
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.labels = function(options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/labels";
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.issueLabels = function(id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/" + id + "/labels";
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.milestoneLabels = function(options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/milestones/" + id + "/labels";
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.milestone = function(id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/milestones/" + id;
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
+      this.milestones = function(options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/milestones";
+        _request("GET", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+
     };
 
     // Top Level API

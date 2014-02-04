@@ -33,7 +33,7 @@
       __create: function ( name, value ) {
         StoryMap.cookie.__erase(name);
         var date = new Date();
-        date.setTime(date.getTime() + 600000); // +10 mins
+        date.setTime(date.getTime() + 360000); // +60 mins
         var expires = "; expires="+date.toGMTString();
         document.cookie = name+"="+value+expires+"; path=/";
       },
@@ -72,11 +72,13 @@
     },
     __gitinit: function() {
       var access_token = StoryMap.cookie.__read('access_token');
-      if (access_token && StoryMap.github === null) {
-        StoryMap.github = new Github({
+      if (access_token != null) {
+        if (StoryMap.github === null) {
+          StoryMap.github = new Github({
               token: access_token,
               auth: "oauth"
             });
+        }
         return true;
       } else {
         return false;
@@ -91,7 +93,7 @@
               for (var i = repos.length - 1; i >= 0; i--) {
                 context.project.unshift({
                   name: repos[i].name,
-                  link: config.base_uri+'?project='+repos[i].name
+                  link: config.base_uri+'#/storymap/'+repos[i].owner.login+'/repo/'+repos[i].name
                 });
               };
               $('#content').html(project_tmpl(context));
@@ -101,10 +103,9 @@
           user.userRepos(username, repolist);
         } else {
           user.repos(repolist);
-        }   
-        
+        }       
       } else {
-        // StoryMap.login();
+        routie('');
       }
     },
     login: function() {
@@ -118,7 +119,7 @@
       var url = 'https://github.com/login/oauth/authorize?' + StoryMap.uri.__encode(request);
       document.location.href = url;
     },
-    oauth: function (code) {
+    oauth: function(code) {
       return ($.post(
         config.base_uri+'oauth',
         { verification:code },
@@ -135,6 +136,24 @@
         },
         'json'
       ));
+    },
+    issues: function(user, project) {
+      if (StoryMap.__gitinit()) {
+        var issue = StoryMap.github.getIssues(user, project);
+        issue.list({state:'open'}, function(err, issues) {
+          for (var i = issues.length - 1; i >= 0; i--) {
+            console.log(issues[i].title);
+          };   
+        });
+        issue.labels({}, function(error, labels){
+          console.log(labels);
+        });
+        issue.milestones({}, function(error, milestones) {
+          console.log(milestones);
+        });
+      } else {
+        routie('');
+      }
     }
   };
 
