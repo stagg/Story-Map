@@ -1,4 +1,4 @@
-// Handlebar extension
+// Handlebar extension to load in template files
 Handlebars.getTemplate = function(name) {
   if (Handlebars.templates === undefined || Handlebars.templates[name] === undefined) {
     $.ajax({
@@ -14,24 +14,7 @@ Handlebars.getTemplate = function(name) {
   }
   return Handlebars.templates[name];
 };
-var
-__decodeURI = function () {
-  var search = location.search.substring(1);
-  return search ? JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}',
-         function(key, value) { return key===""?value:decodeURIComponent(value) }):{};
-}, 
-__encodeURI = function(obj, prefix) {
-  var str = [];
-  for(var p in obj) {
-    var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-    str.push(typeof v == "object" ?
-      __encodeURI(v, k) :
-      encodeURIComponent(k) + "=" + encodeURIComponent(v));
-  }
-  return str.join("&");
-};
 
-/* Make something awesome! */
 $('#expandStories').click(function() {
         var newstate = $(this).attr('state') ^ 1,
             text = newstate ? "Collapse" : "Expand";
@@ -112,7 +95,7 @@ routie({
   '/auth': function() {
     $('#content').html('');
     var code = StoryMap.cookie.__read('auth_code');
-    if (code) {
+    if (code != null) {
       StoryMap.cookie.__erase('auth_code');
       StoryMap.oauth(code).done(function(){ routie('/projects') });
     } else {
@@ -122,8 +105,9 @@ routie({
   '/projects/:username?': function(username) {
     StoryMap.projects(username);
   },
-  '/storymap:project': function() {
-    StoryMap.projects();
+  '/storymap/:user/repo/:project': function(user, project) {
+    StoryMap.issues(user, project);
+    $('#content').html(Handlebars.getTemplate('map'));
   },
   '*': function() {
     if (StoryMap.cookie.__read('access_token')) {
