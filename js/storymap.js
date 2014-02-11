@@ -19,6 +19,11 @@
   var storymap = {
     github: null,
     config: config,
+    githubStates: {OPEN: "open", CLOSED: "closed"},
+    labels: {IN_PROGRESS: "in progress", BLOCKED: "blocked", STORY: "story"},
+    metadata: {COST: "SP", PRIORITY: "Priority"},
+    metaRegexp: /[^[\]]+(?=])/g,
+    metaDelimiter: ": ",
     util: {
       __generateId: function ( length ) {
         var text = "";
@@ -132,7 +137,7 @@
               auth: "oauth"
             });
             StoryMap.cookie.__create('access_token', data.access_token);
-          }          
+          }
         },
         'json'
       ));
@@ -140,20 +145,96 @@
     issues: function(user, project) {
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
-        issue.list({state:'open'}, function(err, issues) {
-          for (var i = issues.length - 1; i >= 0; i--) {
-            console.log(issues[i].title);
-          };   
-        });
-        issue.labels({}, function(error, labels){
-          console.log(labels);
-        });
-        issue.milestones({}, function(error, milestones) {
-          console.log(milestones);
-        });
+        var map_tmpl = Handlebars.getTemplate('map');
+        var context = { unassigned: [], assigned: {} };
+        for (var s in StoryMap.githubStates) {
+          issue.list({state:StoryMap.githubStates[s], labels:StoryMap.labels.STORY}, function(err, stories) {
+            StoryMap.__addStoriesToContext(stories, context);
+          });
+        }
+        console.log(context);
+        $('#content').html(map_tmpl(context));
       } else {
         routie('');
       }
+    },
+    __addStoriesToContext: function(stories, context) {
+      for (var i = 0; i < stories.length; ++i) {
+        var story = stories[i];
+        var body = StoryMap.__parseStoryBody(story);
+        var state = StoryMap.__getStoryState(story);
+        var assignee = StoryMap.__getStoryAssignee(story);
+        var storyData = {
+          name: story.title,
+          number: story.number,
+          assignee: assignee,
+          state: state,
+          comments: story.comments,
+          cost: body.cost,
+          priority: body.priority
+        };
+        var epic = StoryMap.__getStoryEpic(story);
+        var sprint = story.milestone;
+        if (epic === null || sprint === null) {
+          context.unassigned.push(storyData);
+        } else {
+          var sprintTitle = sprint.title;
+          if (epic in context.assigned == false) {
+            context.assigned[epic] = {};
+          }
+          if (sprint in context.assigned[epic] == false) {
+            context.assigned[epic][sprintTitle] = [];
+          }
+          context.assigned[epic][sprintTitle].push(storyData);
+        }
+      };
+    },
+    __getStoryState: function(story) {
+      if (story.state == StoryMap.githubStates.CLOSED) {
+        return "closed";
+      }
+      for (var i = 0; i < story.labels.length; ++i) {
+        var label = story.labels[i].name;
+        if (label == StoryMap.labels.IN_PROGRESS) {
+          return "in-progress";
+        }
+        else if (label == StoryMap.labels.BLOCKED) {
+          return "blocked";
+        }
+      }
+      return "open";
+    },
+    __getStoryAssignee: function(story) {
+      if (story.assignee === null) {
+        return "";
+      }
+      return story.assignee.login;
+    },
+    __getStoryEpic: function(story) {
+      for (var i = 0; i < story.labels.length; ++i) {
+        var epic = story.labels[i].name.match(StoryMap.metaRegexp);
+        if (epic !== null) {
+          return epic[0];
+        }
+      }
+      return null;
+    },
+    __parseStoryBody: function(story) {
+      var bodyData = {cost: "", priority: ""};
+      var body = story.body.match(StoryMap.metaRegexp);
+      if (body === null) {
+        return bodyData;
+      }
+      for (var i = 0; i < body.length; ++i) {
+        var data = body[i].split(StoryMap.metaDelimiter);
+        if (data[0] == StoryMap.metadata.COST) {
+          bodyData.cost = data[1];
+        }
+        if (data[0] == StoryMap.metadata.PRIORITY) {
+          bodyData.priority = data[1];
+        }
+      }
+      return bodyData;
     }
   };
 

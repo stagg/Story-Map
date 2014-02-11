@@ -107,7 +107,6 @@ routie({
   },
   '/storymap/:user/repo/:project': function(user, project) {
     StoryMap.issues(user, project);
-    $('#content').html(Handlebars.getTemplate('map'));
   },
   '*': function() {
     if (StoryMap.cookie.__read('access_token')) {
