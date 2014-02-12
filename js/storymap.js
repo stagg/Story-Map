@@ -1,9 +1,8 @@
 (function() {
   "use strict";
   var config = {
-    clientid: '1cf0ad4850ec72b8fa14',
-    base_uri: 'http://localhost:8080/',
-    callback_uri: 'http://localhost:8080/auth/'
+    base_uri: window.location.origin + '/',
+    callback_uri: window.location.origin + '/auth/'
   };
 
   if (typeof jQuery == 'undefined') {
@@ -115,7 +114,7 @@
     },
     login: function() {
       var request = {
-        client_id: config.clientid,
+        client_id: StoryMap.cookie.__read('clientid'),
         redirect_uri: config.callback_uri,
         state: StoryMap.util.__generateId(20),
         scope: 'user,repo'
@@ -127,10 +126,13 @@
     oauth: function(code) {
       return ($.post(
         config.base_uri+'oauth',
-        { verification:code },
+        {
+          verification: code,
+          redirect_uri: config.callback_uri
+        },
         function(data, status, xhr) {
           if (data.error || status != 'success') {
-
+            // TODO error handling
           } else {          
             StoryMap.github = new Github({
               token: data.access_token,

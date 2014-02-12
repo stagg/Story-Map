@@ -24,7 +24,7 @@
   }
 
 
-  var API_URL = 'http://localhost:8080/api'; //'https://api.github.com';
+  var API_URL = location.origin + '/api'; //'https://api.github.com';
 
   var Github = function(options) {
 

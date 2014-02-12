@@ -1,7 +1,15 @@
-var express = require('express')
+var express = require('express'),
     rest = require('restler'),
-    config = require('./config'),
-    app = express();
+    app = express(),
+    config;
+
+if (process.env.NODE_ENV === 'dev') {
+  console.log('Loading DEV config');
+  config = require('./config-dev');
+} else {
+  console.log('Loading PROD config');
+  config = require('./config');
+}
 
 app.configure(function(){
   app.use(express.bodyParser());
@@ -12,6 +20,7 @@ app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 
 app.get('/', function(req, res) {
+  res.cookie('clientid', config.github.client_id);
   res.render('index.html');
 });
 
@@ -31,7 +40,7 @@ app.post('/oauth', function(req, res) {
         client_id: config.github.client_id,
         client_secret: config.github.client_secret,
         code: req.body.verification,
-        redirect_uri: config.url
+        redirect_uri: req.body.redirect_uri
       }
     }).on('complete', function (data) {
       console.log(data);

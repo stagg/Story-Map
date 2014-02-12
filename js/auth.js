@@ -1,5 +1,5 @@
 var 
-  vaildState = StoryMap.cookie.__read('auth_state');
+  vaildState = StoryMap.cookie.__read('auth_state'),
   parameters = StoryMap.uri.__decode(),
   state = parameters.state,
   code = parameters.code;
