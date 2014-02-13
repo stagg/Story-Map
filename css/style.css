@@ -18,3 +18,14 @@ body {
 .edit-button {
   margin-right:10px;
 }
+
+.ss-container {
+  position: relative;
+  width: 100%;
+}
+
+.ss-container div {
+  height: 120px;
+  position: absolute;
+  width: 120px;
+}

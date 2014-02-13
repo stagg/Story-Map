@@ -1,4 +1,4 @@
-<div class="navbar navbar-default">
+      <div class="navbar navbar-default">
         <div class="container">
           <ul class="nav navbar-nav">
             <li>
@@ -471,8 +471,22 @@
               </li>
             </ul>
           </div>
-          <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
+        <!-- /.modal-content -->
       </div>
-      <!-- /.modal story-->
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal story-->
+    <div>
+      {{#each epic}}
+        <div>{{@key}}:
+        {{#each sprint}}
+          <div>||{{@key}}
+          {{#each this}}
+            <div>||||{{name}}</div>
+          {{/each}}
+          </div>
+        {{/each}}
+        </div>
+      {{/each}}
+    </div>
