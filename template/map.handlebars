@@ -27,10 +27,14 @@
         <div class="col-md-2"></div>
         {{#each epic}}
         <div class="col-md-2">
-          {{@key}}
+          <div class="panel panel-default">
+            <div class="panel-heading">{{@key}}</div>
+          </div>
           {{#each sprint}}
           <div>
-          {{@key}}
+          <div class="panel panel-default">
+            <div class="panel-heading">{{@key}}</div>
+          </div>
           {{#each story}}
           <div class="panel panel-default">
             <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
