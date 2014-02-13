@@ -18,7 +18,23 @@ body {
 .edit-button {
   margin-right:10px;
 }
-
+.profile {
+  float:right;
+  padding: 5px 15px;
+  font-size: 18px;
+  line-height: 20px;
+  margin-right: 20px;
+}
+.profile span{
+    padding-left: 5px;
+}
+.avatar {
+  max-height: 40px;
+  padding: 2px;   
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
 .ss-container {
   position: relative;
   width: 100%;

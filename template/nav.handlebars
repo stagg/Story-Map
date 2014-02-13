@@ -1,21 +1,27 @@
-<div class="container">
+<div id="nav-bar" class="container">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
       <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
     </button>
     <a href="/#/" class="navbar-brand">402 StoryMap</a>
   </div>
+  {{#if login}}
+    <div class="profile">
+      <a class="navbar-link" href="{{html_url}}" target="_blank"><img class="avatar" src="{{avatar_url}}"><span>{{login}}</span></a>
+    </div>
+  {{/if}}
   <div class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
-      <li class="">
+      <li id="projects" class="">
         <a href="/#/projects">Repositories</a>
       </li>
-      <li class="">
-        <a href="#">About</a>
+      <li id="map" class="">
+        <a href="/#/storymap">StoryMap</a>
       </li>
-      <li class="">
-        <a href="#">Contact</a>
+      <li id="about" class="">
+        <a href="#">About</a>
       </li>
     </ul>
   </div>
+
 </div>

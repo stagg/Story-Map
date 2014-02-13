@@ -43,7 +43,8 @@ app.post('/oauth', function(req, res) {
         redirect_uri: req.body.redirect_uri
       }
     }).on('complete', function (data) {
-      console.log(data);
+      console.log('Token:' + data.access_token);
+      res.cookie('access_token', data.access_token);
       res.json(data);
     });
 });

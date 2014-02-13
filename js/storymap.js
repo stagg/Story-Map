@@ -18,6 +18,7 @@
   var storymap = {
     github: null,
     config: config,
+    userinfo: null,
     githubStates: {OPEN: "open", CLOSED: "closed"},
     labels: {IN_PROGRESS: "in progress", BLOCKED: "blocked", STORY: "story"},
     metadata: {COST: "SP", PRIORITY: "Priority"},
@@ -85,7 +86,21 @@
         }
         return true;
       } else {
+        // TODO might want to redirect automatically here.
         return false;
+      }
+    },
+    user: function(username) {
+      if (StoryMap.__gitinit()) {
+        if (StoryMap.userinfo != null && StoryMap.userinfo.login != null) {
+          $('#nav').html(Handlebars.getTemplate('nav')(StoryMap.userinfo));
+        } else {
+          var user = StoryMap.github.getUser();
+          user.show(username, function (err, userinfo) {
+            StoryMap.userinfo = userinfo;
+            StoryMap.user();
+          });  
+        }
       }
     },
     projects: function(username) {
@@ -102,12 +117,12 @@
               };
               $('#content').html(project_tmpl(context));
             };
-
         if (username) {
           user.userRepos(username, repolist);
         } else {
           user.repos(repolist);
-        }       
+        }
+        StoryMap.user();     
       } else {
         routie('');
       }
@@ -133,18 +148,19 @@
         function(data, status, xhr) {
           if (data.error || status != 'success') {
             // TODO error handling
-          } else {          
+          } else {   
+            var token = StoryMap.cookie.__read('access_token')       
             StoryMap.github = new Github({
-              token: data.access_token,
+              token: token,
               auth: "oauth"
             });
-            StoryMap.cookie.__create('access_token', data.access_token);
           }
         },
         'json'
       ));
     },
     issues: function(user, project) {
+      StoryMap.user();
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
         var map_tmpl = Handlebars.getTemplate('map');
