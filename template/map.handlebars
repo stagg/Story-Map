@@ -27,244 +27,32 @@
         <div class="col-md-2"></div>
         {{#each epic}}
         <div class="col-md-2">
+          {{@key}}
+          {{#each sprint}}
+          <div>
+          {{@key}}
+          {{#each story}}
           <div class="panel panel-default">
-            <div class="panel-heading">{{@key}}</div>
+            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
+              <span>{{name}}<a class="pull-right issueid">#{{number}}</a></span>
+            </div>
+            <div class="panel-body">
+              <span><a>{{assignee}}</a><span class="label pull-right label-default">{{state}}</span>
+              <div id="collapse" class="panel-collapse collapse out">
+                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
+              </div>
+              </span>
+            </div>
+            <div class="panel-footer">
+              <span class="badge storypoint pull-right">{{cost}}</span><span class="commentIcon"></span><a class="comment"><small>{{comments}} Comments</small></a>
+            </div>
           </div>
+          {{/each}}
+          </div>
+          {{/each}}
         </div>
         {{/each}}
       </div>
-      <div class="row sprint1">
-        <div class="col-md-2">
-          <div class="panel panel-success">
-            <div class="panel-heading">Sprint 1
-              <div class="progress">
-                <div class="progress-bar" style="width: 100%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
-              <span>              Story Title              <a class="pull-right issueid">#2</a>            </span>
-            </div>
-            <div class="panel-body">
-              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
-              <div id="collapse" class="panel-collapse collapse out">
-                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
-              </div>
-              </span>
-            </div>
-            <div class="panel-footer">
-              <span class="badge storypoint pull-right">4</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
-              <span>              Story Title              <a class="pull-right issueid">#10</a>            </span>
-            </div>
-            <div class="panel-body">
-              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
-              <div id="collapse" class="panel-collapse collapse out">
-                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
-              </div>
-              </span>
-            </div>
-            <div class="panel-footer">
-              <span class="badge storypoint pull-right">3</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
-              <span>              Story Title              <a class="pull-right issueid">#8</a>            </span>
-            </div>
-            <div class="panel-body">
-              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
-              <div id="collapse" class="panel-collapse collapse out">
-                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
-              </div>
-              </span>
-            </div>
-            <div class="panel-footer">
-              <span class="badge storypoint pull-right">1</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
-              <span>              Story Title              <a class="pull-right issueid">#4</a>            </span>
-            </div>
-            <div class="panel-body">
-              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">CLOSED</span>
-              <div id="collapse" class="panel-collapse collapse out">
-                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
-              </div>
-              </span>
-            </div>
-            <div class="panel-footer">
-              <span class="badge storypoint pull-right">2</span><span class="commentIcon"></span><small>No Comments</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row sprint2 a">
-        <div class="col-md-2">
-          <div class="panel panel-info">
-            <div class="panel-heading">Sprint 2
-              <div class="progress">
-                <div class="progress-bar" style="width: 50%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
-              <span>              Story Title              <a class="pull-right issueid">#18</a>            </span>
-            </div>
-            <div class="panel-body">
-              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
-              <div id="collapse" class="panel-collapse collapse out">
-                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
-              </div>
-              </span>
-            </div>
-            <div class="panel-footer">
-              <span class="badge storypoint pull-right">2</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
-              <span>              Story Title              <a class="pull-right issueid">#20</a>            </span>
-            </div>
-            <div class="panel-body">
-              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
-              <div id="collapse" class="panel-collapse collapse out">
-                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
-              </div>
-              </span>
-            </div>
-            <div class="panel-footer">
-              <span class="badge storypoint pull-right">4</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2"></div>
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
-              <span>              Story Title              <a class="pull-right issueid">#14</a>            </span>
-            </div>
-            <div class="panel-body">
-              <span>                              <a>Assignee</a>                              <span class="label pull-right label-success">Open</span>
-              <div id="collapse" class="panel-collapse collapse out">
-                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
-              </div>
-              </span>
-            </div>
-            <div class="panel-footer">
-              <span class="badge storypoint pull-right">3</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row sprint2 b">
-        <div class="col-md-2">
-          <!-- Sprint 2 -->
-        </div>
-        <div class="col-md-2"></div>
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
-              <span>              Story Title              <a class="pull-right issueid">#23</a>            </span>
-            </div>
-            <div class="panel-body">
-              <span>                              <a>Assignee</a>                              <span class="label pull-right label-danger">Closed</span>
-              <div id="collapse" class="panel-collapse collapse out">
-                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
-              </div>
-              </span>
-            </div>
-            <div class="panel-footer">
-              <span class="badge storypoint pull-right">1</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2"></div>
-        <div class="col-md-2">
-          <div class="panel panel-default" data-toggle="modal" data-target="#storyModal">
-            <div class="panel-heading story">
-              <span>              Story Title              <a class="pull-right issueid">#15</a>            </span>
-            </div>
-            <div class="panel-body">
-              <span>                              <a>Assignee</a>                              <span class="label pull-right label-success">Open</span>
-              <div id="collapse" class="panel-collapse collapse out">
-                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
-              </div>
-              </span>
-            </div>
-            <div class="panel-footer">
-              <span class="badge storypoint pull-right">4</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row sprint3">
-        <div class="col-md-2">
-          <div class="panel panel-danger">
-            <div class="panel-heading">Sprint 3
-              <div class="progress">
-                <div class="progress-bar" style="width: 0%;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
-              <span>              Story Title              <a class="pull-right issueid">#30</a>            </span>
-            </div>
-            <div class="panel-body">
-              <span>                              <a>Assignee</a>                              <span class="label pull-right label-success">Open</span>
-              <div id="collapse" class="panel-collapse collapse out">
-                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
-              </div>
-              </span>
-            </div>
-            <div class="panel-footer">
-              <span class="badge storypoint pull-right">-</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2"></div>
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading story" data-toggle="modal" data-target="#storyModal">
-              <span>              Story Title              <a class="pull-right issueid">#32</a>            </span>
-            </div>
-            <div class="panel-body">
-              <span>                              <a>Assignee</a>                              <span class="label pull-right label-success">Open</span>
-              <div id="collapse" class="panel-collapse collapse out">
-                <hr>Alias saepe harum lorem cillum, commodo quos odio voluptatem nam excepteur maiores sunt.
-              </div>
-              </span>
-            </div>
-            <div class="panel-footer">
-              <span class="badge storypoint pull-right">-</span><span class="commentIcon"></span><a class="comment"><small>2 Comments</small></a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-2"></div>
-      </div>
-    </div>
-    <!-- /container -->
     <!-- Modal epic-->
     <div class="modal fade" id="epicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -424,16 +212,3 @@
       <!-- /.modal-dialog -->
     </div>
     <!-- /.modal story-->
-    <div>
-      {{#each epic}}
-        <div>{{@key}}:
-        {{#each sprint}}
-          <div>||{{@key}}
-          {{#each this}}
-            <div>||||{{name}}</div>
-          {{/each}}
-          </div>
-        {{/each}}
-        </div>
-      {{/each}}
-    </div>
