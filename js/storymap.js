@@ -148,7 +148,8 @@
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
         var map_tmpl = Handlebars.getTemplate('map');
-        var context = { unassigned: [], assigned: {} };
+        var context = { unspecified: { backlog: [] } };
+        // var context = { unassigned: [], assigned: {} };
         for (var s in StoryMap.githubStates) {
           issue.list({state:StoryMap.githubStates[s], labels:StoryMap.labels.STORY}, function(err, stories) {
             StoryMap.__addStoriesToContext(stories, context);
@@ -166,6 +167,7 @@
         var body = StoryMap.__parseStoryBody(story);
         var state = StoryMap.__getStoryState(story);
         var assignee = StoryMap.__getStoryAssignee(story);
+
         var storyData = {
           name: story.title,
           number: story.number,
@@ -175,19 +177,35 @@
           cost: body.cost,
           priority: body.priority
         };
+
         var epic = StoryMap.__getStoryEpic(story);
         var sprint = story.milestone;
-        if (epic === null || sprint === null) {
-          context.unassigned.push(storyData);
+
+        if (epic === null) {
+          if (sprint === null) {
+            context.unspecified.backlog.push(storyData);
+          } else {
+            if (sprint.title in context.unspecified == false) {
+              context.unspecified[sprint.title] = [];
+            }
+            context.unspecified[sprint.title].push(storyData);
+          }
         } else {
-          var sprintTitle = sprint.title;
-          if (epic in context.assigned == false) {
-            context.assigned[epic] = {};
+          if (epic in context == false) {
+            context[epic] = {};
           }
-          if (sprint in context.assigned[epic] == false) {
-            context.assigned[epic][sprintTitle] = [];
+
+          if (sprint === null) {
+            if ('backlog' in context[epic] == false) {
+              context[epic]['backlog'] = [];
+            }
+            context[epic]['backlog'].push(storyData);
+          } else {
+            if (sprint.title in context[epic] == false) {
+              context[epic][sprint.title] = [];
+            }
+            context[epic][sprint.title].push(storyData);
           }
-          context.assigned[epic][sprintTitle].push(storyData);
         }
       };
     },
@@ -245,4 +263,3 @@
   }
 
 })();
-

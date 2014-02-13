@@ -23,6 +23,18 @@
       XMLHttpRequest = window.XMLHttpRequest;
   }
 
+  // Thanks to StackOverflow users:
+  // http://stackoverflow.com/questions/1714786/querystring-encoding-of-a-javascript-object/1714899#1714899
+  var serialize = function(obj, prefix) {
+    var str = [];
+    for(var p in obj) {
+      var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+      str.push(typeof v == "object" ?
+        serialize(v, k) :
+        encodeURIComponent(k) + "=" + encodeURIComponent(v));
+    }
+    return str.join("&");
+  }
 
   var API_URL = window.location.origin + '/api'; //'https://api.github.com';
 
@@ -36,6 +48,11 @@
     function _request(method, path, data, cb, raw, sync) {
       function getURL() {
         var url = path.indexOf('//') >= 0 ? path : API_URL + path;
+
+        if (method === 'GET' && data != null) {
+          url += '?' + serialize(data);
+        }
+
         return url + ((/\?/).test(url) ? "&" : "?") + (new Date()).getTime();
       }
 
