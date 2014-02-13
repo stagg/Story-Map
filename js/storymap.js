@@ -164,7 +164,7 @@
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
         var map_tmpl = Handlebars.getTemplate('map');
-        var context = { epic: {unspecified: { sprint: { backlog: [] } } } };
+        var context = { epic: {unspecified: { sprint: { backlog: { story: [] } } } } };
         // var context = { unassigned: [], assigned: {} };
         for (var s in StoryMap.githubStates) {
           issue.list({state:StoryMap.githubStates[s], labels:StoryMap.labels.STORY}, function(err, stories) {
@@ -199,12 +199,12 @@
 
         if (epic === null) {
           if (sprint === null) {
-            context.epic.unspecified.sprint.backlog.push(storyData);
+            context.epic.unspecified.sprint.backlog.story.push(storyData);
           } else {
             if (sprint.title in context.epic.unspecified == false) {
-              context.epic.unspecified.sprint[sprint.title] = [];
+              context.epic.unspecified.sprint[sprint.title] = {story: []};
             }
-            context.epic.unspecified.sprint[sprint.title].push(storyData);
+            context.epic.unspecified.sprint[sprint.title].story.push(storyData);
           }
         } else {
           if (epic in context.epic == false) {
@@ -213,14 +213,14 @@
 
           if (sprint === null) {
             if ('backlog' in context.epic[epic].sprint == false) {
-              context.epic[epic].sprint['backlog'] = [];
+              context.epic[epic].sprint['backlog'] = {story: []};
             }
-            context.epic[epic].sprint['backlog'].push(storyData);
+            context.epic[epic].sprint['backlog'].story.push(storyData);
           } else {
             if (sprint.title in context.epic[epic].sprint == false) {
-              context.epic[epic].sprint[sprint.title] = [];
+              context.epic[epic].sprint[sprint.title] = {story: []};
             }
-            context.epic[epic].sprint[sprint.title].push(storyData);
+            context.epic[epic].sprint[sprint.title].story.push(storyData);
           }
         }
       };
