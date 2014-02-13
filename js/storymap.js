@@ -196,7 +196,7 @@
           }
 
           if (sprint === null) {
-            if ('backlog' in context.epic[epic] == false) {
+            if ('backlog' in context.epic[epic].sprint == false) {
               context.epic[epic].sprint['backlog'] = [];
             }
             context.epic[epic].sprint['backlog'].push(storyData);
