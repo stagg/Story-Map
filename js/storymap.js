@@ -153,10 +153,10 @@
         for (var s in StoryMap.githubStates) {
           issue.list({state:StoryMap.githubStates[s], labels:StoryMap.labels.STORY}, function(err, stories) {
             StoryMap.__addStoriesToContext(stories, context);
+            $('#content').html(map_tmpl(context));
           });
         }
         console.log(context);
-        $('#content').html(map_tmpl(context));
       } else {
         routie('');
       }
