@@ -148,7 +148,7 @@
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
         var map_tmpl = Handlebars.getTemplate('map');
-        var context = { unspecified: { backlog: [] } };
+        var context = { epic: {unspecified: { sprint: { backlog: [] } } } };
         // var context = { unassigned: [], assigned: {} };
         for (var s in StoryMap.githubStates) {
           issue.list({state:StoryMap.githubStates[s], labels:StoryMap.labels.STORY}, function(err, stories) {
@@ -183,28 +183,28 @@
 
         if (epic === null) {
           if (sprint === null) {
-            context.unspecified.backlog.push(storyData);
+            context.epic.unspecified.sprint.backlog.push(storyData);
           } else {
-            if (sprint.title in context.unspecified == false) {
-              context.unspecified[sprint.title] = [];
+            if (sprint.title in context.epic.unspecified == false) {
+              context.epic.unspecified.sprint[sprint.title] = [];
             }
-            context.unspecified[sprint.title].push(storyData);
+            context.epic.unspecified.sprint[sprint.title].push(storyData);
           }
         } else {
-          if (epic in context == false) {
-            context[epic] = {};
+          if (epic in context.epic == false) {
+            context.epic[epic] = {sprint: {}};
           }
 
           if (sprint === null) {
-            if ('backlog' in context[epic] == false) {
-              context[epic]['backlog'] = [];
+            if ('backlog' in context.epic[epic] == false) {
+              context.epic[epic].sprint['backlog'] = [];
             }
-            context[epic]['backlog'].push(storyData);
+            context.epic[epic].sprint['backlog'].push(storyData);
           } else {
-            if (sprint.title in context[epic] == false) {
-              context[epic][sprint.title] = [];
+            if (sprint.title in context.epic[epic].sprint == false) {
+              context.epic[epic].sprint[sprint.title] = [];
             }
-            context[epic][sprint.title].push(storyData);
+            context.epic[epic].sprint[sprint.title].push(storyData);
           }
         }
       };
