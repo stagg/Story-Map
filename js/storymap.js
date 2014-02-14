@@ -21,6 +21,8 @@
     userinfo: null,
     githubStates: {OPEN: "open", CLOSED: "closed"},
     labels: {IN_PROGRESS: "in progress", BLOCKED: "blocked", STORY: "story"},
+    epics: { "unspecified": 0 },
+    sprints: {},
     metadata: {COST: "SP", PRIORITY: "Priority"},
     metaRegexp: /[^[\]]+(?=])/g,
     metaDelimiter: ": ",
@@ -164,15 +166,36 @@
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
         var map_tmpl = Handlebars.getTemplate('map');
+        var epics = { "unspecified": 0 };
+        var sprints = {};
         var context = { epic: {unspecified: { sprint: { backlog: { story: [] } } } } };
         // var context = { unassigned: [], assigned: {} };
-        for (var s in StoryMap.githubStates) {
-          issue.list({state:StoryMap.githubStates[s], labels:StoryMap.labels.STORY}, function(err, stories) {
-            StoryMap.__addStoriesToContext(stories, context);
-            $('#content').html(map_tmpl(context));
-          });
-        }
-        console.log(context);
+
+        // TODO: this needs to be nested in the sprints callback function, which has yet to be written.
+        issue.labels(null, function(err, labels) {
+          var epicNames = [];
+
+          for (var i = 0; i < labels.length; i++) {
+            var epic = labels[i].name.match(StoryMap.metaRegexp);
+            if (epic != null) {
+              epicNames.push(epic[0]);
+            }
+          }
+
+          for (var i = 0; i < epicNames.length; i++) {
+            epics[epicNames[i]] = i+1;
+          }
+
+          for (var s in StoryMap.githubStates) {
+            issue.list({state:StoryMap.githubStates[s], labels:StoryMap.labels.STORY}, function(err, stories) {
+              StoryMap.__addStoriesToContext(stories, context);
+              $('#content').html(map_tmpl(context));
+            });
+          }
+        });
+
+        console.log("Epics obj: " + epics);
+        console.log("Context obj: " + context);
       } else {
         routie('');
       }

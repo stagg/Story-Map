@@ -37,7 +37,8 @@ body {
 }
 .ss-container {
   position: relative;
-  width: 100%;
+  width: 180px;
+  height: 700px;
 }
 
 .ss-container div {

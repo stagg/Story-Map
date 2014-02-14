@@ -120,6 +120,4 @@ routie({
   }
 });
 
-
-
-
+$('.ss-container').shapeshift();
