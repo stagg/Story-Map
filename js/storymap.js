@@ -166,12 +166,12 @@
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
         var map_tmpl = Handlebars.getTemplate('map');
-        var epics = { "unspecified": 0 };
-        var sprints = {};
+        var epicsMap = { "unspecified": 0 };
+        var sprintsMap = {};
         var context = { epic: {unspecified: { sprint: { backlog: { story: [] } } } } };
         // var context = { unassigned: [], assigned: {} };
 
-        // TODO: this needs to be nested in the sprints callback function, which has yet to be written.
+        // Create epics map
         issue.labels(null, function(err, labels) {
           var epicNames = [];
 
@@ -183,19 +183,42 @@
           }
 
           for (var i = 0; i < epicNames.length; i++) {
-            epics[epicNames[i]] = i+1;
+            epicsMap[epicNames[i]] = i+1;
           }
 
-          for (var s in StoryMap.githubStates) {
-            issue.list({state:StoryMap.githubStates[s], labels:StoryMap.labels.STORY}, function(err, stories) {
-              StoryMap.__addStoriesToContext(stories, context);
-              $('#content').html(map_tmpl(context));
+          // Create sprints map
+          issue.milestones({state: StoryMap.githubStates['OPEN']}, function(err, sprintObjs) {
+            var openSprintObjs = sprintObjs;
+            issue.milestones({state: StoryMap.githubStates['CLOSED']}, function(err, sprintObjs) {
+              var closedSprintObjs = sprintObjs;
+              var allSprintObjs = closedSprintObjs.concat(openSprintObjs).sort(StoryMap.__compareSprints);
+
+              for (var i = 0; i < allSprintObjs.length; i++) {
+                sprintsMap[allSprintObjs[i].title] = i;
+              }
+
+              // Create stories context to send for render
+              issue.list({state:StoryMap.githubStates['OPEN'], labels:StoryMap.labels.STORY}, function(err, stories) {
+                StoryMap.__addStoriesToContext(stories, context);
+
+                issue.list({state:StoryMap.githubStates['CLOSED'], labels:StoryMap.labels.STORY}, function(err, stories) {
+                  StoryMap.__addStoriesToContext(stories, context);
+                  // Render
+                  $('#content').html(map_tmpl(context));
+                });
+              });
             });
-          }
+          });
         });
 
-        console.log("Epics obj: " + epics);
-        console.log("Context obj: " + context);
+        console.log("Sprints map obj: ");
+        console.log(sprintsMap);
+
+        console.log("Epics map obj: ");
+        console.log(epicsMap);
+
+        console.log("Context obj: ");
+        console.log(context);
       } else {
         routie('');
       }
@@ -294,6 +317,26 @@
         }
       }
       return bodyData;
+    },
+    __compareSprints: function (a, b) {
+      if (a.due_on == null && b.due_on == null) {
+        return 0
+      } else if (a.due_on == null) {
+        return 1;
+      } else if (b.due_on == null) {
+        return -1;
+      }
+
+      var aDueDate = Date.parse(a.due_on);
+      var bDueDate = Date.parse(b.due_on);
+
+      if (aDueDate < bDueDate) {
+        return -1;
+      } else if (aDueDate > bDueDate) {
+        return 1;
+      } else {
+        return 0;
+      }
     }
   };
 
