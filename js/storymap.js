@@ -165,111 +165,117 @@
       StoryMap.user();
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
-        var map_tmpl = Handlebars.getTemplate('map');
         var epicsMap = { "unspecified": 0 };
         var sprintsMap = {};
-        var context = { epic: {unspecified: { sprint: { backlog: { story: [] } } } } };
-        // var context = { unassigned: [], assigned: {} };
+        var storiesList = [];
 
-        // Create epics map
-        issue.labels(null, function(err, labels) {
-          var epicNames = [];
-
-          for (var i = 0; i < labels.length; i++) {
-            var epic = labels[i].name.match(StoryMap.metaRegexp);
-            if (epic != null) {
-              epicNames.push(epic[0]);
-            }
-          }
-
-          for (var i = 0; i < epicNames.length; i++) {
-            epicsMap[epicNames[i]] = i+1;
-          }
-
-          // Create sprints map
-          issue.milestones({state: StoryMap.githubStates['OPEN']}, function(err, sprintObjs) {
-            var openSprintObjs = sprintObjs;
-            issue.milestones({state: StoryMap.githubStates['CLOSED']}, function(err, sprintObjs) {
-              var closedSprintObjs = sprintObjs;
-              var allSprintObjs = closedSprintObjs.concat(openSprintObjs).sort(StoryMap.__compareSprints);
-
-              for (var i = 0; i < allSprintObjs.length; i++) {
-                sprintsMap[allSprintObjs[i].title] = i;
-              }
-
-              // Create stories context to send for render
-              issue.list({state:StoryMap.githubStates['OPEN'], labels:StoryMap.labels.STORY}, function(err, stories) {
-                StoryMap.__addStoriesToContext(stories, context);
-
-                issue.list({state:StoryMap.githubStates['CLOSED'], labels:StoryMap.labels.STORY}, function(err, stories) {
-                  StoryMap.__addStoriesToContext(stories, context);
-                  // Render
-                  $('#content').html(map_tmpl(context));
-                });
-              });
-            });
-          });
+        var haveEpics = StoryMap.__populateEpicsMap(issue, epicsMap);
+        var haveSprints = StoryMap.__populateSprintsMap(issue, sprintsMap);
+        var haveStories = StoryMap.__populateStoriesList(issue, storiesList);
+        $.when(haveEpics, haveSprints, haveStories).done(function() {
+          StoryMap.__render(epicsMap, sprintsMap, storiesList);
         });
-
-        console.log("Sprints map obj: ");
-        console.log(sprintsMap);
-
-        console.log("Epics map obj: ");
-        console.log(epicsMap);
-
-        console.log("Context obj: ");
-        console.log(context);
       } else {
         routie('');
       }
     },
-    __addStoriesToContext: function(stories, context) {
+    __render: function(epicsMap, sprintsMap, storiesList) {
+      var map_tmpl = Handlebars.getTemplate('map');
+      var context = {epic: [], sprint: []};
+
+      for (var epicName in epicsMap) {
+        context.epic.push(epicName);
+      }
+      for (var sprintName in sprintsMap) {
+        var sprintObj = {name: sprintName, epic: []};
+        for (var epicName in epicsMap) {
+          sprintObj.epic.push([]);
+        }
+        context.sprint.push(sprintObj);
+      }
+      for (var i = 0; i < storiesList.length; ++i) {
+        var story = storiesList[i];
+        var storySprint = sprintsMap[story.sprint];
+        var storyEpic = epicsMap[story.epic];
+        context.sprint[storySprint].epic[storyEpic].push(story);
+      }
+      console.log(context);
+      $('#content').html(map_tmpl(context));
+    },
+    __populateEpicsMap: function(issue, epicsMap) {
+      var dfd = $.Deferred();
+      issue.labels(null, function(err, labels) {
+        var epicNames = [];
+
+        for (var i = 0; i < labels.length; i++) {
+          var epic = labels[i].name.match(StoryMap.metaRegexp);
+          if (epic != null) {
+            epicNames.push(epic[0]);
+          }
+        }
+
+        for (var i = 0; i < epicNames.length; i++) {
+          epicsMap[epicNames[i]] = i+1;
+        }
+        epicsMap["unspecified"] = epicNames.length;
+        dfd.resolve();
+      });
+      return dfd.promise();
+    },
+    // TODO: we could query for both open and closed milestones at the same
+    // time, and make them push to a common array; but, I am not sure if that
+    // will have any repercussions
+    __populateSprintsMap: function(issue, sprintsMap) {
+      var dfd = $.Deferred();
+      issue.milestones({state: StoryMap.githubStates['OPEN']}, function(err, sprintObjs) {
+        var openSprintObjs = sprintObjs;
+        issue.milestones({state: StoryMap.githubStates['CLOSED']}, function(err, sprintObjs) {
+          var closedSprintObjs = sprintObjs;
+          var allSprintObjs = closedSprintObjs.concat(openSprintObjs).sort(StoryMap.__compareSprints);
+
+          for (var i = 0; i < allSprintObjs.length; i++) {
+            sprintsMap[allSprintObjs[i].title] = i;
+          }
+          sprintsMap["backlog"] = allSprintObjs.length;
+          dfd.resolve();
+        });
+      });
+      return dfd.promise();
+    },
+    // TODO: same idea as with the sprints map
+    __populateStoriesList: function(issue, storiesList) {
+      var dfd = $.Deferred();
+      issue.list({state:StoryMap.githubStates['OPEN'], labels:StoryMap.labels.STORY}, function(err, stories) {
+        StoryMap.__addStoriesToList(stories, storiesList);
+
+        issue.list({state:StoryMap.githubStates['CLOSED'], labels:StoryMap.labels.STORY}, function(err, stories) {
+          StoryMap.__addStoriesToList(stories, storiesList);
+          dfd.resolve();
+        });
+      });
+      return dfd.promise();
+    },
+    __addStoriesToList: function(stories, storiesList) {
       for (var i = 0; i < stories.length; ++i) {
         var story = stories[i];
         var body = StoryMap.__parseStoryBody(story);
         var state = StoryMap.__getStoryState(story);
         var assignee = StoryMap.__getStoryAssignee(story);
+        var epicName = StoryMap.__getStoryEpic(story);
+        var sprintName = StoryMap.__getStorySprint(story);
 
-        var storyData = {
+        storiesList.push({
           name: story.title,
+          epic: epicName,
+          sprint: sprintName,
           number: story.number,
           assignee: assignee,
           state: state,
           comments: story.comments,
           cost: body.cost,
           priority: body.priority
-        };
-
-        var epic = StoryMap.__getStoryEpic(story);
-        var sprint = story.milestone;
-
-        if (epic === null) {
-          if (sprint === null) {
-            context.epic.unspecified.sprint.backlog.story.push(storyData);
-          } else {
-            if (sprint.title in context.epic.unspecified == false) {
-              context.epic.unspecified.sprint[sprint.title] = {story: []};
-            }
-            context.epic.unspecified.sprint[sprint.title].story.push(storyData);
-          }
-        } else {
-          if (epic in context.epic == false) {
-            context.epic[epic] = {sprint: {}};
-          }
-
-          if (sprint === null) {
-            if ('backlog' in context.epic[epic].sprint == false) {
-              context.epic[epic].sprint['backlog'] = {story: []};
-            }
-            context.epic[epic].sprint['backlog'].story.push(storyData);
-          } else {
-            if (sprint.title in context.epic[epic].sprint == false) {
-              context.epic[epic].sprint[sprint.title] = {story: []};
-            }
-            context.epic[epic].sprint[sprint.title].story.push(storyData);
-          }
-        }
-      };
+        });
+      }
     },
     __getStoryState: function(story) {
       if (story.state == StoryMap.githubStates.CLOSED) {
@@ -299,7 +305,14 @@
           return epic[0];
         }
       }
-      return null;
+      return "unspecified";
+    },
+    __getStorySprint: function(story) {
+      var sprint = story.milestone;
+      if (sprint !== null) {
+        return sprint.title;
+      }
+      return "backlog";
     },
     __parseStoryBody: function(story) {
       var bodyData = {cost: "", priority: ""};
