@@ -21,8 +21,6 @@
     userinfo: null,
     githubStates: {OPEN: "open", CLOSED: "closed"},
     labels: {IN_PROGRESS: "in progress", BLOCKED: "blocked", STORY: "story"},
-    epics: { "unspecified": 0 },
-    sprints: {},
     metadata: {COST: "SP", PRIORITY: "Priority"},
     metaRegexp: /[^[\]]+(?=])/g,
     metaDelimiter: ": ",
@@ -166,7 +164,7 @@
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
         var epicsMap = { "unspecified": 0 };
-        var sprintsMap = {};
+        var sprintsMap = { "backlog": 0 };
         var storiesList = [];
 
         var haveEpics = StoryMap.__populateEpicsMap(issue, epicsMap);
@@ -217,14 +215,10 @@
         for (var i = 0; i < epicNames.length; i++) {
           epicsMap[epicNames[i]] = i+1;
         }
-        epicsMap["unspecified"] = epicNames.length;
         dfd.resolve();
       });
       return dfd.promise();
     },
-    // TODO: we could query for both open and closed milestones at the same
-    // time, and make them push to a common array; but, I am not sure if that
-    // will have any repercussions
     __populateSprintsMap: function(issue, sprintsMap) {
       var dfd = $.Deferred();
       issue.milestones({state: StoryMap.githubStates['OPEN']}, function(err, sprintObjs) {
@@ -234,15 +228,13 @@
           var allSprintObjs = closedSprintObjs.concat(openSprintObjs).sort(StoryMap.__compareSprints);
 
           for (var i = 0; i < allSprintObjs.length; i++) {
-            sprintsMap[allSprintObjs[i].title] = i;
+            sprintsMap[allSprintObjs[i].title] = i+1;
           }
-          sprintsMap["backlog"] = allSprintObjs.length;
           dfd.resolve();
         });
       });
       return dfd.promise();
     },
-    // TODO: same idea as with the sprints map
     __populateStoriesList: function(issue, storiesList) {
       var dfd = $.Deferred();
       issue.list({state:StoryMap.githubStates['OPEN'], labels:StoryMap.labels.STORY}, function(err, stories) {
