@@ -1,47 +1,47 @@
-      <div class="navbar navbar-default">
-        <div class="container">
-          <ul class="nav navbar-nav">
-            <li>
-              <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#sprintModal">Create Sprint</a>
-            </li>
-            <li>
-              <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#epicModal">Create Epic</a>
-            </li>
-            <li>
-              <a href="#" id="createStory" class="btn btn-link btn-xs" data-toggle="modal" data-target="#storyModal">Create Story</a>
-            </li>
-          </ul>
-          <p></p>
-          <a id="expandStories" class="btn btn-primary btn-md pull-right" state="0">Expand</a>
+    <div class="navbar navbar-default">
+      <div class="container">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#sprintModal">Create Sprint</a>
+          </li>
+          <li>
+            <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#epicModal">Create Epic</a>
+          </li>
+          <li>
+            <a href="#" id="createStory" class="btn btn-link btn-xs" data-toggle="modal" data-target="#storyModal">Create Story</a>
+          </li>
+        </ul>
+        <p></p>
+        <a id="expandStories" class="btn btn-primary btn-md pull-right" state="0">Expand</a>
+      </div>
+    </div>
+    <div class="row heading">
+      <div class="col-md-2">
+        <p class="text-center">Sprint</p>
+      </div>
+      <div class="col-md-8">
+        <p class="text-center">Epics</p>
+      </div>
+    </div>
+    <div class="row epics">
+      <div class="col-md-2"></div>
+      {{#each epic}}
+      <div class="col-md-2">
+        <div class="panel panel-default">
+          <div class="panel-heading">{{this}}</div>
         </div>
       </div>
-      <div class="row heading">
-        <div class="col-md-2">
-          <p class="text-center">Sprint</p>
-        </div>
-        <div class="col-md-8">
-          <p class="text-center">Epics</p>
+      {{/each}}
+    </div>
+    {{#each sprint}}
+    <div class="row">
+      <div class="col-md-2">
+        <div class="panel panel-default">
+          <div class="panel-heading">{{name}}</div>
         </div>
       </div>
-      <div class="row epics">
-        <div class="col-md-2"></div>
-        {{#each epic}}
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading">{{this}}</div>
-          </div>
-        </div>
-        {{/each}}
-      </div>
-      {{#each sprint}}
-      <div class="row">
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-heading">{{name}}</div>
-          </div>
-        </div>
-        {{#each epic}}
-        <div class="col-md-2">
+      {{#each epic}}
+      <div class="col-md-2">
         {{#each this}}
         <div class="panel panel-default story">
           <div class="panel-heading" data-toggle="modal" data-target="#storyModal">
@@ -59,10 +59,10 @@
           </div>
         </div>
         {{/each}}
-        </div>
-        {{/each}}
       </div>
       {{/each}}
+    </div>
+    {{/each}}
     <!-- Modal epic-->
     <div class="modal fade" id="epicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
