@@ -18,6 +18,16 @@ body {
 .edit-button {
   margin-right:10px;
 }
+a.nolink,
+a:hover.nolink {
+  text-decoration: none;
+  color: #333;
+}
+.odd {
+  padding-top: 20px;
+  margin-bottom: 20px;
+  background-color: #DDD;
+}
 .profile {
   float:right;
   padding: 5px 15px;
@@ -40,7 +50,6 @@ body {
   width: 180px;
   height: 700px;
 }
-
 .ss-container div {
   height: 120px;
   position: absolute;
