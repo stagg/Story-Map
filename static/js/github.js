@@ -850,7 +850,100 @@
           cb(err,res)
         });
       };
-
+      // Issue POST/PATCH
+      this.createIssue = function(options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues";
+        _request("POST", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+      this.editIssue = function(id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/" + id;
+        _request("PATCH", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+      // Comment POST/PATCH/DELETE
+      this.addComment = function (id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/" + id + "/comments";
+        _request("POST", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+      this.editComment = function (id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/comments/" + id;
+        _request("PATCH", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+      this.deleteComment = function (id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/comments/" + id;
+        _request("DELETE", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+      // Milestones POST/PATCH/DELETE
+      this.createMilestone = function (options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/milestones";
+        _request("POST", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+      this.editMilestone = function (id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/milestones/" + id;
+        _request("PATCH", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+      this.deleteMilestone = function (id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/milestones/" + id;
+        _request("DELETE", path, options, function(err, res) {
+          cb(err,res)
+        });
+      }; 
+      // Labels POST/PATCH/DELETE and POST/DELETE from issues
+      this.createLabel = function (options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/labels";
+        _request("POST", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+      this.updateLabel = function (name, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/labels/" + name;
+        _request("PATCH", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+      this.deleteLabel = function (name, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/labels/" + name;
+        _request("DELETE", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };  
+      this.addLabelsIssue = function (id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/" + id + "/labels";
+        _request("POST", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };  
+      this.deleteLabelIssue = function (id, name, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/" + id + "/labels/" + name;
+        _request("DELETE", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+      this.replaceAllLabelsIssue = function (id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/" + id + "/labels";
+        _request("PUT", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };
+      this.removeAllLabelsIssue = function (id, options, cb) {
+        var path = "/repos/" + user + "/" + repo + "/issues/" + id + "/labels";
+        _request("DELETE", path, options, function(err, res) {
+          cb(err,res)
+        });
+      };             
     };
 
     // Top Level API
