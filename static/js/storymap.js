@@ -335,10 +335,10 @@
     },
     __getStoryState: function(story) {
       if (story.state == StoryMap.githubStates.CLOSED) {
-        return {state:"closed", color:"BD2C00"};
+        return {state:"closed", color:"D9534F"};
       }
       if (story.state == StoryMap.githubStates.OPEN) {
-        return {state:"open", color:"6CC644"};
+        return {state:"open", color:"5CB85C"};
       }
       for (var i = 0; i < story.labels.length; ++i) {
         var label = story.labels[i];

@@ -11,24 +11,22 @@
             <a href="#" id="createStory" class="btn btn-link btn-xs" data-toggle="modal" data-target="#storyModal">Create Story</a>
           </li>
         </ul>
-        <p></p>
-        <a id="expandStories" class="btn btn-primary btn-md pull-right" state="0">Expand</a>
       </div>
     </div>
     <div class="row heading">
       <div class="col-md-2">
-        <p class="text-center">Sprint</p>
+        <h3 class="text-center">Sprint</h3>
       </div>
       <div class="col-md-8">
-        <p class="text-center">Epics</p>
+        <h3 class="text-center">Features</p>
       </div>
     </div>
     <div class="row epics">
       <div class="col-md-2"></div>
       {{#each epic}}
       <div class="col-md-2">
-        <div class="panel panel-default">
-          <div class="panel-heading" style="background-color:#{{color}};">{{name}}</div>
+        <div class="panel panel-default" style="background-color:#{{color}};">
+          <div class="panel-body"><strong>{{name}}</strong></div>
         </div>
       </div>
       {{/each}}
@@ -37,26 +35,17 @@
     <div class="row{{#if_odd @index}} odd{{/if_odd}}">
       <div class="col-md-2">
         <div class="panel panel-default">
-          <div class="panel-heading">{{name}}</div>
+          <div class="panel-body"><strong>{{name}}</strong></div>
         </div>
       </div>
       {{#each epic}}
       <div class="col-md-2">
         {{#each this}}
-        <div class="panel panel-default story" id="{{number}}">
-          <div class="panel-heading">
-          <span><a class="pull-right issueid" href="{{url}}" target="_blank">#{{number}}</a></span>
-            <span data-toggle="modal" data-target="#storyModal"><a class="nolink" href="#">{{name}}</a></span>
-          </div>
+        <div class="panel panel-default story" id="{{number}}" style="background-color:#{{state.color}};">
           <div class="panel-body">
-            <span><a {{#if assignee.url}} href="{{assignee.url}}"{{else}} class="nolink" {{/if}} target="_blank">{{assignee.name}}</a><span class="label pull-right label-default" style="background-color:#{{state.color}};">{{state.state}}</span>
-            <div id="collapse" class="panel-collapse collapse out">
-              <hr>{{body}}
-            </div>
+            <span data-toggle="modal" data-target="#storyModal">
+              <a class="nolink" href="#">{{name}}</a>
             </span>
-          </div>
-          <div class="panel-footer">
-            <span class="badge storypoint pull-right">{{cost}}</span><span class="commentIcon"></span><a class="comment"><small>{{comments}} Comments</small></a>
           </div>
         </div>
         {{/each}}
