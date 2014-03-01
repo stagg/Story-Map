@@ -17,9 +17,9 @@
                 <span id="storyAsignee" class="not-edit hidden"><a {{#if assignee.url}} href="{{assignee.url}}"{{else}} class="nolink" {{/if}} target="_blank">{{assignee.name}}</a></span>
                   <select id="storyAsigneeEdit" class="form-control edit" name="Asignee">
                     <option selected disabled>Asignee</option>
-                    <option>User 1</option>
-                    <option>User 2</option>
-                    <option>User 3</option>
+                    {{#each assignees}}
+                    <option {{#ifvalue this value=../assignee.name}}selected{{/ifvalue}}>{{this}}</option>
+                    {{/each}}
                   </select>
                 </div>
                 <div class="col-md-4">

@@ -167,11 +167,13 @@
         var epicsMap = { "unspecified": {pos:0, color:'F5F5F5'} };
         var sprintsMap = { "backlog": 0 };
         var storiesList = [];
+        var assigneesList = [];
 
+        var haveAssignees = StoryMap.__populateAssigneesList(issue, assigneesList);
         var haveEpics = StoryMap.__populateEpicsMap(issue, epicsMap);
         var haveSprints = StoryMap.__populateSprintsMap(issue, sprintsMap);
         var haveStories = StoryMap.__populateStoriesList(issue, storiesList);
-        $.when(haveEpics, haveSprints, haveStories).done(function() {
+        $.when(haveAssignees, haveEpics, haveSprints, haveStories).done(function() {
           StoryMap.__render(epicsMap, sprintsMap, storiesList);
           $('#expandStories').click(function() {
             var newstate = $(this).attr('state') ^ 1,
@@ -184,17 +186,18 @@
             $(this).html( text );
             $(this).attr('state',newstate)
           });
-          $('.story').click(function() {StoryMap.__loadStory(this, storiesList, sprintsMap)});
+          $('.story').click(function() {StoryMap.__loadStory(this, assigneesList, storiesList, sprintsMap)});
         });
       } else {
         routie('');
       }
     },
-    __loadStory: function(el, stories, sprints) {
+    __loadStory: function(el, assignees, stories, sprints) {
       var id = $(el).attr('id');
       var obj = $.grep(stories, function(e){ return e.number == id; })[0];
       obj.sprints = sprints;
       obj.costs = StoryMap.costs;
+      obj.assignees = assignees;
       $('#storyModal-content').html(Handlebars.getTemplate('story_modal')(obj));
       $('#collapseComments').removeClass('hidden');
       $('#storyComments').removeClass('hidden');
@@ -246,6 +249,16 @@
       }
       console.log(context);
       $('#content').html(map_tmpl(context));
+    },
+    __populateAssigneesList: function(issue, assigneesList) {
+      var dfd = $.Deferred();
+      issue.assignees(null, function(err, assignees) {
+        for (var i = 0; i < assignees.length; ++i) {
+          assigneesList.push(assignees[i].login);
+        }
+        dfd.resolve();
+      });
+      return dfd.promise();
     },
     __populateEpicsMap: function(issue, epicsMap) {
       var dfd = $.Deferred();
