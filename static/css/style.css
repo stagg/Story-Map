@@ -82,3 +82,7 @@ a:hover.nolink {
   padding-right: 15px;
   z-index: 1001;
 }
+
+.break-word {
+  word-wrap: break-word;
+}

@@ -22,7 +22,7 @@
           <h3 class="text-center">Features</p>
         </div>
       </div>
-      <div class="row epics" data-columns="{{calc_cols epic}}">
+      <div class="row epics break-word" data-columns="{{calc_cols epic}}">
         <div class="col-md-2"></div>
         {{#each epic}}
         <div class="col-md-2">
@@ -34,7 +34,7 @@
       </div>
     </div>
     {{#each sprint}}
-    <div class="row{{#if_odd @index}} odd{{/if_odd}}"  data-columns="{{calc_cols epic}}">
+    <div class="row{{#if_odd @index}} odd{{/if_odd}} break-word" data-columns="{{calc_cols epic}}">
       <div class="col-md-2">
         <div class="panel panel-default">
           <div class="panel-body"><strong>{{name}}</strong></div>
