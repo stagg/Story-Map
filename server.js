@@ -70,8 +70,13 @@ app.all('/api/*', function(req, res) {
 	console.log(req.headers)
 	console.log(req.body)
 	rest.post('https://api.github.com' + req.url, {
-	    headers: req.headers,
-	    data: req.body
+	    headers: {
+        accept: req.headers.accept,
+        authorization: req.headers.authorization,
+        'content-type': req.headers['content-type'],
+        cookie: req.headers.cookie
+      },
+	    data: JSON.stringify(req.body)
 	  }).on('complete', function (data) {
 	    res.json(data);
 	  });
