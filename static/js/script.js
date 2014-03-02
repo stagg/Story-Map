@@ -31,6 +31,10 @@ Handlebars.registerHelper('ifvalue', function (conditional, options) {
   }
 });
 
+Handlebars.registerHelper('calc_cols', function (epicObj) {
+  return (epicObj.length + 1) * 2;
+});
+
 // Init 
 $('#nav').ready( function() {
   $('#nav').html(Handlebars.getTemplate('nav'));
@@ -66,3 +70,19 @@ routie({
 });
 
 $('.ss-container').shapeshift();
+
+// Bootstrap Affix does not work for some reason so here's 
+// our jury-rigged implementation:
+$(document).ready(function() {
+  $(window).scroll(function () {
+    if ($(window).scrollTop() > $('#navbar').height()) {
+      $('#story-map-headers').addClass('affix row');
+      $('#sprint-backlog').css('margin-top', $('#story-map-headers').height());
+    }
+
+    if ($(window).scrollTop() < $('#navbar').height() + 1) {
+      $('#story-map-headers').removeClass('affix row');
+      $('#sprint-backlog').css('margin-top', 0);
+    }
+  });
+});

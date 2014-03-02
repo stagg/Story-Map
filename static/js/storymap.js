@@ -165,7 +165,7 @@
       StoryMap.user();
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
-        var epicsMap = { "unspecified": {pos:0, color:'F5F5F5'} };
+        var epicsMap = { };
         var sprintsMap = { "backlog": 0 };
         var storiesList = [];
         var assigneesList = [];
@@ -238,7 +238,6 @@
     __renderMap: function(epicsMap, sprintsMap, storiesList) {
       var map_tmpl = Handlebars.getTemplate('map');
       var context = {epic: [], sprint: []};
-
       
       for (var epicName in epicsMap) {
         context.epic.push({name:epicName, color:epicsMap[epicName].color});
@@ -256,8 +255,8 @@
         var storyEpic = epicsMap[story.epic];
         context.sprint[storySprint].epic[storyEpic.pos].push(story);
       }
-      console.log(context);
       $('#content').html(map_tmpl(context));
+      gridlineIt();
     },
     __populateAssigneesList: function(issue, assigneesList) {
       var dfd = $.Deferred();
@@ -281,9 +280,12 @@
           }
         }
 
-        for (var i = 0; i < epicNames.length; i++) {
-          epicsMap[epicNames[i].name] = {pos:i+1, color:epicNames[i].color};
+        var j = 0;
+        for (j; j < epicNames.length; j++) {
+          epicsMap[epicNames[j].name] = {pos:j, color:epicNames[j].color};
         }
+
+        epicsMap["unspecified"] = {pos:j, color:'F5F5F5'};
         dfd.resolve();
       });
       return dfd.promise();

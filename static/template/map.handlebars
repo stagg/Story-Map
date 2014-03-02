@@ -1,4 +1,4 @@
-    <div class="navbar navbar-default">
+    <div id="navbar" class="navbar navbar-default">
       <div class="container">
         <ul class="nav navbar-nav">
           <li>
@@ -13,26 +13,28 @@
         </ul>
       </div>
     </div>
-    <div class="row heading">
-      <div class="col-md-2">
-        <h3 class="text-center">Sprint</h3>
-      </div>
-      <div class="col-md-8">
-        <h3 class="text-center">Features</p>
-      </div>
-    </div>
-    <div class="row epics">
-      <div class="col-md-2"></div>
-      {{#each epic}}
-      <div class="col-md-2">
-        <div class="panel panel-default" style="background-color:#{{color}};">
-          <div class="panel-body"><strong>{{name}}</strong></div>
+    <div id="story-map-headers">
+      <div class="row heading">
+        <div class="col-md-2">
+          <h3 class="text-center">Sprint</h3>
+        </div>
+        <div class="col-md-8">
+          <h3 class="text-center">Features</p>
         </div>
       </div>
-      {{/each}}
+      <div class="row epics" data-columns="{{calc_cols epic}}">
+        <div class="col-md-2"></div>
+        {{#each epic}}
+        <div class="col-md-2">
+          <div class="panel panel-default" style="background-color:#{{color}};">
+            <div class="panel-body"><strong>{{name}}</strong></div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
     </div>
     {{#each sprint}}
-    <div class="row{{#if_odd @index}} odd{{/if_odd}}">
+    <div class="row{{#if_odd @index}} odd{{/if_odd}}"  data-columns="{{calc_cols epic}}">
       <div class="col-md-2">
         <div class="panel panel-default">
           <div class="panel-body"><strong>{{name}}</strong></div>

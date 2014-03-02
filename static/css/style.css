@@ -55,3 +55,30 @@ a:hover.nolink {
   position: absolute;
   width: 120px;
 }
+
+@media(min-width: 768px) {
+  .affix {
+    width: 750px;
+  }
+}
+
+@media(min-width: 992px) {
+  .affix {
+    width: 970px;
+  }
+}
+
+@media(min-width: 1200px) {
+  .affix {
+    width: 1170px;
+  }
+}
+
+.affix {
+  position: fixed;
+  top: 0;
+  background-color: #EEE;
+  padding-left: 15px;
+  padding-right: 15px;
+  z-index: 1001;
+}
