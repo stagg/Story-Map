@@ -232,7 +232,10 @@
         data.assignee = $("#storyAssigneeEdit").val();
         data.labels = [StoryMap.labels.STORY];
 
-        issue.createIssue(data, function(){});
+        issue.createIssue(data, function() {
+          // TODO: don't reload the entire page
+          location.reload(false);
+        });
       });
     },
     __renderMap: function(epicsMap, sprintsMap, storiesList) {
@@ -416,8 +419,14 @@
       return bodyData;
     },
     __constructStoryMetaData: function(priority, cost) {
-      return "[" + StoryMap.metadata.COST + StoryMap.metaDelimiter + cost + "]\n" +
-             "[" + StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + priority + "]\n";
+      var metaDataStr = "";
+      if (priority !== null) {
+        metaDataStr += "[" + StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + priority + "]\n";
+      }
+      if (cost !== null) {
+        metaDataStr += "[" + StoryMap.metadata.COST + StoryMap.metaDelimiter + cost + "]\n";
+      }
+      return metaDataStr;
     },
     __compareSprints: function (a, b) {
       if (a.due_on == null && b.due_on == null) {
