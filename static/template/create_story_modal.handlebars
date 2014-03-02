@@ -1,0 +1,55 @@
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Create Story</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="row">
+                <div class="col-md-12">
+                  <input id="storyTitleEdit" type="text" class="form-control" placeholder="Title" />
+                </div>
+              </div>
+              <p></p>
+              <div class="row">
+                <div class="col-md-4">
+                  <select id="storyAssigneeEdit" class="form-control" name="Assignee">
+                    <option selected disabled value="">Assignee</option>
+                    {{#each assignees}}
+                    <option value={{this}}>{{this}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <select id="storyPriorityEdit" class="form-control" name="Priority">
+                    <option selected disabled>Priority</option>
+                    {{#each priorities}}
+                    <option value={{this}}>{{this}}</option>
+                    {{/each}}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <select id="storyPointsEdit" class="form-control" name="Story Points">
+                    <option selected disabled value="">Story Points</option>
+                    {{#each costs}}
+                      <option value={{this}}>{{this}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+              <p></p>
+              <div class="row">
+                <div class="col-md-12">
+                  <textarea id="storyDescEdit" class="form-control" placeholder="Description"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-success" id="createStoryBtn" data-dismiss="modal">Create</button>
+          </div>
+        </div>
+      </div>

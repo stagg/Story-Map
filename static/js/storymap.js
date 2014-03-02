@@ -20,7 +20,8 @@
     config: config,
     userinfo: null,
     githubStates: {OPEN: "open", CLOSED: "closed"},
-    costs: ['1','2','3','5','8','13','20','40','100'], 
+    costs: ['1','2','3','5','8','13','20','40','100'],
+    priorities: ['1', '2', '3', '4', '5'],
     labels: {IN_PROGRESS: "in progress", BLOCKED: "blocked", STORY: "story"},
     metadata: {COST: "SP", PRIORITY: "Priority"},
     metaRegexp: /[^[\]]+(?=])/g,
@@ -174,18 +175,8 @@
         var haveSprints = StoryMap.__populateSprintsMap(issue, sprintsMap);
         var haveStories = StoryMap.__populateStoriesList(issue, storiesList);
         $.when(haveAssignees, haveEpics, haveSprints, haveStories).done(function() {
-          StoryMap.__render(epicsMap, sprintsMap, storiesList);
-          $('#expandStories').click(function() {
-            var newstate = $(this).attr('state') ^ 1,
-                text = newstate ? "Collapse" : "Expand";
-            if ( $(this).attr('state')==="0" ) {
-                $('#content').find('.panel-body div#collapse:not(.in)').collapse('show');
-            } else {
-                $('#content').find('.panel-body div#collapse').collapse('hide');
-            }
-            $(this).html( text );
-            $(this).attr('state',newstate)
-          });
+          StoryMap.__renderMap(epicsMap, sprintsMap, storiesList);
+          StoryMap.__setupCreateStoryModal(issue, assigneesList, StoryMap.priorities, StoryMap.costs);
           $('.story').click(function() {StoryMap.__loadStory(this, assigneesList, storiesList, sprintsMap)});
         });
       } else {
@@ -226,7 +217,25 @@
           $(this).attr('state',newstate)
       });
     },
-    __render: function(epicsMap, sprintsMap, storiesList) {
+    __setupCreateStoryModal: function(issue, assignees, priorities, costs) {
+      var modal_tmpl = Handlebars.getTemplate('create_story_modal');
+      var context = {"assignees": assignees, "priorities": priorities, "costs": costs};
+      $('#createStoryModal').html(modal_tmpl(context));
+      $('#createStoryBtn').click(function() {
+        var data = {}
+        var priority = $("#storyPriorityEdit").val();
+        var cost = $("#storyPointsEdit").val();
+        var desc = $("#storyDescEdit").val();
+
+        data.title = $("#storyTitleEdit").val();
+        data.body = StoryMap.__constructStoryMetaData(priority, cost) + desc;
+        data.assignee = $("#storyAssigneeEdit").val();
+        data.labels = [StoryMap.labels.STORY];
+
+        issue.createIssue(data, function(){});
+      });
+    },
+    __renderMap: function(epicsMap, sprintsMap, storiesList) {
       var map_tmpl = Handlebars.getTemplate('map');
       var context = {epic: [], sprint: []};
 
@@ -405,6 +414,10 @@
         }
       }
       return bodyData;
+    },
+    __constructStoryMetaData: function(priority, cost) {
+      return "[" + StoryMap.metadata.COST + StoryMap.metaDelimiter + cost + "]\n" +
+             "[" + StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + priority + "]\n";
     },
     __compareSprints: function (a, b) {
       if (a.due_on == null && b.due_on == null) {

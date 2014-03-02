@@ -53,19 +53,29 @@ app.post('/oauth', function(req, res) {
 app.all('/api/*', function(req, res) {
   req.url = req.url.replace(/^\/api/, '');
   console.log(req.url);
-  rest.get('https://api.github.com' + req.url, {
-      headers: { 
-        accept: req.headers.accept,
-        'user-agent': req.headers['user-agent'],
-        authorization: req.headers.authorization,
-        'content-type': req.headers['content-type'],
-        cookie: req.headers.cookie 
-      },
-      data: req.body,
-      method: req.method
-    }).on('complete', function (data) {
-      res.json(data);
-    });
+  if (req.method === "GET") {
+    rest.get('https://api.github.com' + req.url, {
+        headers: {
+          accept: req.headers.accept,
+          'user-agent': req.headers['user-agent'],
+          authorization: req.headers.authorization,
+          'content-type': req.headers['content-type'],
+          cookie: req.headers.cookie
+        }
+      }).on('complete', function (data) {
+        res.json(data);
+      });
+  }
+  else if (req.method === "POST") {
+	console.log(req.headers)
+	console.log(req.body)
+	rest.post('https://api.github.com' + req.url, {
+	    headers: req.headers,
+	    data: req.body
+	  }).on('complete', function (data) {
+	    res.json(data);
+	  });
+  }
 });
 
 
