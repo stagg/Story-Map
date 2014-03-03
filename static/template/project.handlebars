@@ -2,7 +2,7 @@
       <div class="container">
         <ul class="nav navbar-nav">
           <li>
-            <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#sprintModal">Create Sprint</a>
+            <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#createSprintModal">Create Sprint</a>
           </li>
           <li>
             <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#createEpicModal">Create Epic</a>
@@ -49,29 +49,40 @@
     </div>
     <!-- /.modal epic-->
     <!-- Modal sprint-->
-    <div class="modal fade" id="sprintModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createSprintModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Create a new sprint</h4>
+            <h4 class="modal-title" id="myModalLabel">Create Sprint</h4>
           </div>
           <div class="modal-body">
             <form>
-              <input type="text" class="form-control" placeholder="Title">
+              <div class="row">
+                <div class="col-md-12">
+                  <input id="createSprintTitle" type="text" class="form-control" placeholder="Title" />
+                </div>
+              </div>
               <p></p>
-              <textarea class="form-control" placeholder="Description"></textarea>
+              <div class="row">
+                <div class="col-md-12">
+                  <textarea id="createSprintDesc" class="form-control" placeholder="Description"></textarea>
+                </div>
+              </div>
               <p></p>
-              <div class="btn-toolbar">
-                <div class="btn-group">
-                  <a class="btn btn-success">Green</a><a class="btn btn-warning">Yellow</a><a class="btn btn-danger">Red</a><a class="btn btn-primary">Dark Blue</a><a class="btn btn-info">Light Blue</a>
+              <div class="row">
+                <div class="col-md-6">
+                  <input type="text" id="createSprintStartDate" class="form-control" placeholder="Start Date">
+                </div>
+                <div class="col-md-6">
+                  <input type="text" id="createSprintDueDate" class="form-control" placeholder="Due Date">
                 </div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-success" data-dismiss="modal">Create</button>
+            <button type="button" class="btn btn-success" id="createSprintBtn" data-dismiss="modal">Create</button>
           </div>
         </div>
         <!-- /.modal-content -->

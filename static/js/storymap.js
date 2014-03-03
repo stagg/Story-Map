@@ -23,7 +23,7 @@
     costs: ['1','2','3','5','8','13','20','40','100'],
     priorities: ['1', '2', '3', '4', '5'],
     labels: {IN_PROGRESS: "in progress", BLOCKED: "blocked", STORY: "story"},
-    metadata: {COST: "SP", PRIORITY: "Priority"},
+    metadata: {COST: "SP", PRIORITY: "Priority", START: "Start"},
     metaRegexp: /[^[\]]+(?=])/g,
     metaDelimiter: ": ",
     epicsMap: {},
@@ -176,6 +176,7 @@
         var haveSprints = StoryMap.__populateSprintsMap(issue);
         var haveStories = StoryMap.__populateStoriesList(issue);
         $.when(haveAssignees, haveEpics, haveSprints, haveStories).done(function() {
+          StoryMap.__setupCreateSprintModal(issue);
           StoryMap.__setupCreateEpicModal(issue);
           StoryMap.__setupCreateStoryModal(issue);
           StoryMap.__renderMap();
@@ -224,6 +225,38 @@
           }       
           $(this).html( text );
           $(this).attr('state',newstate)
+      });
+    },
+    __setupCreateSprintModal: function(issue) {
+      $('#createSprintStartDate').datepicker({format: "yyyy-mm-dd"});
+      $('#createSprintDueDate').datepicker({format: "yyyy-mm-dd"});
+      $('#createSprintModal').on('click', '#createSprintBtn', function() {
+        var data = {};
+        var start = $("#createSprintStartDate").val();
+        var due = $("#createSprintDueDate").val();
+        var desc = $("#createSprintDesc").val();
+
+        var body = "";
+        if (start) {
+          body += StoryMap.__convertToMetaDataString(
+            StoryMap.metadata.START + StoryMap.metaDelimiter + start) + "\n";
+        }
+        body += desc;
+
+        data.title = $("#createSprintTitle").val();
+        data.description = body;
+        data.due_on = due + "T00:00:00Z";
+
+        issue.createMilestone(data, function(err, createdSprint) {
+          StoryMap.sprintsMap[createdSprint.title] = Object.keys(StoryMap.sprintsMap).length;
+          StoryMap.__renderMap();
+        });
+      });
+      $('#createSprintModal').on('hidden.bs.modal', function() {
+          $("#createSprintTitle").val("");
+          $("#createSprintDesc").val("");
+          $("#createSprintStartDate").val("");
+          $("#createSprintDueDate").val("");
       });
     },
     __setupCreateEpicModal: function(issue) {
