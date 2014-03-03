@@ -232,13 +232,13 @@
       $('#createStoryModal').html(modal_tmpl(context));
       $('#createStoryModal').on('click', '#createStoryBtn', function() {
         var data = {}
-        var priority = $("#storyPriorityEdit").val();
-        var cost = $("#storyPointsEdit").val();
-        var desc = $("#storyDescEdit").val();
+        var priority = $("#createStoryPriority").val();
+        var cost = $("#createStoryPoints").val();
+        var desc = $("#createStoryDesc").val();
 
-        data.title = $("#storyTitleEdit").val();
+        data.title = $("#createStoryTitle").val();
         data.body = StoryMap.__constructStoryMetaData(priority, cost) + desc;
-        data.assignee = $("#storyAssigneeEdit").val();
+        data.assignee = $("#createStoryAssignee").val();
         data.labels = [StoryMap.labels.STORY];
 
         issue.createIssue(data, function(err, createdStory) {
