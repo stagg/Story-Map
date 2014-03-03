@@ -246,6 +246,13 @@
           StoryMap.__renderMap();
         });
       });
+      $('#createStoryModal').on('hidden.bs.modal', function() {
+        $("#createStoryTitle").val("");
+        $("#createStoryDesc").val("");
+        $("#createStoryPriority").val("");
+        $("#createStoryPoints").val("");
+        $("#createStoryAssignee").val("");
+      });
     },
     __renderMap: function() {
       var map_tmpl = Handlebars.getTemplate('map');
