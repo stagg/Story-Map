@@ -1,127 +1,42 @@
-    <div id="navbar" class="navbar navbar-default">
-      <div class="container">
-        <ul class="nav navbar-nav">
-          <li>
-            <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#sprintModal">Create Sprint</a>
-          </li>
-          <li>
-            <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#epicModal">Create Epic</a>
-          </li>
-          <li>
-            <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#createStoryModal">Create Story</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div id="story-map-headers">
-      <div class="row heading">
-        <div class="col-md-2">
-          <h3 class="text-center">Sprint</h3>
+      <div id="story-map-headers">
+        <div class="row heading">
+          <div class="col-md-2">
+            <h3 class="text-center">Sprint</h3>
+          </div>
+          <div class="col-md-8">
+            <h3 class="text-center">Features</p>
+          </div>
         </div>
-        <div class="col-md-8">
-          <h3 class="text-center">Features</p>
+        <div class="row epics break-word" data-columns="{{calc_cols epic}}">
+          <div class="col-md-2"></div>
+          {{#each epic}}
+          <div class="col-md-2">
+            <div class="panel panel-default" style="background-color:#{{color}};">
+              <div class="panel-body"><strong>{{name}}</strong></div>
+            </div>
+          </div>
+          {{/each}}
         </div>
       </div>
-      <div class="row epics break-word" data-columns="{{calc_cols epic}}">
-        <div class="col-md-2"></div>
-        {{#each epic}}
+      {{#each sprint}}
+      <div class="row{{#if_odd @index}} odd{{/if_odd}} break-word" data-columns="{{calc_cols epic}}">
         <div class="col-md-2">
-          <div class="panel panel-default" style="background-color:#{{color}};">
+          <div class="panel panel-default">
             <div class="panel-body"><strong>{{name}}</strong></div>
           </div>
         </div>
-        {{/each}}
-      </div>
-    </div>
-    {{#each sprint}}
-    <div class="row{{#if_odd @index}} odd{{/if_odd}} break-word" data-columns="{{calc_cols epic}}">
-      <div class="col-md-2">
-        <div class="panel panel-default">
-          <div class="panel-body"><strong>{{name}}</strong></div>
-        </div>
-      </div>
-      {{#each epic}}
-      <div class="col-md-2">
-        {{#each this}}
-        <div class="panel panel-default story" id="{{number}}" style="background-color:#{{state.color}};">
-          <div class="panel-body">
-            <span data-toggle="modal" data-target="#storyModal">
-              <a class="nolink" href="#">{{name}}</a>
-            </span>
+        {{#each epic}}
+        <div class="col-md-2">
+          {{#each this}}
+          <div class="panel panel-default story" id="{{number}}" style="background-color:#{{state.color}};">
+            <div class="panel-body">
+              <span data-toggle="modal" data-target="#storyModal">
+                <a class="nolink" href="#">{{name}}</a>
+              </span>
+            </div>
           </div>
+          {{/each}}
         </div>
         {{/each}}
       </div>
       {{/each}}
-    </div>
-    {{/each}}
-    <!-- Modal epic-->
-    <div class="modal fade" id="epicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Create new Epic</h4>
-          </div>
-          <div class="modal-body">
-            <form>
-              <input type="text" class="form-control" placeholder="Title">
-              <p></p>
-              <textarea class="form-control" placeholder="Description"></textarea>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-success" data-dismiss="modal">Create</button>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal epic-->
-    <!-- Modal sprint-->
-    <div class="modal fade" id="sprintModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Create a new sprint</h4>
-          </div>
-          <div class="modal-body">
-            <form>
-              <input type="text" class="form-control" placeholder="Title">
-              <p></p>
-              <textarea class="form-control" placeholder="Description"></textarea>
-              <p></p>
-              <div class="btn-toolbar">
-                <div class="btn-group">
-                  <a class="btn btn-success">Green</a><a class="btn btn-warning">Yellow</a><a class="btn btn-danger">Red</a><a class="btn btn-primary">Dark Blue</a><a class="btn btn-info">Light Blue</a>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-success" data-dismiss="modal">Create</button>
-          </div>
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal sprint-->
-    <!-- Modal story-->
-    <div class="modal fade" id="storyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div id ="storyModal-content" class="modal-content">
-        </div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal story-->
-    <!-- Modal create story -->
-    <div class="modal fade" id="createStoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    </div>
-    <!-- /.modal create story -->

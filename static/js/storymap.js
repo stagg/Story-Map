@@ -26,6 +26,10 @@
     metadata: {COST: "SP", PRIORITY: "Priority"},
     metaRegexp: /[^[\]]+(?=])/g,
     metaDelimiter: ": ",
+    epicsMap: {},
+    sprintsMap: {},
+    storiesList: [],
+    assigneesList: [],
     util: {
       __generateId: function ( length ) {
         var text = "";
@@ -162,33 +166,37 @@
       ));
     },
     issues: function(user, project) {
+      StoryMap.__setupProject();
       StoryMap.user();
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
-        var epicsMap = { };
-        var sprintsMap = { "backlog": 0 };
-        var storiesList = [];
-        var assigneesList = [];
 
-        var haveAssignees = StoryMap.__populateAssigneesList(issue, assigneesList);
-        var haveEpics = StoryMap.__populateEpicsMap(issue, epicsMap);
-        var haveSprints = StoryMap.__populateSprintsMap(issue, sprintsMap);
-        var haveStories = StoryMap.__populateStoriesList(issue, storiesList);
+        var haveAssignees = StoryMap.__populateAssigneesList(issue);
+        var haveEpics = StoryMap.__populateEpicsMap(issue);
+        var haveSprints = StoryMap.__populateSprintsMap(issue);
+        var haveStories = StoryMap.__populateStoriesList(issue);
         $.when(haveAssignees, haveEpics, haveSprints, haveStories).done(function() {
-          StoryMap.__renderMap(epicsMap, sprintsMap, storiesList);
-          StoryMap.__setupCreateStoryModal(issue, assigneesList, StoryMap.priorities, StoryMap.costs);
-          $('.story').click(function() {StoryMap.__loadStory(this, assigneesList, storiesList, sprintsMap)});
+          StoryMap.__setupCreateStoryModal(issue);
+          StoryMap.__renderMap();
+          $('#story-map').on('click', '.story', function() {StoryMap.__loadStory(this)});
         });
       } else {
         routie('');
       }
     },
-    __loadStory: function(el, assignees, stories, sprints) {
+    __setupProject: function() {
+      StoryMap.epicsMap = {};
+      StoryMap.sprintsMap = { "backlog": 0 };
+      StoryMap.storiesList = [];
+      StoryMap.assigneesList = [];
+      $('#content').html(Handlebars.getTemplate('project'));
+    },
+    __loadStory: function(el) {
       var id = $(el).attr('id');
-      var obj = $.grep(stories, function(e){ return e.number == id; })[0];
-      obj.sprints = sprints;
+      var obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0];
+      obj.sprints = StoryMap.sprintsMap;
       obj.costs = StoryMap.costs;
-      obj.assignees = assignees;
+      obj.assignees = StoryMap.assigneesList;
       $('#storyModal-content').html(Handlebars.getTemplate('story_modal')(obj));
       $('#collapseComments').removeClass('hidden');
       $('#storyComments').removeClass('hidden');
@@ -217,11 +225,12 @@
           $(this).attr('state',newstate)
       });
     },
-    __setupCreateStoryModal: function(issue, assignees, priorities, costs) {
+    __setupCreateStoryModal: function(issue) {
       var modal_tmpl = Handlebars.getTemplate('create_story_modal');
-      var context = {"assignees": assignees, "priorities": priorities, "costs": costs};
+      var context = {"assignees": StoryMap.assigneesList,
+                     "priorities": StoryMap.priorities, "costs": StoryMap.costs};
       $('#createStoryModal').html(modal_tmpl(context));
-      $('#createStoryBtn').click(function() {
+      $('#createStoryModal').on('click', '#createStoryBtn', function() {
         var data = {}
         var priority = $("#storyPriorityEdit").val();
         var cost = $("#storyPointsEdit").val();
@@ -232,46 +241,46 @@
         data.assignee = $("#storyAssigneeEdit").val();
         data.labels = [StoryMap.labels.STORY];
 
-        issue.createIssue(data, function() {
-          // TODO: don't reload the entire page
-          location.reload(false);
+        issue.createIssue(data, function(err, createdStory) {
+          StoryMap.__addStoriesToList([createdStory]);
+          StoryMap.__renderMap();
         });
       });
     },
-    __renderMap: function(epicsMap, sprintsMap, storiesList) {
+    __renderMap: function() {
       var map_tmpl = Handlebars.getTemplate('map');
       var context = {epic: [], sprint: []};
       
-      for (var epicName in epicsMap) {
-        context.epic.push({name:epicName, color:epicsMap[epicName].color});
+      for (var epicName in StoryMap.epicsMap) {
+        context.epic.push({name:epicName, color:StoryMap.epicsMap[epicName].color});
       }
-      for (var sprintName in sprintsMap) {
+      for (var sprintName in StoryMap.sprintsMap) {
         var sprintObj = {name: sprintName, epic: []};
-        for (var epicName in epicsMap) {
+        for (var epicName in StoryMap.epicsMap) {
           sprintObj.epic.push([]);
         }
         context.sprint.push(sprintObj);
       }
-      for (var i = 0; i < storiesList.length; ++i) {
-        var story = storiesList[i];
-        var storySprint = sprintsMap[story.sprint];
-        var storyEpic = epicsMap[story.epic];
+      for (var i = 0; i < StoryMap.storiesList.length; ++i) {
+        var story = StoryMap.storiesList[i];
+        var storySprint = StoryMap.sprintsMap[story.sprint];
+        var storyEpic = StoryMap.epicsMap[story.epic];
         context.sprint[storySprint].epic[storyEpic.pos].push(story);
       }
-      $('#content').html(map_tmpl(context));
+      $('#story-map').html(map_tmpl(context));
       gridlineIt();
     },
-    __populateAssigneesList: function(issue, assigneesList) {
+    __populateAssigneesList: function(issue) {
       var dfd = $.Deferred();
       issue.assignees(null, function(err, assignees) {
         for (var i = 0; i < assignees.length; ++i) {
-          assigneesList.push(assignees[i].login);
+          StoryMap.assigneesList.push(assignees[i].login);
         }
         dfd.resolve();
       });
       return dfd.promise();
     },
-    __populateEpicsMap: function(issue, epicsMap) {
+    __populateEpicsMap: function(issue) {
       var dfd = $.Deferred();
       issue.labels(null, function(err, labels) {
         var epicNames = [];
@@ -285,15 +294,15 @@
 
         var j = 0;
         for (j; j < epicNames.length; j++) {
-          epicsMap[epicNames[j].name] = {pos:j, color:epicNames[j].color};
+          StoryMap.epicsMap[epicNames[j].name] = {pos:j, color:epicNames[j].color};
         }
 
-        epicsMap["unspecified"] = {pos:j, color:'F5F5F5'};
+        StoryMap.epicsMap["unspecified"] = {pos:j, color:'F5F5F5'};
         dfd.resolve();
       });
       return dfd.promise();
     },
-    __populateSprintsMap: function(issue, sprintsMap) {
+    __populateSprintsMap: function(issue) {
       var dfd = $.Deferred();
       issue.milestones({state: StoryMap.githubStates['OPEN']}, function(err, sprintObjs) {
         var openSprintObjs = sprintObjs;
@@ -302,26 +311,26 @@
           var allSprintObjs = closedSprintObjs.concat(openSprintObjs).sort(StoryMap.__compareSprints);
 
           for (var i = 0; i < allSprintObjs.length; i++) {
-            sprintsMap[allSprintObjs[i].title] = i+1;
+            StoryMap.sprintsMap[allSprintObjs[i].title] = i+1;
           }
           dfd.resolve();
         });
       });
       return dfd.promise();
     },
-    __populateStoriesList: function(issue, storiesList) {
+    __populateStoriesList: function(issue) {
       var dfd = $.Deferred();
       issue.list({state:StoryMap.githubStates['OPEN'], labels:StoryMap.labels.STORY}, function(err, stories) {
-        StoryMap.__addStoriesToList(stories, storiesList);
+        StoryMap.__addStoriesToList(stories);
 
         issue.list({state:StoryMap.githubStates['CLOSED'], labels:StoryMap.labels.STORY}, function(err, stories) {
-          StoryMap.__addStoriesToList(stories, storiesList);
+          StoryMap.__addStoriesToList(stories);
           dfd.resolve();
         });
       });
       return dfd.promise();
     },
-    __addStoriesToList: function(stories, storiesList) {
+    __addStoriesToList: function(stories) {
       for (var i = 0; i < stories.length; ++i) {
         var story = stories[i];
         var body = StoryMap.__parseStoryBody(story);
@@ -331,7 +340,7 @@
         var sprintName = StoryMap.__getStorySprint(story);
         var cleanlabels = StoryMap.__getStoryLabels(story);
 
-        storiesList.push({
+        StoryMap.storiesList.push({
           name: story.title,
           epic: epicName,
           sprint: sprintName,
