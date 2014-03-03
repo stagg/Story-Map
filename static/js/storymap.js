@@ -176,6 +176,7 @@
         var haveSprints = StoryMap.__populateSprintsMap(issue);
         var haveStories = StoryMap.__populateStoriesList(issue);
         $.when(haveAssignees, haveEpics, haveSprints, haveStories).done(function() {
+          StoryMap.__setupCreateEpicModal(issue);
           StoryMap.__setupCreateStoryModal(issue);
           StoryMap.__renderMap();
           $('#story-map').on('click', '.story', function() {StoryMap.__loadStory(this)});
@@ -225,6 +226,27 @@
           $(this).attr('state',newstate)
       });
     },
+    __setupCreateEpicModal: function(issue) {
+      $('#createEpicColour').colorpicker();
+      $('#createEpicModal').on('click', '#createEpicBtn', function() {
+        var data = {};
+        var name = $("#createEpicName").val();
+        var colour = $("#createEpicColour").val();
+
+        data.name = StoryMap.__convertToMetaDataString(name);
+        data.color = colour.replace("#", "");
+
+        issue.createLabel(data, function(err, createdEpic) {
+          StoryMap.epicsMap[createdEpic.name.match(StoryMap.metaRegexp)[0]] =
+            {color: createdEpic.color};
+          StoryMap.__renderMap();
+        });
+      });
+      $('#createEpicModal').on('hidden.bs.modal', function() {
+          $("#createEpicName").val("");
+          $("#createEpicColour").val("");
+      });
+    },
     __setupCreateStoryModal: function(issue) {
       var modal_tmpl = Handlebars.getTemplate('create_story_modal');
       var context = {"assignees": StoryMap.assigneesList,
@@ -236,8 +258,19 @@
         var cost = $("#createStoryPoints").val();
         var desc = $("#createStoryDesc").val();
 
+        var body = ""
+        if (priority !== null) {
+          body += StoryMap.__convertToMetaDataString(
+            StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + priority) + "\n";
+        }
+        if (cost !== null) {
+          body += StoryMap.__convertToMetaDataString(
+            StoryMap.metadata.COST + StoryMap.metaDelimiter + cost) + "\n";
+        }
+        body += desc;
+        
         data.title = $("#createStoryTitle").val();
-        data.body = StoryMap.__constructStoryMetaData(priority, cost) + desc;
+        data.body = body;
         data.assignee = $("#createStoryAssignee").val();
         data.labels = [StoryMap.labels.STORY];
 
@@ -436,15 +469,10 @@
       }
       return bodyData;
     },
-    __constructStoryMetaData: function(priority, cost) {
-      var metaDataStr = "";
-      if (priority !== null) {
-        metaDataStr += "[" + StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + priority + "]\n";
-      }
-      if (cost !== null) {
-        metaDataStr += "[" + StoryMap.metadata.COST + StoryMap.metaDelimiter + cost + "]\n";
-      }
-      return metaDataStr;
+    __convertToMetaDataString: function(string) {
+      if (string === null)
+        return ""
+      return "[" + string + "]";
     },
     __compareSprints: function (a, b) {
       if (a.due_on == null && b.due_on == null) {

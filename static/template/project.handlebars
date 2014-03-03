@@ -5,7 +5,7 @@
             <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#sprintModal">Create Sprint</a>
           </li>
           <li>
-            <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#epicModal">Create Epic</a>
+            <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#createEpicModal">Create Epic</a>
           </li>
           <li>
             <a href="#" class="btn btn-link btn-xs" data-toggle="modal" data-target="#createStoryModal">Create Story</a>
@@ -16,7 +16,7 @@
     <div id="story-map">
     </div>
     <!-- Modal epic-->
-    <div class="modal fade" id="epicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createEpicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -25,14 +25,22 @@
           </div>
           <div class="modal-body">
             <form>
-              <input type="text" class="form-control" placeholder="Title">
+              <div class="row">
+                <div class="col-md-12">
+                  <input id="createEpicName" type="text" class="form-control" placeholder="Name" />
+                </div>
+              </div>
               <p></p>
-              <textarea class="form-control" placeholder="Description"></textarea>
+              <div class="row">
+                <div class="col-md-12">
+                  <input type="text" id="createEpicColour" class="form-control" placeholder="Colour">
+                </div>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-success" data-dismiss="modal">Create</button>
+            <button type="button" class="btn btn-success" id="createEpicBtn" data-dismiss="modal">Create</button>
           </div>
         </div>
         <!-- /.modal-content -->
