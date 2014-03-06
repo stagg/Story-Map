@@ -1,0 +1,20 @@
+<ul class="list-group">
+  {{#each comments}}
+    <li class="list-group-item">
+      <p>
+        <a href="{{this.user.html_url}}">
+          <img class="avatar" src="{{this.user.avatar_url}}"><span>{{this.user.login}}</span>
+        </a>
+      </p>
+      <br>
+      <p>{{this.body}}</p>
+    </li>
+  {{/each}}
+  <li class="list-group-item">
+    <form>
+      <textarea class="form-control" placeholder="Leave a comment"></textarea>
+      <p></p>
+      <button type="button" class="btn btn-success btn-sm">Comment</button>
+    </form>
+  </li>
+</ul>

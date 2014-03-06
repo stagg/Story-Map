@@ -6,40 +6,64 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="row">
-                <div class="col-md-12">
-                  <input id="createStoryTitle" type="text" class="form-control" placeholder="Title" />
+              <p>
+                <div class="row">
+                  <div class="col-md-12">
+                    <input id="createStoryTitle" type="text" class="form-control" placeholder="Title" />
+                  </div>
                 </div>
-              </div>
-              <p></p>
-              <div class="row">
-                <div class="col-md-4">
-                  <select id="createStoryAssignee" class="form-control" name="Assignee">
-                    <option selected disabled value="">Assignee</option>
-                    {{#each assignees}}
-                    <option value={{this}}>{{this}}</option>
-                    {{/each}}
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <select id="createStoryPriority" class="form-control" name="Priority">
-                    <option selected disabled value="">Priority</option>
-                    {{#each priorities}}
-                    <option value={{this}}>{{this}}</option>
-                    {{/each}}
-                    </option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <select id="createStoryPoints" class="form-control" name="Story Points">
-                    <option selected disabled value="">Story Points</option>
-                    {{#each costs}}
+              </p>
+              <p>
+                <div class="row">
+                  <div class="col-md-4">
+                    <select id="createStoryAssignee" class="form-control" name="Assignee">
+                      <option selected disabled value="">Assignee</option>
+                      {{#each assignees}}
                       <option value={{this}}>{{this}}</option>
-                    {{/each}}
-                  </select>
+                      {{/each}}
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <select id="createStoryPriority" class="form-control" name="Priority">
+                      <option selected disabled value="">Priority</option>
+                      {{#each priorities}}
+                      <option value={{this}}>{{this}}</option>
+                      {{/each}}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <select id="createStoryPoints" class="form-control" name="Story Points">
+                      <option selected disabled value="">Story Points</option>
+                      {{#each costs}}
+                        <option value={{this}}>{{this}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <p></p>
+              </p>
+              <p>
+                <div class="row">
+                  <div class="col-md-6">
+                    <select id="createStorySprint" class="form-control" name="Sprint">
+                      <option selected disabled value="">Sprint</option>
+                      {{#each sprints}}
+                      <option value={{this.id}}>{{@key}}</option>
+                      {{/each}}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <select id="createStoryEpic" class="form-control" name="Feature">
+                      <option selected disabled value="">Feature</option>
+                      {{#each epics}}
+                      <option value={{@key}}>{{@key}}</option>
+                      {{/each}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </p>
               <div class="row">
                 <div class="col-md-12">
                   <textarea id="createStoryDesc" class="form-control" placeholder="Description"></textarea>

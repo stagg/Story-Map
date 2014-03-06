@@ -170,7 +170,7 @@
       StoryMap.user();
       if (StoryMap.__gitinit()) {
         var issue = StoryMap.github.getIssues(user, project);
-
+        StoryMap.issue = issue;
         var haveAssignees = StoryMap.__populateAssigneesList(issue);
         var haveEpics = StoryMap.__populateEpicsMap(issue);
         var haveSprints = StoryMap.__populateSprintsMap(issue);
@@ -189,27 +189,35 @@
     __setupProject: function() {
       $('#content').html(Handlebars.getTemplate('project'));
     },
+    __loadComments: function (id) {
+      if (StoryMap.__gitinit() && StoryMap.issue) {
+        var dfd = $.Deferred();
+        StoryMap.issue.issueComments(id, null, function(err, comments) {
+          console.log(comments);
+          $('#collapseComments').html(Handlebars.getTemplate('story_modal_comments')({"comments":comments}));
+          dfd.resolve();
+        });
+        return dfd.promise();
+      }
+    },
     __loadStory: function(el) {
       var id = $(el).attr('id');
       var obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0];
       obj.sprints = StoryMap.sprintsMap;
       obj.costs = StoryMap.costs;
       obj.assignees = StoryMap.assigneesList;
+      obj.priorities = StoryMap.priorities;
+      obj.epics = StoryMap.epicsMap;
+      obj.epic = {name:obj.epic, color:StoryMap.epicsMap[obj.epic].color};
+      obj.body = StoryMap.__removeMetaDataStrings(obj.body);
       $('#storyModal-content').html(Handlebars.getTemplate('story_modal')(obj));
-      $('#collapseComments').removeClass('hidden');
-      $('#storyComments').removeClass('hidden');
-      $('#storyEdit').removeClass('hidden');  
+      $('#storyEdit').removeClass('hidden');
       $('#storyEdit').attr('state', 0)
-      
       $('.not-edit').removeClass('hidden'); 
       $('.edit').addClass('hidden'); 
-      
-      $('#storySubmit').addClass('hidden');
-      $('#storyCancel').addClass('hidden');
       $('#storyEdit').click(function() {
           var newstate = $(this).attr('state') ^ 1,
               text = newstate ? "Cancel" : "Edit";
-          $('#storyCancel').addClass('hidden');
           if ( $(this).attr('state')==="0" ) {
             $('.not-edit').addClass('hidden');      
             $('.edit').removeClass('hidden');   
@@ -222,6 +230,16 @@
           $(this).html( text );
           $(this).attr('state',newstate)
       });
+      $('#storyComments').click(function() {
+        if ( $('#collapseComments').html() == "") {
+          var commentsLoaded = StoryMap.__loadComments(id);
+          $.when(commentsLoaded).done(function() {
+              $('#collapseComments').toggle();
+          });
+        } else {
+          $('#collapseComments').toggle();
+        }
+      })
     },
     __setupCreateSprintModal: function(issue) {
       $('#createSprintStartDate').datepicker({format: "yyyy-mm-dd"});
@@ -282,13 +300,19 @@
     __setupCreateStoryModal: function(issue) {
       var modal_tmpl = Handlebars.getTemplate('create_story_modal');
       var context = {"assignees": StoryMap.assigneesList,
-                     "priorities": StoryMap.priorities, "costs": StoryMap.costs};
+                     "priorities": StoryMap.priorities,
+                     "costs": StoryMap.costs,
+                     "sprints": StoryMap.sprintsMap,
+                     "epics": StoryMap.epicsMap};
       $('#createStoryModal').html(modal_tmpl(context));
       $('#createStoryModal').on('click', '#createStoryBtn', function() {
         var data = {}
         var priority = $("#createStoryPriority").val();
         var cost = $("#createStoryPoints").val();
         var desc = $("#createStoryDesc").val();
+        var sprint = $("#createStorySprint").val();
+        var epic = $("#createStoryEpic").val();
+        var labels = [StoryMap.labels.STORY];
 
         var body = ""
         if (priority !== null) {
@@ -299,14 +323,18 @@
           body += StoryMap.__convertToMetaDataString(
             StoryMap.metadata.COST + StoryMap.metaDelimiter + cost) + "\n";
         }
+        if (epic !== null && epic.toLowerCase() !== "unspecified") {
+          labels.push(StoryMap.__convertToMetaDataString(epic));
+        }
         body += desc;
         
         data.title = $("#createStoryTitle").val();
         data.body = body;
         data.assignee = $("#createStoryAssignee").val();
-        data.labels = [StoryMap.labels.STORY];
-
+        data.milestone =  sprint < 0 ? null : sprint;
+        data.labels = labels;
         issue.createIssue(data, function(err, createdStory) {
+          console.log(createdStory);
           var repopulatedStories = StoryMap.__populateStoriesList(issue);
           $.when(repopulatedStories).done(function() {
             StoryMap.__renderMap();
@@ -339,7 +367,7 @@
         var story = StoryMap.storiesList[i];
         var storySprint = StoryMap.sprintsMap[story.sprint];
         var storyEpic = StoryMap.epicsMap[story.epic];
-        context.sprint[storySprint].epic[storyEpic.pos].push(story);
+        context.sprint[storySprint.pos].epic[storyEpic.pos].push(story);
       }
       $('#story-map').html(map_tmpl(context));
       gridlineIt();
@@ -379,7 +407,7 @@
       return dfd.promise();
     },
     __populateSprintsMap: function(issue) {
-      StoryMap.sprintsMap = { "backlog": 0 };
+      StoryMap.sprintsMap = { "backlog": {pos:0, id:-1} };
       var dfd = $.Deferred();
       issue.milestones({state: StoryMap.githubStates['OPEN']}, function(err, sprintObjs) {
         var openSprintObjs = sprintObjs;
@@ -388,7 +416,7 @@
           var allSprintObjs = closedSprintObjs.concat(openSprintObjs).sort(StoryMap.__compareSprints);
 
           for (var i = 0; i < allSprintObjs.length; i++) {
-            StoryMap.sprintsMap[allSprintObjs[i].title] = i+1;
+            StoryMap.sprintsMap[allSprintObjs[i].title] = {pos:i+1, id:allSprintObjs[i].number};
           }
           dfd.resolve();
         });
@@ -511,6 +539,11 @@
       if (string === null)
         return ""
       return "[" + string + "]";
+    },
+     __removeMetaDataStrings: function(string) {
+      if (string === null)
+        return ""
+      return string.replace(/\[(\w+:\s[^\]]+)]/g, "");
     },
     __compareSprints: function (a, b) {
       if (a.due_on == null && b.due_on == null) {

@@ -16,7 +16,7 @@ app.configure(function(){
   app.use(express.static(__dirname + '/static'));
 });
 
-app.set('views', __dirname + '/static/views');
+app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
 
 app.get('/', function(req, res) {

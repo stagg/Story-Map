@@ -12,7 +12,7 @@
           {{#each epic}}
           <div class="col-md-2">
             <div class="panel panel-default" style="background-color:#{{color}};">
-              <div class="panel-body"><strong>{{name}}</strong></div>
+              <div class="panel-body feature"><strong>{{name}}</strong></div>
             </div>
           </div>
           {{/each}}
@@ -22,19 +22,13 @@
       <div class="row{{#if_odd @index}} odd{{/if_odd}} break-word" data-columns="{{calc_cols epic}}">
         <div class="col-md-2">
           <div class="panel panel-default">
-            <div class="panel-body"><strong>{{name}}</strong></div>
+            <div class="panel-body sprint"><strong>{{name}}</strong></div>
           </div>
         </div>
         {{#each epic}}
         <div class="col-md-2">
           {{#each this}}
-          <div class="panel panel-default story" id="{{number}}" style="background-color:#{{state.color}};">
-            <div class="panel-body">
-              <span data-toggle="modal" data-target="#storyModal">
-                <a class="nolink" href="#">{{name}}</a>
-              </span>
-            </div>
-          </div>
+            {{> story this}}
           {{/each}}
         </div>
         {{/each}}

@@ -1,0 +1,21 @@
+<div class="panel panel-default story" id="{{number}}" style="border:2px solid #{{state.color}};">
+<div class="panel-body panel-story">
+  <p class="panel-header">
+    <span>
+        <a href="{{url}}" class="issueid pull-left">#{{number}}</a>
+        {{#if comments}}
+        <span>
+            <span class="comments">{{comments}}</span>
+            <span class="glyphicon glyphicon-comment"></span>
+        </span>
+        {{/if}}
+        {{#if cost}}<span class="cost pull-right">{{cost}}</span>{{/if}}
+    </span>
+  </p>
+  <p class="story-title " data-toggle="modal"  data-target="#storyModal">
+      <a class="nolink" href="#">
+        {{name}}
+      </a>
+  </p>
+</div>
+</div>

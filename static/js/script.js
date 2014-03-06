@@ -15,6 +15,8 @@ Handlebars.getTemplate = function(name) {
   return Handlebars.templates[name];
 };
 
+Handlebars.registerPartial("story", Handlebars.getTemplate('story'));
+
 Handlebars.registerHelper('if_odd', function(conditional, options) {
   if((conditional % 2) != 0) {
     return options.fn(this);
