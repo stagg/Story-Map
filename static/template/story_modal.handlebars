@@ -48,7 +48,7 @@
                     <select id="storySprintEdit" class="form-control edit" name="Sprint">
                       <option selected disabled>Sprint</option>
                       {{#each sprints}}                      
-                          <option {{#ifvalue @key value=this.id }}selected{{/ifvalue}}>{{@key}}</option>
+                          <option {{#ifvalue @key value=../sprint }}selected{{/ifvalue}}>{{@key}}</option>
                       {{/each}}
                     </select>
                   </div>
@@ -57,7 +57,7 @@
                     <select id="storyEpicEdit" class="edit form-control" name="Feature">
                       <option selected disabled value="">Feature</option>
                       {{#each epics}}                      
-                          <option {{#ifvalue @key value=@key }}selected{{/ifvalue}}>{{@key}}</option>
+                          <option {{#ifvalue @key value=../epic.name }}selected{{/ifvalue}}>{{@key}}</option>
                       {{/each}}
                       </option>
                     </select>

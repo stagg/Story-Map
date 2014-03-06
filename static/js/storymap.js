@@ -189,12 +189,26 @@
     __setupProject: function() {
       $('#content').html(Handlebars.getTemplate('project'));
     },
+    __addComment: function(id) {
+      $('#newCommentBtn').click(function (argument) {
+        var text = $('#newComment').val();
+        if (text !== "") {
+          StoryMap.issue.addComment(id, {"body": text}, function (err, comment) {
+            //Reload comments
+            if (comment) {
+              StoryMap.__loadComments(id);
+            }
+          });
+        }
+      });
+    },
     __loadComments: function (id) {
       if (StoryMap.__gitinit() && StoryMap.issue) {
         var dfd = $.Deferred();
         StoryMap.issue.issueComments(id, null, function(err, comments) {
           console.log(comments);
           $('#collapseComments').html(Handlebars.getTemplate('story_modal_comments')({"comments":comments}));
+          StoryMap.__addComment(id);
           dfd.resolve();
         });
         return dfd.promise();
