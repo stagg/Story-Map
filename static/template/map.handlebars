@@ -22,7 +22,13 @@
       <div class="row{{#if_odd @index}} odd{{/if_odd}} break-word" data-columns="{{calc_cols epic}}">
         <div class="col-md-2">
           <div class="panel panel-default">
-            <div class="panel-body sprint"><strong>{{name}}</strong></div>
+            <div class="panel-body sprint">
+            <p><strong>{{name}}</strong></p>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="{{prc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{prc}}%;">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         {{#each epic}}

@@ -1,6 +1,5 @@
 <div class="panel panel-default story" id="{{number}}" style="border:2px solid #{{state.color}};">
-<div class="panel-body panel-story">
-  <p class="panel-header">
+<div class="panel-header">
     <span>
         <a href="{{url}}" class="issueid pull-left">#{{number}}</a>
         {{#if comments}}
@@ -11,7 +10,8 @@
         {{/if}}
         {{#if cost}}<span class="cost pull-right">{{cost}}</span>{{/if}}
     </span>
-  </p>
+</div>
+<div class="panel-body panel-story">
   <p class="story-title " data-toggle="modal"  data-target="#storyModal">
       <a class="nolink" href="#">
         {{name}}

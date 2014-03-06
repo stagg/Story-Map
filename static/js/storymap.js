@@ -357,7 +357,7 @@
         context.epic.push({name:epicName, color:StoryMap.epicsMap[epicName].color});
       }
       for (var sprintName in StoryMap.sprintsMap) {
-        var sprintObj = {name: sprintName, epic: []};
+        var sprintObj = {name: sprintName, epic: [], prc:0, close: 0, open: 0};
         for (var epicName in StoryMap.epicsMap) {
           sprintObj.epic.push([]);
         }
@@ -367,8 +367,17 @@
         var story = StoryMap.storiesList[i];
         var storySprint = StoryMap.sprintsMap[story.sprint];
         var storyEpic = StoryMap.epicsMap[story.epic];
+        if(story.state.state.toLowerCase() !== StoryMap.githubStates['CLOSED'].toLowerCase()) {
+          context.sprint[storySprint.pos].open++;
+        } else {
+          context.sprint[storySprint.pos].close++;
+        }
         context.sprint[storySprint.pos].epic[storyEpic.pos].push(story);
       }
+      for (var i = context.sprint.length - 1; i >= 0; i--) {
+        var obj = context.sprint[i];
+        obj.prc = (obj.open / obj.close) * 100;
+      };
       $('#story-map').html(map_tmpl(context));
       gridlineIt();
     },
@@ -478,7 +487,7 @@
           return {state:"blocked", color:label.color};
         }
       }
-      return "open";
+      return {state:"open", color:"5CB85C"};
     },
     __getStoryAssignee: function(story) {
       if (story.assignee === null) {
