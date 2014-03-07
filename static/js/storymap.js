@@ -26,8 +26,8 @@
     metadata: {COST: "SP", PRIORITY: "Priority", START: "Start"},
     metaRegexp: /[^[\]]+(?=])/g,
     metaDelimiter: ": ",
-    epicsMap: {},
-    sprintsMap: {},
+    epicsList: [],
+    sprintsList: [],
     storiesList: [],
     assigneesList: [],
     util: {
@@ -172,8 +172,8 @@
         var issue = StoryMap.github.getIssues(user, project);
         StoryMap.issue = issue;
         var haveAssignees = StoryMap.__populateAssigneesList(issue);
-        var haveEpics = StoryMap.__populateEpicsMap(issue);
-        var haveSprints = StoryMap.__populateSprintsMap(issue);
+        var haveEpics = StoryMap.__populateEpicsList(issue);
+        var haveSprints = StoryMap.__populateSprintsList(issue);
         var haveStories = StoryMap.__populateStoriesList(issue);
         $.when(haveAssignees, haveEpics, haveSprints, haveStories).done(function() {
           StoryMap.__setupCreateSprintModal(issue);
@@ -217,12 +217,12 @@
     __loadStory: function(el) {
       var id = $(el).attr('id');
       var obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0];
-      obj.sprints = StoryMap.sprintsMap;
+      obj.sprints = StoryMap.sprintsList;
       obj.costs = StoryMap.costs;
       obj.assignees = StoryMap.assigneesList;
       obj.priorities = StoryMap.priorities;
-      obj.epics = StoryMap.epicsMap;
-      obj.epic = {name:obj.epic, color:StoryMap.epicsMap[obj.epic].color};
+      obj.epics = StoryMap.epicsList;
+      obj.epic = StoryMap.__getEpicObject(obj.epic);
       obj.body = StoryMap.__removeMetaDataStrings(obj.body);
       $('#storyModal-content').html(Handlebars.getTemplate('story_modal')(obj));
       $('#storyEdit').removeClass('hidden');
@@ -276,7 +276,7 @@
         data.due_on = due + "T00:00:00Z";
 
         issue.createMilestone(data, function(err, createdSprint) {
-          var repopulatedSprints = StoryMap.__populateSprintsMap(issue);
+          var repopulatedSprints = StoryMap.__populateSprintsList(issue);
           $.when(repopulatedSprints).done(function() {
             StoryMap.__renderMap();
           });
@@ -300,7 +300,7 @@
         data.color = colour.replace("#", "");
 
         issue.createLabel(data, function(err, createdEpic) {
-          var repopulatedEpics = StoryMap.__populateEpicsMap(issue);
+          var repopulatedEpics = StoryMap.__populateEpicsList(issue);
           $.when(repopulatedEpics).done(function() {
             StoryMap.__renderMap();
           });
@@ -316,8 +316,8 @@
       var context = {"assignees": StoryMap.assigneesList,
                      "priorities": StoryMap.priorities,
                      "costs": StoryMap.costs,
-                     "sprints": StoryMap.sprintsMap,
-                     "epics": StoryMap.epicsMap};
+                     "sprints": StoryMap.sprintsList,
+                     "epics": StoryMap.epicsList};
       $('#createStoryModal').html(modal_tmpl(context));
       $('#createStoryModal').on('click', '#createStoryBtn', function() {
         var data = {}
@@ -366,27 +366,33 @@
     __renderMap: function() {
       var map_tmpl = Handlebars.getTemplate('map');
       var context = {epic: [], sprint: []};
+      var epicsMap = {};
+      var sprintsMap = {};
       
-      for (var epicName in StoryMap.epicsMap) {
-        context.epic.push({name:epicName, color:StoryMap.epicsMap[epicName].color});
+      for (var i = 0; i < StoryMap.epicsList.length; ++i) {
+        var epic = StoryMap.epicsList[i];
+        epicsMap[epic.name] = i;
+        context.epic.push({name:epic.name, color:epic.color});
       }
-      for (var sprintName in StoryMap.sprintsMap) {
-        var sprintObj = {name: sprintName, epic: [], prc:0, close: 0, open: 0};
-        for (var epicName in StoryMap.epicsMap) {
+      for (var i = 0; i < StoryMap.sprintsList.length; ++i) {
+        var sprint = StoryMap.sprintsList[i];
+        sprintsMap[sprint.name] = i;
+        var sprintObj = {name: sprint.name, epic: [], prc:0, close: 0, open: 0};
+        for (var j = 0; j < StoryMap.epicsList.length; ++j) {
           sprintObj.epic.push([]);
         }
         context.sprint.push(sprintObj);
       }
       for (var i = 0; i < StoryMap.storiesList.length; ++i) {
         var story = StoryMap.storiesList[i];
-        var storySprint = StoryMap.sprintsMap[story.sprint];
-        var storyEpic = StoryMap.epicsMap[story.epic];
-        if(story.state.state.toLowerCase() !== StoryMap.githubStates['CLOSED'].toLowerCase()) {
-          context.sprint[storySprint.pos].open++;
+        var storySprint = sprintsMap[story.sprint];
+        var storyEpic = epicsMap[story.epic];
+        if (story.state.state.toLowerCase() !== StoryMap.githubStates['CLOSED'].toLowerCase()) {
+            context.sprint[storySprint].open++;
         } else {
-          context.sprint[storySprint.pos].close++;
+            context.sprint[storySprint].close++;
         }
-        context.sprint[storySprint.pos].epic[storyEpic.pos].push(story);
+        context.sprint[storySprint].epic[storyEpic].push(story);
       }
       for (var i = context.sprint.length - 1; i >= 0; i--) {
         var obj = context.sprint[i];
@@ -406,31 +412,23 @@
       });
       return dfd.promise();
     },
-    __populateEpicsMap: function(issue) {
-      StoryMap.epicsMap = {};
+    __populateEpicsList: function(issue) {
+      StoryMap.epicsList = [];
       var dfd = $.Deferred();
       issue.labels(null, function(err, labels) {
-        var epicNames = [];
-
         for (var i = 0; i < labels.length; i++) {
           var epic = labels[i].name.match(StoryMap.metaRegexp);
           if (epic != null) {
-            epicNames.push({name:epic[0], color:labels[i].color});
+            StoryMap.epicsList.push({name:epic[0], color:labels[i].color});
           }
         }
-
-        var j = 0;
-        for (j; j < epicNames.length; j++) {
-          StoryMap.epicsMap[epicNames[j].name] = {pos:j, color:epicNames[j].color};
-        }
-
-        StoryMap.epicsMap["unspecified"] = {pos:j, color:'F5F5F5'};
+        StoryMap.epicsList.push({name:'unspecified', color:'F5F5F5'});
         dfd.resolve();
       });
       return dfd.promise();
     },
-    __populateSprintsMap: function(issue) {
-      StoryMap.sprintsMap = { "backlog": {pos:0, id:-1} };
+    __populateSprintsList: function(issue) {
+      StoryMap.sprintsList = []
       var dfd = $.Deferred();
       issue.milestones({state: StoryMap.githubStates['OPEN']}, function(err, sprintObjs) {
         var openSprintObjs = sprintObjs;
@@ -439,8 +437,9 @@
           var allSprintObjs = closedSprintObjs.concat(openSprintObjs).sort(StoryMap.__compareSprints);
 
           for (var i = 0; i < allSprintObjs.length; i++) {
-            StoryMap.sprintsMap[allSprintObjs[i].title] = {pos:i+1, id:allSprintObjs[i].number};
+            StoryMap.sprintsList.push({name:allSprintObjs[i].title, id:allSprintObjs[i].number});
           }
+          StoryMap.sprintsList.push({name:'backlog', id:-1});
           dfd.resolve();
         });
       });
@@ -557,6 +556,14 @@
         }
       }
       return bodyData;
+    },
+    __getEpicObject: function(epicName) {
+      for (var i = 0; i < StoryMap.epicsList.length; ++i) {
+        if (StoryMap.epicsList[i].name == epicName) {
+          return StoryMap.epicsList[i];
+        }
+      }
+      return {};
     },
     __convertToMetaDataString: function(string) {
       if (string === null)
