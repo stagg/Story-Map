@@ -216,14 +216,18 @@
     __loadStory: function(el) {
       var id = $(el).attr('id');
       var obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0];
-      obj.sprints = StoryMap.sprintsList;
-      obj.costs = StoryMap.costs;
-      obj.assignees = StoryMap.assigneesList;
-      obj.priorities = StoryMap.priorities;
-      obj.epics = StoryMap.epicsList;
-      obj.epic = StoryMap.__getEpicObject(obj.epic);
-      obj.body = StoryMap.__removeMetaDataStrings(obj.body);
-      $('#storyModal-content').html(Handlebars.getTemplate('story_modal')(obj));
+      var context = {};
+      for (var prop in obj) {
+        context[prop] = obj[prop];
+      }
+      context.sprints = StoryMap.sprintsList;
+      context.costs = StoryMap.costs;
+      context.assignees = StoryMap.assigneesList;
+      context.priorities = StoryMap.priorities;
+      context.epics = StoryMap.epicsList;
+      context.epic = StoryMap.__getEpicObject(obj.epic);
+      context.body = StoryMap.__removeMetaDataStrings(obj.body);
+      $('#storyModal-content').html(Handlebars.getTemplate('story_modal')(context));
       $('#storyEdit').removeClass('hidden');
       $('#storyEdit').attr('state', 0)
       $('.not-edit').removeClass('hidden'); 
