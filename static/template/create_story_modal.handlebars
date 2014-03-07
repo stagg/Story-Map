@@ -48,7 +48,7 @@
                     <select id="createStorySprint" class="form-control" name="Sprint">
                       <option selected disabled value="">Sprint</option>
                       {{#each sprints}}
-                      <option value={{this.id}}>{{@key}}</option>
+                      <option value={{id}}>{{name}}</option>
                       {{/each}}
                       </option>
                     </select>
@@ -57,7 +57,7 @@
                     <select id="createStoryEpic" class="form-control" name="Feature">
                       <option selected disabled value="">Feature</option>
                       {{#each epics}}
-                      <option value={{@key}}>{{@key}}</option>
+                      <option value={{name}}>{{name}}</option>
                       {{/each}}
                       </option>
                     </select>
