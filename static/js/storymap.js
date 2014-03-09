@@ -213,6 +213,51 @@
         return dfd.promise();
       }
     },
+    __updateStory: function (id, el) {
+      var form = $('#story-form').serializeArray();
+      var data = {body:"", labels:[]};
+      for (var i = form.length - 1; i >= 0; i--) {
+        var obj = form[i];
+        if (obj.name === "priority") {
+          data.body += StoryMap.__convertToMetaDataString( 
+            StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + obj.value) + "\n";
+        } else if (obj.name === "cost") {
+          data.body += StoryMap.__convertToMetaDataString(
+            StoryMap.metadata.COST + StoryMap.metaDelimiter + obj.value) + "\n";
+        } else if (obj.name === "feature" && obj.value !== "unspecified") {
+          data.labels.push(StoryMap.__convertToMetaDataString(obj.value));
+        } else if (obj.name === "state") {
+          if (obj.value === StoryMap.githubStates.OPEN || obj.value === StoryMap.githubStates.CLOSED) {
+            data.state = obj.value;
+          } else {
+            data.state = StoryMap.githubStates.OPEN;
+            data.labels.push(obj.value);
+          }
+        } else if(obj.name === "labels[]") {
+          data.labels.push(obj.value);
+        } else {
+          data[obj.name] = obj.value;
+        }
+      };
+      if (StoryMap.__gitinit() && StoryMap.issue) {
+        StoryMap.issue.editIssue(id, data, function (err, response) {
+          if (response) {
+            var story = StoryMap.__createStory(response);
+            for (var i = StoryMap.storiesList.length - 1; i >= 0; i--) {
+              var obj = StoryMap.storiesList[i];
+              if (obj.number === story.number) {
+                StoryMap.storiesList[i] = story;
+                break;
+              }
+             }; 
+            StoryMap.__renderMap();
+            $('#storyModal').modal('hide');
+          } else {
+            console.log(err);
+          }
+        });
+      }
+    },
     __loadStory: function(el) {
       var id = $(el).attr('id');
       var obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0];
@@ -233,19 +278,22 @@
       $('.not-edit').removeClass('hidden'); 
       $('.edit').addClass('hidden'); 
       $('#storyEdit').click(function() {
-          var newstate = $(this).attr('state') ^ 1,
-              text = newstate ? "Cancel" : "Edit";
-          if ( $(this).attr('state')==="0" ) {
-            $('.not-edit').addClass('hidden');      
-            $('.edit').removeClass('hidden');   
-            $('#storySubmit').html('Update')
-          } else {
-            $('.not-edit').removeClass('hidden');      
-            $('.edit').addClass('hidden'); 
-            $('#storySubmit').html('Create')
-          }       
-          $(this).html( text );
-          $(this).attr('state',newstate)
+        var newstate = $(this).attr('state') ^ 1,
+            text = newstate ? "Cancel" : "Edit";
+        if ( $(this).attr('state')==="0" ) {
+          $('.not-edit').addClass('hidden');      
+          $('.edit').removeClass('hidden');   
+          $('#storySubmit').html('Update')
+        } else {
+          $('.not-edit').removeClass('hidden');      
+          $('.edit').addClass('hidden'); 
+          $('#storySubmit').html('Create')
+        }       
+        $(this).html( text );
+        $(this).attr('state', newstate)
+      });
+      $('#storySubmit').click(function(event) {
+        StoryMap.__updateStory(id, this);
       });
       $('#storyComments').click(function() {
         if ( $('#collapseComments').html() == "") {
@@ -257,6 +305,28 @@
           $('#collapseComments').toggle();
         }
       })
+    },
+    __createStory: function(story) {
+      var body = StoryMap.__parseStoryBody(story);
+      var state = StoryMap.__getStoryState(story);
+      var assignee = StoryMap.__getStoryAssignee(story);
+      var epicName = StoryMap.__getStoryEpic(story);
+      var sprintName = StoryMap.__getStorySprint(story);
+      var cleanlabels = StoryMap.__getStoryLabels(story);
+      return {
+        name: story.title,
+        epic: epicName,
+        sprint: sprintName,
+        number: story.number,
+        url: story.html_url,
+        body: story.body,
+        assignee: assignee,
+        state: state,
+        comments: story.comments,
+        cost: body.cost,
+        priority: body.priority,
+        labels: cleanlabels
+      };
     },
     __setupCreateSprintModal: function(issue) {
       $('#createSprintStartDate').datepicker({format: "yyyy-mm-dd"});
@@ -329,7 +399,6 @@
         var sprint = $("#createStorySprint").val();
         var epic = $("#createStoryEpic").val();
         var labels = [StoryMap.labels.STORY];
-
         var body = ""
         if (priority !== null) {
           body += StoryMap.__convertToMetaDataString(
@@ -340,7 +409,7 @@
             StoryMap.metadata.COST + StoryMap.metaDelimiter + cost) + "\n";
         }
         if (epic !== null && epic.toLowerCase() !== "unspecified") {
-          labels.push(StoryMap.__convertToMetaDataString(epic));
+          labels.push("'"+StoryMap.__convertToMetaDataString(epic)+"'");
         }
         body += desc;
         
@@ -349,6 +418,7 @@
         data.assignee = $("#createStoryAssignee").val();
         data.milestone =  sprint < 0 ? null : sprint;
         data.labels = labels;
+        data = StoryMap.util.encode
         issue.createIssue(data, function(err, createdStory) {
           console.log(createdStory);
           var repopulatedStories = StoryMap.__populateStoriesList(issue);
@@ -367,10 +437,10 @@
     },
     __renderMap: function() {
       var map_tmpl = Handlebars.getTemplate('map');
-      var context = {epic: [], sprint: []};
+      var context = {epic: [], sprint: [], style:{}};
       var epicsMap = {};
       var sprintsMap = {};
-      
+      context.style.width = StoryMap.epicsList.length * 150;
       for (var i = 0; i < StoryMap.epicsList.length; ++i) {
         var epic = StoryMap.epicsList[i];
         epicsMap[epic.name] = i;
@@ -379,7 +449,7 @@
       for (var i = 0; i < StoryMap.sprintsList.length; ++i) {
         var sprint = StoryMap.sprintsList[i];
         sprintsMap[sprint.name] = i;
-        var sprintObj = {name: sprint.name, epic: [], prc:0, close: 0, open: 0};
+        var sprintObj = {name: sprint.name, id:sprint.id, epic: [], prc:0, close: 0, open: 0};
         for (var j = 0; j < StoryMap.epicsList.length; ++j) {
           sprintObj.epic.push([]);
         }
@@ -390,9 +460,9 @@
         var storySprint = sprintsMap[story.sprint];
         var storyEpic = epicsMap[story.epic];
         if (story.state.state.toLowerCase() !== StoryMap.githubStates['CLOSED'].toLowerCase()) {
-            context.sprint[storySprint].open++;
+          context.sprint[storySprint].open++;
         } else {
-            context.sprint[storySprint].close++;
+          context.sprint[storySprint].close++;
         }
         context.sprint[storySprint].epic[storyEpic].push(story);
       }
@@ -401,8 +471,12 @@
         obj.prc = (obj.open / (obj.close + obj.open)) * 100;
       };
       $('#story-map').html(map_tmpl(context));
-      gridlineIt();
-      $('#story-map').scrollspy({ target: '#sprint-menu' });
+      // gridlineIt();
+      $('body').scrollspy({ target: '#sprint-menu' });
+      $('a.sprint-link').click(function (e) {
+        $($(this).attr('href')).goTo();
+        e.preventDefault();
+      });
     },
     __populateAssigneesList: function(issue) {
       StoryMap.assigneesList = [];
@@ -463,44 +537,24 @@
     __addStoriesToList: function(stories) {
       for (var i = 0; i < stories.length; ++i) {
         var story = stories[i];
-        var body = StoryMap.__parseStoryBody(story);
-        var state = StoryMap.__getStoryState(story);
-        var assignee = StoryMap.__getStoryAssignee(story);
-        var epicName = StoryMap.__getStoryEpic(story);
-        var sprintName = StoryMap.__getStorySprint(story);
-        var cleanlabels = StoryMap.__getStoryLabels(story);
-
-        StoryMap.storiesList.push({
-          name: story.title,
-          epic: epicName,
-          sprint: sprintName,
-          number: story.number,
-          url: story.html_url,
-          body: story.body,
-          assignee: assignee,
-          state: state,
-          comments: story.comments,
-          cost: body.cost,
-          priority: body.priority,
-          labels: cleanlabels
-        });
+        StoryMap.storiesList.push(StoryMap.__createStory(story));
       }
     },
     __getStoryState: function(story) {
       if (story.state == StoryMap.githubStates.CLOSED) {
         return {state:"closed", color:"D9534F"};
       }
-      if (story.state == StoryMap.githubStates.OPEN) {
-        return {state:"open", color:"5CB85C"};
-      }
       for (var i = 0; i < story.labels.length; ++i) {
         var label = story.labels[i];
         if (label.name == StoryMap.labels.IN_PROGRESS) {
-          return {state:"in-progress", color:label.color};
+          return {state:StoryMap.labels.IN_PROGRESS, color:label.color};
         }
         else if (label.name == StoryMap.labels.BLOCKED) {
-          return {state:"blocked", color:label.color};
+          return {state:StoryMap.labels.BLOCKED, color:label.color};
         }
+      }
+      if (story.state == StoryMap.githubStates.OPEN) {
+        return {state:"open", color:"5CB85C"};
       }
       return {state:"open", color:"5CB85C"};
     },
@@ -575,7 +629,7 @@
      __removeMetaDataStrings: function(string) {
       if (string === null)
         return ""
-      return string.replace(/\[(\w+:\s[^\]]+)]/g, "");
+      return string.replace(/\[(\w+:\s[^\]]+)]/g, "").replace(/^\r?\n|\r$/g, "");
     },
     __compareSprints: function (a, b) {
       if (a.due_on == null && b.due_on == null) {

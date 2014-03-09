@@ -37,6 +37,15 @@ Handlebars.registerHelper('calc_cols', function (epicObj) {
   return (epicObj.length + 1) * 2;
 });
 
+(function($) {
+    $.fn.goTo = function() {
+        $('html, body').animate({
+            scrollTop: $(this).offset().top + 'px'
+        }, 'fast');
+        return this;
+    }
+})(jQuery);
+
 // Init 
 $('#nav').ready( function() {
   $('#nav').html(Handlebars.getTemplate('nav'));
@@ -75,16 +84,16 @@ $('.ss-container').shapeshift();
 
 // Bootstrap Affix does not work for some reason so here's 
 // our jury-rigged implementation:
-$(document).ready(function() {
-  $(window).scroll(function () {
-    if ($(window).scrollTop() > $('#navbar').height()) {
-      $('#story-map-headers').addClass('affix row');
-      $('#sprint-backlog').css('margin-top', $('#story-map-headers').height());
-    }
+// $(document).ready(function() {
+//   $(window).scroll(function () {
+//     if ($(window).scrollTop() > $('#navbar').height()) {
+//       $('#story-map-headers').addClass('affix row');
+//       $('#sprint-backlog').css('margin-top', $('#story-map-headers').height());
+//     }
 
-    if ($(window).scrollTop() < $('#navbar').height() + 1) {
-      $('#story-map-headers').removeClass('affix row');
-      $('#sprint-backlog').css('margin-top', 0);
-    }
-  });
-});
+//     if ($(window).scrollTop() < $('#navbar').height() + 1) {
+//       $('#story-map-headers').removeClass('affix row');
+//       $('#sprint-backlog').css('margin-top', 0);
+//     }
+//   });
+// });

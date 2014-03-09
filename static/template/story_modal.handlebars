@@ -5,17 +5,22 @@
             <br class="edit" />
           </div>
           <div class="modal-body">
-            <form>
+            <form id="story-form">
+              <input hidden name="state" value="{{state.state}}">
               <div class="row">
                 <div class="col-md-12">
-                  <input id="storyTitleEdit" type="text" class="edit form-control hidden" placeholder="Title" value="{{name}}">
+                  <input id="storyTitleEdit" type="text" name="title" class="edit form-control hidden" placeholder="Title" value="{{name}}">
                 </div>
               </div>
               <p></p>
               <div class="row">
                 <div class="col-md-4">
-                <span id="storyAsignee" class="not-edit hidden"><a {{#if assignee.url}} href="{{assignee.url}}"{{else}} class="nolink" {{/if}} target="_blank">{{assignee.name}}</a></span>
-                  <select id="storyAsigneeEdit" class="form-control edit" name="Asignee">
+                <span id="storyAsignee" class="not-edit hidden">
+                  <a {{#if assignee.url}} href="{{assignee.url}}"{{else}} class="nolink" {{/if}} target="_blank">
+                    <img class="avatar" src="{{assignee.avatar}}"/>{{assignee.name}}
+                  </a>
+                </span>
+                  <select id="storyAsigneeEdit" class="form-control edit" name="assignee">
                     <option selected disabled>Asignee</option>
                     {{#each assignees}}
                     <option {{#ifvalue this value=../assignee.name}}selected{{/ifvalue}}>{{this}}</option>
@@ -23,7 +28,7 @@
                   </select>
                 </div>
                 <div class="col-md-4">
-                  <select id="storyPriorityEdit" class="form-control edit" name="Priority">
+                  <select id="storyPriorityEdit" class="form-control edit" name="priority">
                     <option selected disabled value="">Priority</option>
                     {{#each priorities}}
                         <option {{#ifvalue this value=../priority }}selected{{/ifvalue}}>{{this}}</option>
@@ -33,7 +38,7 @@
                 </div>
                 <div class="col-md-4">    
                   <span id="storyPoints" class="not-edit label label-default hidden pull-right">{{cost}}</span>
-                  <select id="storyPointsEdit" class="form-control edit" name="Story Points">
+                  <select id="storyPointsEdit" class="form-control edit" name="cost">
                     <option selected disabled>Story Points</option>
                     {{#each costs}}
                       <option {{#ifvalue this value=../cost }}selected{{/ifvalue}}>{{this}}</option>
@@ -45,16 +50,16 @@
                 <div class="row">
                   <div class="col-md-6">
                     <h4><span id="storySprint" class="not-edit label label-info">{{sprint}}</span></h4>
-                    <select id="storySprintEdit" class="form-control edit" name="Sprint">
+                    <select id="storySprintEdit" class="form-control edit" name="milestone">
                       <option selected disabled>Sprint</option>
                       {{#each sprints}}                      
-                          <option {{#ifvalue name value=../sprint }}selected{{/ifvalue}}>{{name}}</option>
+                          <option value="{{id}}" {{#ifvalue name value=../sprint }}selected{{/ifvalue}}>{{name}}</option>
                       {{/each}}
                     </select>
                   </div>
                   <div class="col-md-6">
                     <h4><span id="storyEpic" class="not-edit label" style="background-color: #{{epic.color}}">{{epic.name}}</span></h4>
-                    <select id="storyEpicEdit" class="edit form-control" name="Feature">
+                    <select id="storyEpicEdit" class="edit form-control" name="feature">
                       <option selected disabled value="">Feature</option>
                       {{#each epics}}                      
                           <option {{#ifvalue name value=../epic.name }}selected{{/ifvalue}}>{{name}}</option>
@@ -68,14 +73,14 @@
                 <div class="row">
                   <div class="col-md-12">
                     <p id="storyDesc" class="not-edit">{{body}}</p>
-                    <textarea id="storyDescEdit" class="edit form-control hidden" placeholder="Description">{{body}}</textarea>
+                    <textarea id="storyDescEdit" class="edit form-control hidden" name="body" placeholder="Description">{{body}}</textarea>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-12">
                     <span class="help-block">Labels</span>
                     {{#each labels}}
-                    <h4><span class="label-cloud label" style="background-color:#{{color}}">{{name}}</span></h4>
+                      <span class="label-cloud label" style="background-color:#{{color}}"><input hidden name="labels[]" value="{{name}}">{{name}}</span>
                     {{/each}}
                   </div>
                 </div>
@@ -84,7 +89,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" id="storyComments" class="btn btn-primary pull-left" data-parent="#accordion" href="#collapseComments">Comments</button>
-            <button type="button" id="storySubmit" class="edit btn btn-success pull-right" data-dismiss="modal">Update</button>
+            <button type="button" id="storySubmit" class="edit btn btn-success pull-right">Update</button>
           </div>
           <p style="margin:10px"></p>
           <div id="collapseComments" class="panel-collapse collapse out" style="padding:10px"></div>

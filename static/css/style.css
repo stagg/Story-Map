@@ -12,7 +12,7 @@
 body {
   padding-bottom: 40px;
   background-color: #eee;
-  height: 80%: 
+  height: 80%; 
 }
 .signin {
   max-width: 330px;
@@ -115,18 +115,21 @@ a:hover.nolink {
   max-height: 120px;
   padding: 8px;
 }
-
 /* Content */
-.horizontal {
-  width:150%;
-}
 .col-map {
   width: 150px;
-  min-height: 1px;
+  min-height: 100px;
   float: left;
+  box-sizing: border-box;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .col-sprint {
   width:210px;
+}
+.horizontal {
+  overflow: scroll;
+  padding-left: 10px;
 }
 .horizontal .row {
   min-height: 100px;
@@ -136,37 +139,19 @@ a:hover.nolink {
   z-index: 1010;
   padding: 15px;
 }
-#story-map {
-  overflow: scroll;
-  height: 500px;
+#createModal a, #createModal span {
+  color: #000;
 }
-.affix {
-  top: 0;
-  width: 150%;
-  background-color: #EEE;
-  padding-left: 15px;
-  padding-right: 15px;
-  z-index: 1001;
-}
-@media(min-width: 768px) {
-  .affix {
-    position: inherit;
-    width: 750px;
-  }
-}
-
-@media(min-width: 992px) {
-  .affix {
-      position: fixed;
-    width: 970px;
-  }
-}
-
-@media(min-width: 1200px) {
-  .affix {
-    width: 1170px;
-  }
+#createModal .glyphicon-plus:before {
+  font-size: 0.8em;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .break-word {
   word-wrap: break-word;
+}
+@media (min-width: 1200px) {
+    .container-large{
+        width: 80%;
+    }
 }

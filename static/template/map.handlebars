@@ -1,4 +1,4 @@
-      <nav id="menu" class="col navbar-inverse" role="navigation">
+      <nav id="menu" class="col" role="navigation">
         <ul class="nav nav-stacked nav-pills">
             <li class="collapse">
               <a class="collapse-toggle active" data-toggle="collapse" data-target="#createModal">
@@ -6,36 +6,42 @@
               </a>
               <ul id="createModal" class="nav nav-stacked nav-pills collapse" style="width:100%;">
                 <li class="nav">
-                  <span class=""></span><a data-toggle="modal" data-target="#createEpicModal">Feature</a>
+                  <a href="javascript:void(0)">
+                    <span data-toggle="modal" data-target="#createEpicModal" class="glyphicon glyphicon-plus">Feature</span>
+                  </a>
                 </li>
                 <li class="nav">
-                  <span class=""></span><a data-toggle="modal" data-target="#createSprintModal">Sprint</a>
+                  <a href="javascript:void(0)">
+                    <span data-toggle="modal" data-target="#createSprintModal" class="glyphicon glyphicon-plus">Sprint</span>
+                  </a>
                 </li>
                 <li class="nav">
-                  <span class=""></span><a data-toggle="modal" data-target="#createStoryModal">Story</a>
+                  <a href="javascript:void(0)" >
+                    <span data-toggle="modal" data-target="#createStoryModal" class="glyphicon glyphicon-plus">Story</span>
+                  </a>
                 </li>
               </ul>
             </li>
             <li id="sprint-menu"  class="nav">
                 <ul class="nav nav-stacked nav-pills">
                   {{#each sprint}}
-                    <li class="nav"><a href="#nav{{id}}">{{name}}</a></li>
+                    <li><a href="#nav{{id}}" class="sprint-link">{{name}}</a></li>
                   {{/each}}
                 </ul>
             </li>
         </ul>
       </nav>
-      <div class="horizontal">
+<div id="scroll-map" class="row">
+  <div class="col-map col-sprint"></div>
+  <div class="horizontal">
+    <div style="width:{{style.width}}px;">
         <div id="story-map-headers">
           <div class="row heading">
-            <div class="col-map col-sprint">
-            </div>
-            <div class="col-md-8">
-              <h3 class="text-center">Features</p>
+            <div class="col">
+              <h3 class="text-center">Features</p></h3>
             </div>
           </div>
-          <div class="row epics break-word" data-columns="{{calc_cols epic}}">
-            <div class="col-map col-sprint"></div>
+          <div class="row epics break-word">
             {{#each epic}}
             <div class="col-map">
               <div class="panel panel-default" style="background-color:#{{color}};">
@@ -46,8 +52,7 @@
           </div>
         </div>
         {{#each sprint}}
-        <div id="nav{{id}}" class="row{{#if_odd @index}} odd{{/if_odd}} break-word" data-columns="{{calc_cols epic}}">
-          <div class="col-map col-sprint"></div>
+        <div id="nav{{id}}" class="row{{#if_odd @index}} odd{{/if_odd}} break-word">
           {{#each epic}}
           <div class="col-map">
             {{#each this}}
@@ -57,4 +62,7 @@
           {{/each}}
         </div>
         {{/each}}
+      </div>
     </div>
+  </div>
+</row>

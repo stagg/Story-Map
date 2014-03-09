@@ -66,7 +66,7 @@ app.all('/api/*', function(req, res) {
         res.json(data);
       });
   }
-  else if (req.method === "POST") {
+  else if (req.method === "POST" || req.method === "PATCH") {
 	console.log(req.headers)
 	console.log(req.body)
 	rest.post('https://api.github.com' + req.url, {
