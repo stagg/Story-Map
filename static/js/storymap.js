@@ -194,7 +194,6 @@
         var text = $('#newComment').val();
         if (text !== "") {
           StoryMap.issue.addComment(id, {"body": text}, function (err, comment) {
-            //Reload comments
             if (comment) {
               StoryMap.__loadComments(id);
             }
@@ -263,7 +262,6 @@
         var start = $("#createSprintStartDate").val();
         var due = $("#createSprintDueDate").val();
         var desc = $("#createSprintDesc").val();
-
         var body = "";
         if (start) {
           body += StoryMap.__convertToMetaDataString(
@@ -365,17 +363,22 @@
     },
     __renderMap: function() {
       var map_tmpl = Handlebars.getTemplate('map');
-      var context = {epic: [], sprint: []};
-      
+      var context = {epic: [], sprint: []}, size = 0, key;
       for (var epicName in StoryMap.epicsMap) {
         context.epic.push({name:epicName, color:StoryMap.epicsMap[epicName].color});
       }
+      for (key in StoryMap.sprintsMap) {
+        if (StoryMap.sprintsMap.hasOwnProperty(key)) size++;
+      }
+      context.sprint.length = size;
       for (var sprintName in StoryMap.sprintsMap) {
-        var sprintObj = {name: sprintName, epic: [], prc:0, close: 0, open: 0};
+        var sprintObj = StoryMap.sprintsMap[sprintName];
+        sprintObj.name = sprintName;
+        sprintObj.epic = [];
         for (var epicName in StoryMap.epicsMap) {
           sprintObj.epic.push([]);
         }
-        context.sprint.push(sprintObj);
+        context.sprint[sprintObj.pos] = sprintObj;
       }
       for (var i = 0; i < StoryMap.storiesList.length; ++i) {
         var story = StoryMap.storiesList[i];
@@ -390,10 +393,11 @@
       }
       for (var i = context.sprint.length - 1; i >= 0; i--) {
         var obj = context.sprint[i];
-        obj.prc = (obj.open / obj.close) * 100;
+        obj.prc = (obj.open / (obj.close + obj.open)) * 100;
       };
       $('#story-map').html(map_tmpl(context));
       gridlineIt();
+      $('#story-map').scrollspy({ target: '#sprint-menu' });
     },
     __populateAssigneesList: function(issue) {
       StoryMap.assigneesList = [];
@@ -411,35 +415,31 @@
       var dfd = $.Deferred();
       issue.labels(null, function(err, labels) {
         var epicNames = [];
-
         for (var i = 0; i < labels.length; i++) {
           var epic = labels[i].name.match(StoryMap.metaRegexp);
           if (epic != null) {
             epicNames.push({name:epic[0], color:labels[i].color});
           }
         }
-
         var j = 0;
         for (j; j < epicNames.length; j++) {
           StoryMap.epicsMap[epicNames[j].name] = {pos:j, color:epicNames[j].color};
         }
-
         StoryMap.epicsMap["unspecified"] = {pos:j, color:'F5F5F5'};
         dfd.resolve();
       });
       return dfd.promise();
     },
     __populateSprintsMap: function(issue) {
-      StoryMap.sprintsMap = { "backlog": {pos:0, id:-1} };
+      StoryMap.sprintsMap = { "backlog": {pos:0, id:-1, prc: 0, open: 0, close: 0} };
       var dfd = $.Deferred();
       issue.milestones({state: StoryMap.githubStates['OPEN']}, function(err, sprintObjs) {
         var openSprintObjs = sprintObjs;
         issue.milestones({state: StoryMap.githubStates['CLOSED']}, function(err, sprintObjs) {
           var closedSprintObjs = sprintObjs;
           var allSprintObjs = closedSprintObjs.concat(openSprintObjs).sort(StoryMap.__compareSprints);
-
           for (var i = 0; i < allSprintObjs.length; i++) {
-            StoryMap.sprintsMap[allSprintObjs[i].title] = {pos:i+1, id:allSprintObjs[i].number};
+            StoryMap.sprintsMap[allSprintObjs[i].title] = {pos:i+1, id:allSprintObjs[i].number, prc: 0, open: 0, close: 0};
           }
           dfd.resolve();
         });

@@ -1,42 +1,60 @@
-      <div id="story-map-headers">
-        <div class="row heading">
-          <div class="col-md-2">
-            <h3 class="text-center">Sprint</h3>
-          </div>
-          <div class="col-md-8">
-            <h3 class="text-center">Features</p>
-          </div>
-        </div>
-        <div class="row epics break-word" data-columns="{{calc_cols epic}}">
-          <div class="col-md-2"></div>
-          {{#each epic}}
-          <div class="col-md-2">
-            <div class="panel panel-default" style="background-color:#{{color}};">
-              <div class="panel-body feature"><strong>{{name}}</strong></div>
+      <nav id="menu" class="col navbar-inverse" role="navigation">
+        <ul class="nav nav-stacked nav-pills">
+            <li class="collapse">
+              <a class="collapse-toggle active" data-toggle="collapse" data-target="#createModal">
+                Create<span class="caret"></span>
+              </a>
+              <ul id="createModal" class="nav nav-stacked nav-pills collapse" style="width:100%;">
+                <li class="nav">
+                  <span class=""></span><a data-toggle="modal" data-target="#createEpicModal">Feature</a>
+                </li>
+                <li class="nav">
+                  <span class=""></span><a data-toggle="modal" data-target="#createSprintModal">Sprint</a>
+                </li>
+                <li class="nav">
+                  <span class=""></span><a data-toggle="modal" data-target="#createStoryModal">Story</a>
+                </li>
+              </ul>
+            </li>
+            <li id="sprint-menu"  class="nav">
+                <ul class="nav nav-stacked nav-pills">
+                  {{#each sprint}}
+                    <li class="nav"><a href="#nav{{id}}">{{name}}</a></li>
+                  {{/each}}
+                </ul>
+            </li>
+        </ul>
+      </nav>
+      <div class="horizontal">
+        <div id="story-map-headers">
+          <div class="row heading">
+            <div class="col-map col-sprint">
+            </div>
+            <div class="col-md-8">
+              <h3 class="text-center">Features</p>
             </div>
           </div>
-          {{/each}}
-        </div>
-      </div>
-      {{#each sprint}}
-      <div class="row{{#if_odd @index}} odd{{/if_odd}} break-word" data-columns="{{calc_cols epic}}">
-        <div class="col-md-2">
-          <div class="panel panel-default">
-            <div class="panel-body sprint">
-            <p><strong>{{name}}</strong></p>
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="{{prc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{prc}}%;">
-                </div>
+          <div class="row epics break-word" data-columns="{{calc_cols epic}}">
+            <div class="col-map col-sprint"></div>
+            {{#each epic}}
+            <div class="col-map">
+              <div class="panel panel-default" style="background-color:#{{color}};">
+                <div class="panel-body feature"><strong>{{name}}</strong></div>
               </div>
             </div>
+            {{/each}}
           </div>
         </div>
-        {{#each epic}}
-        <div class="col-md-2">
-          {{#each this}}
-            {{> story this}}
+        {{#each sprint}}
+        <div id="nav{{id}}" class="row{{#if_odd @index}} odd{{/if_odd}} break-word" data-columns="{{calc_cols epic}}">
+          <div class="col-map col-sprint"></div>
+          {{#each epic}}
+          <div class="col-map">
+            {{#each this}}
+              {{> story this}}
+            {{/each}}
+          </div>
           {{/each}}
         </div>
         {{/each}}
-      </div>
-      {{/each}}
+    </div>
