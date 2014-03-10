@@ -50,39 +50,72 @@ app.post('/oauth', function(req, res) {
 });
 
 // Github api redirect
-app.all('/api/*', function(req, res) {
+app.get('/api/*', function(req, res) {
   req.url = req.url.replace(/^\/api/, '');
   console.log(req.url);
-  if (req.method === "GET") {
-    rest.get('https://api.github.com' + req.url, {
-        headers: {
-          accept: req.headers.accept,
-          'user-agent': req.headers['user-agent'],
-          authorization: req.headers.authorization,
-          'content-type': req.headers['content-type'],
-          cookie: req.headers.cookie
-        }
-      }).on('complete', function (data) {
-        res.json(data);
-      });
-  }
-  else if (req.method === "POST" || req.method === "PATCH") {
-	console.log(req.headers)
-	console.log(req.body)
-	rest.post('https://api.github.com' + req.url, {
-	    headers: {
+  rest.get('https://api.github.com' + req.url, {
+      headers: {
+        accept: req.headers.accept,
+        'user-agent': req.headers['user-agent'],
+        authorization: req.headers.authorization,
+        'content-type': req.headers['content-type'],
+        cookie: req.headers.cookie
+      }
+  }).on('complete', function (data) {
+    res.json(data);
+  });
+});
+
+app.post('/api/*', function(req, res) {
+  req.url = req.url.replace(/^\/api/, '');
+  console.log(req.url);
+  console.log(req.headers);
+  console.log(req.body);
+  rest.post('https://api.github.com' + req.url, {
+      headers: {
         accept: req.headers.accept,
         authorization: req.headers.authorization,
         'content-type': req.headers['content-type'],
         cookie: req.headers.cookie
       },
-	    data: JSON.stringify(req.body)
-	  }).on('complete', function (data) {
-	    res.json(data);
-	  });
-  }
+      data: JSON.stringify(req.body)
+  }).on('complete', function (data) {
+    res.json(data);
+  });
 });
 
+app.patch('/api/*', function(req, res) {
+  req.url = req.url.replace(/^\/api/, '');
+  console.log(req.url);
+  console.log(req.headers);
+  console.log(req.body);
+  rest.patch('https://api.github.com' + req.url, {
+      headers: {
+        accept: req.headers.accept,
+        authorization: req.headers.authorization,
+        'content-type': req.headers['content-type'],
+        cookie: req.headers.cookie
+      },
+      data: JSON.stringify(req.body)
+  }).on('complete', function (data) {
+    res.json(data);
+  });
+});
+
+app.del('/api/*', function(req, res) {
+  req.url = req.url.replace(/^\/api/, '');
+  console.log(req.url);
+  console.log(req.headers);
+  console.log(req.body);
+  rest.del('https://api.github.com' + req.url, {headers: {
+      accept: req.headers.accept,
+      authorization: req.headers.authorization,
+      'content-type': req.headers['content-type'],
+      cookie: req.headers.cookie
+  }}).on('complete', function (data) {
+    res.json(data);
+  });
+});
 
 app.listen(config.port);
 

@@ -13,6 +13,7 @@ body {
   padding-bottom: 40px;
   background-color: #eee;
   height: 80%; 
+  padding-top: 50px;
 }
 .signin {
   max-width: 330px;
@@ -52,6 +53,7 @@ a:hover.nolink {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+  margin-right: 8px;
 }
 .ss-container {
   position: relative;
@@ -94,6 +96,10 @@ a:hover.nolink {
 .comments {
   padding-left: 8px;
   padding-right: 2px;
+}
+.comment-date {
+  color: #ccc;
+  font-size: 0.8em;
 }
 .cost {
   color: #333;

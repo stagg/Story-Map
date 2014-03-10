@@ -1,22 +1,24 @@
-// Handlebar extension to load in template files
+// Handlebar extensions
 Handlebars.getTemplate = function(name) {
   if (Handlebars.templates === undefined || Handlebars.templates[name] === undefined) {
+    NProgress.start();
+    NProgress.inc();
     $.ajax({
       url : 'template/' + name + '.handlebars',
       success : function(data) {
+        NProgress.inc();
         if (Handlebars.templates === undefined) {
           Handlebars.templates = {};
         }
+        NProgress.inc();
         Handlebars.templates[name] = Handlebars.compile(data);
+        NProgress.done();
       },
       async : false
     });
   }
   return Handlebars.templates[name];
 };
-
-Handlebars.registerPartial("story", Handlebars.getTemplate('story'));
-
 Handlebars.registerHelper('if_odd', function(conditional, options) {
   if((conditional % 2) != 0) {
     return options.fn(this);
@@ -24,7 +26,6 @@ Handlebars.registerHelper('if_odd', function(conditional, options) {
     return options.inverse(this);
   }
 });
-
 Handlebars.registerHelper('ifvalue', function (conditional, options) {
   if (options.hash.value === conditional) {
     return options.fn(this)
@@ -32,25 +33,33 @@ Handlebars.registerHelper('ifvalue', function (conditional, options) {
     return options.inverse(this);
   }
 });
-
-Handlebars.registerHelper('calc_cols', function (epicObj) {
-  return (epicObj.length + 1) * 2;
+Handlebars.registerHelper('ellipsis', function (text) {
+  return text.length < 64 ? text : text.slice(0,64).trim()+'...';
 });
+Handlebars.registerHelper('date', function (date) {
+  return new Date(date).toLocaleString();
+});
+Handlebars.registerPartial("story", Handlebars.getTemplate('story'));
 
+// jQuery extensions
 (function($) {
-    $.fn.goTo = function() {
-        $('html, body').animate({
-            scrollTop: $(this).offset().top + 'px'
-        }, 'fast');
-        return this;
-    }
+  $.fn.goTo = function() {
+    $('html, body').animate({
+        scrollTop: $(this).offset().top + 'px'
+    }, 'fast');
+    return this;
+  }
 })(jQuery);
 
+$(document).on('page:fetch',   function() { NProgress.start(); });
+$(document).on('page:change',  function() { NProgress.done(); });
+$(document).on('page:restore', function() { NProgress.remove(); });
 // Init 
 $('#nav').ready( function() {
   $('#nav').html(Handlebars.getTemplate('nav'));
 });
 
+// Routing setup
 routie({
   '/auth': function() {
     $('#content').html('');

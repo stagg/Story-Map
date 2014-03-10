@@ -193,10 +193,12 @@
       $('#newCommentBtn').click(function (argument) {
         var text = $('#newComment').val();
         if (text !== "") {
+          NProgress.start();
           StoryMap.issue.addComment(id, {"body": text}, function (err, comment) {
             if (comment) {
               StoryMap.__loadComments(id);
             }
+            NProgress.done();
           });
         }
       });
@@ -204,19 +206,34 @@
     __loadComments: function (id) {
       if (StoryMap.__gitinit() && StoryMap.issue) {
         var dfd = $.Deferred();
+        NProgress.start();
         StoryMap.issue.issueComments(id, null, function(err, comments) {
-          console.log(comments);
           $('#collapseComments').html(Handlebars.getTemplate('story_modal_comments')({"comments":comments}));
           StoryMap.__addComment(id);
+          $('span.comment-delete').click(function (argument) {
+            NProgress.start();
+            var commentId = $(this).attr('id');
+            StoryMap.issue.deleteComment(commentId, null, function (err, res) {
+              if (err) {
+                console.log(err);
+              } else {
+                StoryMap.__loadComments(id);    
+              }
+              NProgress.done();
+            });
+          });
+          NProgress.done();
           dfd.resolve();
         });
         return dfd.promise();
       }
     },
     __updateStory: function (id, el) {
+      NProgress.start();
       var form = $('#story-form').serializeArray();
       var data = {body:"", labels:[]};
       for (var i = form.length - 1; i >= 0; i--) {
+        NProgress.inc();
         var obj = form[i];
         if (obj.name === "priority") {
           data.body += StoryMap.__convertToMetaDataString( 
@@ -239,6 +256,7 @@
           data[obj.name] = obj.value;
         }
       };
+      NProgress.inc();
       if (StoryMap.__gitinit() && StoryMap.issue) {
         StoryMap.issue.editIssue(id, data, function (err, response) {
           if (response) {
@@ -255,6 +273,7 @@
           } else {
             console.log(err);
           }
+          NProgress.done();
         });
       }
     },
@@ -409,7 +428,7 @@
             StoryMap.metadata.COST + StoryMap.metaDelimiter + cost) + "\n";
         }
         if (epic !== null && epic.toLowerCase() !== "unspecified") {
-          labels.push("'"+StoryMap.__convertToMetaDataString(epic)+"'");
+          labels.push(StoryMap.__convertToMetaDataString(epic));
         }
         body += desc;
         
@@ -418,13 +437,14 @@
         data.assignee = $("#createStoryAssignee").val();
         data.milestone =  sprint < 0 ? null : sprint;
         data.labels = labels;
-        data = StoryMap.util.encode
+        // TODO validation
         issue.createIssue(data, function(err, createdStory) {
-          console.log(createdStory);
-          var repopulatedStories = StoryMap.__populateStoriesList(issue);
-          $.when(repopulatedStories).done(function() {
+          if (createdStory) {
+            StoryMap.storiesList.push(StoryMap.__createStory(createdStory));
             StoryMap.__renderMap();
-          });
+          } else {
+            console.log(err);
+          }
         });
       });
       $('#createStoryModal').on('hidden.bs.modal', function() {
@@ -436,16 +456,19 @@
       });
     },
     __renderMap: function() {
+      NProgress.start();
       var map_tmpl = Handlebars.getTemplate('map');
       var context = {epic: [], sprint: [], style:{}};
       var epicsMap = {};
       var sprintsMap = {};
+      NProgress.set(0.20);
       context.style.width = StoryMap.epicsList.length * 150;
       for (var i = 0; i < StoryMap.epicsList.length; ++i) {
         var epic = StoryMap.epicsList[i];
         epicsMap[epic.name] = i;
         context.epic.push({name:epic.name, color:epic.color});
       }
+      NProgress.set(0.40);
       for (var i = 0; i < StoryMap.sprintsList.length; ++i) {
         var sprint = StoryMap.sprintsList[i];
         sprintsMap[sprint.name] = i;
@@ -455,6 +478,7 @@
         }
         context.sprint.push(sprintObj);
       }
+      NProgress.set(0.60);
       for (var i = 0; i < StoryMap.storiesList.length; ++i) {
         var story = StoryMap.storiesList[i];
         var storySprint = sprintsMap[story.sprint];
@@ -466,11 +490,13 @@
         }
         context.sprint[storySprint].epic[storyEpic].push(story);
       }
+      NProgress.set(0.80);
       for (var i = context.sprint.length - 1; i >= 0; i--) {
         var obj = context.sprint[i];
         obj.prc = (obj.open / (obj.close + obj.open)) * 100;
       };
       $('#story-map').html(map_tmpl(context));
+      NProgress.done();
       // gridlineIt();
       $('body').scrollspy({ target: '#sprint-menu' });
       $('a.sprint-link').click(function (e) {
