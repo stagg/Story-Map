@@ -20,6 +20,7 @@
     config: config,
     userinfo: null,
     githubStates: {OPEN: "open", CLOSED: "closed"},
+    states: [{state:"closed", color:"D9534F", verb:'Close'}, {state:"open", color:"5CB85C", verb: 'Open'}],
     costs: ['1','2','3','5','8','13','20','40','100'],
     priorities: ['1', '2', '3', '4', '5'],
     labels: {IN_PROGRESS: "in progress", BLOCKED: "blocked", STORY: "story"},
@@ -30,6 +31,7 @@
     sprintsList: [],
     storiesList: [],
     assigneesList: [],
+    labelsList: [],
     util: {
       __generateId: function ( length ) {
         var text = "";
@@ -175,7 +177,9 @@
         var haveEpics = StoryMap.__populateEpicsList(issue);
         var haveSprints = StoryMap.__populateSprintsList(issue);
         var haveStories = StoryMap.__populateStoriesList(issue);
-        $.when(haveAssignees, haveEpics, haveSprints, haveStories).done(function() {
+        var haveLabels = StoryMap.__populateLabelsList(issue);
+        $.when(haveAssignees, haveEpics, haveSprints, haveStories, haveLabels).done(function() {
+          StoryMap.__populateStateList(StoryMap.labelsList);
           StoryMap.__setupCreateSprintModal(issue);
           StoryMap.__setupCreateEpicModal(issue);
           StoryMap.__setupCreateStoryModal(issue);
@@ -277,6 +281,43 @@
         });
       }
     },
+    __updateStoryState: function(id, state) {
+      var obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0];
+      var data = {title:obj.name, state:StoryMap.githubStates.OPEN, labels:[]};
+      if (StoryMap.__gitinit() && StoryMap.issue) {
+        for (var i = obj.labels.length - 1; i >= 0; i--) {
+          data.labels.push(obj.labels[i].name);
+        };
+        if (obj.epic !== null && obj.epic.toLowerCase() !== "unspecified") {
+          data.labels.push(StoryMap.__convertToMetaDataString(obj.epic));
+        }
+        if (state == StoryMap.githubStates.CLOSED) {
+          data.state = StoryMap.githubStates.CLOSED;
+        } else if (state == StoryMap.labels.IN_PROGRESS) {
+          data.labels.push(StoryMap.labels.IN_PROGRESS);
+        } else if (state == StoryMap.labels.BLOCKED) {
+          data.labels.push(StoryMap.labels.BLOCKED);
+        }
+        StoryMap.issue.editIssue(id, data, function (err, response) {
+          if (response) {
+            var story = StoryMap.__createStory(response);
+            for (var i = StoryMap.storiesList.length - 1; i >= 0; i--) {
+              var obj = StoryMap.storiesList[i];
+              if (obj.number === story.number) {
+                StoryMap.storiesList[i] = story;
+                break;
+              }
+            }; 
+            StoryMap.__renderMap();
+            // TODO change this to redraw the modal
+            $('#storyModal').modal('hide');
+          } else {
+            console.log(err);
+          }
+          NProgress.done();
+        });
+      }
+    },
     __loadStory: function(el) {
       var id = $(el).attr('id');
       var obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0];
@@ -284,6 +325,7 @@
       for (var prop in obj) {
         context[prop] = obj[prop];
       }
+      context.states = StoryMap.states;
       context.sprints = StoryMap.sprintsList;
       context.costs = StoryMap.costs;
       context.assignees = StoryMap.assigneesList;
@@ -291,7 +333,7 @@
       context.epics = StoryMap.epicsList;
       context.epic = StoryMap.__getEpicObject(obj.epic);
       context.body = StoryMap.__removeMetaDataStrings(obj.body);
-      $('#storyModal-content').html(Handlebars.getTemplate('story_modal')(context));
+      $('#storyModal').html(Handlebars.getTemplate('story_modal')(context));
       $('#storyEdit').removeClass('hidden');
       $('#storyEdit').attr('state', 0)
       $('.not-edit').removeClass('hidden'); 
@@ -310,6 +352,33 @@
         }       
         $(this).html( text );
         $(this).attr('state', newstate)
+      });
+      var labels = new Bloodhound({
+        datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.name); },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: StoryMap.labelsList
+      });
+      labels.initialize();
+      $('#labellist').typeahead(null, {highlight: true, source: labels.ttAdapter(), displayKey: 'name'});
+      $('#labellist').on('typeahead:selected', null, function(event, obj, dataset) {
+        $('#labellist').css('background-color', '#'+obj.color);
+        $('#labellist').css('color', '#fff');
+      });
+      $('#labellist').on('typeahead:autocompleted', null, function(event, obj, dataset) {
+        $('#labellist').css('background-color', '#'+obj.color);
+        $('#labellist').css('color', '#fff');
+      });
+      $('#labellist').on('typeahead:open', null, function(event) {
+        $('#labellist').css('background-color', '#fff');
+        $('#labellist').css('color', '#000');
+      });
+      $('#labellist').on('typeahead:cursorchanged', null, function(event, obj, dataset) {
+        $('#labellist').css('background-color', '#'+obj.color);
+        $('#labellist').css('color', '#fff');
+      });
+      $('.btn-state').click(function(event) {
+        var state = $(this).attr('value');
+        StoryMap.__updateStoryState(id, state, obj.title);
       });
       $('#storySubmit').click(function(event) {
         StoryMap.__updateStory(id, this);
@@ -515,6 +584,15 @@
       });
       return dfd.promise();
     },
+    __populateLabelsList: function(issue) {
+      StoryMap.labelsList = [];
+      var dfd = $.Deferred();
+      issue.labels(null, function(err, labels) {
+        StoryMap.labelsList = labels;
+        dfd.resolve();
+      });
+      return dfd.promise();
+    },
     __populateEpicsList: function(issue) {
       StoryMap.epicsList = [];
       var dfd = $.Deferred();
@@ -560,6 +638,16 @@
       });
       return dfd.promise();
     },
+    __populateStateList: function(labels) {
+      for (var i = 0; i < labels.length; ++i) {
+        var label = labels[i];
+        if (label.name == StoryMap.labels.IN_PROGRESS) {
+          StoryMap.states.push({state:StoryMap.labels.IN_PROGRESS, verb:'In progress', color:label.color});
+        } else if (label.name == StoryMap.labels.BLOCKED) {
+          StoryMap.states.push({state:StoryMap.labels.BLOCKED, verb:'Blocked', color:label.color});
+        }
+      }
+    },
     __addStoriesToList: function(stories) {
       for (var i = 0; i < stories.length; ++i) {
         var story = stories[i];
@@ -578,9 +666,6 @@
         else if (label.name == StoryMap.labels.BLOCKED) {
           return {state:StoryMap.labels.BLOCKED, color:label.color};
         }
-      }
-      if (story.state == StoryMap.githubStates.OPEN) {
-        return {state:"open", color:"5CB85C"};
       }
       return {state:"open", color:"5CB85C"};
     },
