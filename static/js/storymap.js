@@ -183,6 +183,7 @@
           StoryMap.__setupCreateSprintModal(issue);
           StoryMap.__setupCreateEpicModal(issue);
           StoryMap.__setupCreateStoryModal(issue);
+          StoryMap.__setupFiltersModal();
           StoryMap.__renderMap();
           $('#story-map').on('click', '.story', function() {StoryMap.__loadStory(this)});
         });
@@ -524,6 +525,26 @@
         $("#createStoryAssignee").val("");
       });
     },
+    __setupFiltersModal: function() {
+      var modal_tmpl = Handlebars.getTemplate('filters_modal');
+      var context = {"states": StoryMap.states,
+                     "assignees": StoryMap.assigneesList,
+                     "priorities": StoryMap.priorities,
+                     "costs": StoryMap.costs};
+      $('#filtersModal').html(modal_tmpl(context));
+      $('#filtersModal').on('click', '#clearFiltersBtn', function() {
+        var inputFields = ["#filterEpicName", "#filterSprintName",
+                           "#filterStoryName", "#filterStoryState",
+                           "#filterStoryAssignee", "#filterStoryPriority",
+                           "#filterStoryPoints"];
+        for (var i = 0; i < inputFields.length; ++i) {
+          $(inputFields[i]).val("");
+        }
+      });
+      $('#filtersModal').on('click', '#applyFiltersBtn', function() {
+        StoryMap.__renderMap();
+      });
+    },
     __renderMap: function() {
       NProgress.start();
       var map_tmpl = Handlebars.getTemplate('map');
@@ -531,34 +552,11 @@
       var epicsMap = {};
       var sprintsMap = {};
       NProgress.set(0.20);
-      context.style.width = StoryMap.epicsList.length * 150;
-      for (var i = 0; i < StoryMap.epicsList.length; ++i) {
-        var epic = StoryMap.epicsList[i];
-        epicsMap[epic.name] = i;
-        context.epic.push({name:epic.name, color:epic.color});
-      }
+      StoryMap.__processEpics(epicsMap, context);
       NProgress.set(0.40);
-      for (var i = 0; i < StoryMap.sprintsList.length; ++i) {
-        var sprint = StoryMap.sprintsList[i];
-        sprintsMap[sprint.name] = i;
-        var sprintObj = {name: sprint.name, id:sprint.id, epic: [], prc:0, close: 0, open: 0};
-        for (var j = 0; j < StoryMap.epicsList.length; ++j) {
-          sprintObj.epic.push([]);
-        }
-        context.sprint.push(sprintObj);
-      }
+      StoryMap.__processSprints(sprintsMap, context);
       NProgress.set(0.60);
-      for (var i = 0; i < StoryMap.storiesList.length; ++i) {
-        var story = StoryMap.storiesList[i];
-        var storySprint = sprintsMap[story.sprint];
-        var storyEpic = epicsMap[story.epic];
-        if (story.state.state.toLowerCase() !== StoryMap.githubStates['CLOSED'].toLowerCase()) {
-          context.sprint[storySprint].open++;
-        } else {
-          context.sprint[storySprint].close++;
-        }
-        context.sprint[storySprint].epic[storyEpic].push(story);
-      }
+      StoryMap.__processStories(epicsMap, sprintsMap, context);
       NProgress.set(0.80);
       for (var i = context.sprint.length - 1; i >= 0; i--) {
         var obj = context.sprint[i];
@@ -572,6 +570,62 @@
         $($(this).attr('href')).goTo();
         e.preventDefault();
       });
+      console.log(context)
+    },
+    __processEpics: function(epicsMap, context) {
+      context.style.width = StoryMap.epicsList.length * 150;
+      var numEpics = 0;
+      var nameFilter = $("#filterEpicName").val();
+      for (var i = 0; i < StoryMap.epicsList.length; ++i) {
+        var epic = StoryMap.epicsList[i];
+        if (!nameFilter || nameFilter == epic.name || epic.name == "unspecified") {
+          epicsMap[epic.name] = numEpics;
+          context.epic.push({name:epic.name, color:epic.color});
+          ++numEpics;
+        }
+      }
+    },
+    __processSprints: function(sprintsMap, context) {
+      var numSprints = 0;
+      var nameFilter = $("#filterSprintName").val();
+      for (var i = 0; i < StoryMap.sprintsList.length; ++i) {
+        var sprint = StoryMap.sprintsList[i];
+        if (!nameFilter || nameFilter == sprint.name || sprint.name == "backlog") {
+          sprintsMap[sprint.name] = numSprints;
+          var sprintObj = {name: sprint.name, id:sprint.id, epic: [], prc:0, close: 0, open: 0};
+          for (var j = 0; j < context.epic.length; ++j) {
+            sprintObj.epic.push([]);
+          }
+          context.sprint.push(sprintObj);
+          ++numSprints;
+        }
+      }
+    },
+    __processStories: function(epicsMap, sprintsMap, context) {
+      var nameFilter = $("#filterStoryName").val();
+      var stateFilter = $("#filterStoryState").val();
+      var assigneeFilter = $("#filterStoryAssignee").val();
+      var priorityFilter = $("#filterStoryPriority").val();
+      var costFilter = $("#filterStoryPoints").val();
+      for (var i = 0; i < StoryMap.storiesList.length; ++i) {
+        var story = StoryMap.storiesList[i];
+        var storySprint = sprintsMap[story.sprint];
+        var storyEpic = epicsMap[story.epic];
+        if (typeof(storySprint) != "undefined" && typeof(storyEpic) != "undefined") {
+          if ((!nameFilter || nameFilter == story.name) &&
+              (!stateFilter || stateFilter == story.state.state) &&
+              (!assigneeFilter || assigneeFilter == story.assignee) &&
+              (!priorityFilter || priorityFilter == story.priority) &&
+              (!costFilter || costFilter == story.cost)) {
+            if (story.state.state.toLowerCase() !== StoryMap.githubStates['CLOSED'].toLowerCase()) {
+              context.sprint[storySprint].open++;
+            } else {
+              context.sprint[storySprint].close++;
+            }
+            context.sprint[storySprint].epic[storyEpic].push(story);
+          }
+        }
+      }
     },
     __populateAssigneesList: function(issue) {
       StoryMap.assigneesList = [];

@@ -1,0 +1,83 @@
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="filtersLabel">Filters</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Epics</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <input id="filterEpicName" type="text" class="form-control" placeholder="Name" />
+                </div>
+              </div>
+              <p></p>
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Sprints</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <input id="filterSprintName" type="text" class="form-control" placeholder="Name" />
+                </div>
+              </div>
+              <p></p>
+              <div class="row">
+                <div class="col-md-12">
+                  <h4>Stories</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <input id="filterStoryName" type="text" class="form-control" placeholder="Name" />
+                </div>
+              </div>
+              <p></p>
+              <div class="row">
+                <div class="col-md-3">
+                  <select id="filterStoryState" class="form-control" name="state">
+                    <option selected disabled value="">State</option>
+                    {{#each states}}
+                      <option>{{state}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select id="filterStoryAssignee" class="form-control" name="assignee">
+                    <option selected disabled value="">Assignee</option>
+                    {{#each assignees}}
+                      <option>{{this}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select id="filterStoryPriority" class="form-control" name="priority">
+                    <option selected disabled value="">Priority</option>
+                    {{#each priorities}}
+                      <option>{{this}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <select id="filterStoryPoints" class="form-control" name="cost">
+                    <option selected disabled value="">Story Points</option>
+                    {{#each costs}}
+                      <option>{{this}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" id="clearFiltersBtn">Clear</button>
+            <button type="button" class="btn btn-success" id="applyFiltersBtn" data-dismiss="modal">Apply</button>
+          </div>
+        </div>
+      </div>
