@@ -641,7 +641,6 @@
         $($(this).attr('href')).goTo();
         e.preventDefault();
       });
-      console.log(context)
     },
     __processEpics: function(epicsMap, context) {
       context.style.width = StoryMap.epicsList.length * 150;
@@ -685,7 +684,7 @@
         if (typeof(storySprint) != "undefined" && typeof(storyEpic) != "undefined") {
           if ((!nameFilter || nameFilter == story.name) &&
               (!stateFilter || stateFilter == story.state.state) &&
-              (!assigneeFilter || assigneeFilter == story.assignee) &&
+              (!assigneeFilter || assigneeFilter == story.assignee.name) &&
               (!priorityFilter || priorityFilter == story.priority) &&
               (!costFilter || costFilter == story.cost)) {
             if (story.state.state.toLowerCase() !== StoryMap.githubStates['CLOSED'].toLowerCase()) {
