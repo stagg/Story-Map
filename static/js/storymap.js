@@ -113,7 +113,7 @@
     },
     projects: function(username) {
       if (StoryMap.__gitinit()) {
-        var project_tmpl = Handlebars.getTemplate('project_select'),
+        var project_tmpl = Handlebars.gestTemplate('project_select'),
             context = { project:[] },
             user = StoryMap.github.getUser(),
             repolist = function(err, repos) {
@@ -271,9 +271,9 @@
                 StoryMap.storiesList[i] = story;
                 break;
               }
-             }; 
+            }; 
+            StoryMap.__loadStoryModal(story);
             StoryMap.__renderMap();
-            $('#storyModal').modal('hide');
           } else {
             console.log(err);
           }
@@ -308,9 +308,8 @@
                 break;
               }
             }; 
+            StoryMap.__loadStoryModal(story);
             StoryMap.__renderMap();
-            // TODO change this to redraw the modal
-            $('#storyModal').modal('hide');
           } else {
             console.log(err);
           }
@@ -318,10 +317,66 @@
         });
       }
     },
+    __deleteStoryLabel: function (id, name, modal) {
+      var obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0];
+      StoryMap.issue.deleteLabelIssue(obj.number, [name], function (err, res) {
+        if (err) {
+          console.log(err);
+        } else {
+          for (var i = obj.labels.length - 1; i >= 0; i--) {
+            if (obj.labels[i].name === name) {
+              obj.labels.splice(i, 1);
+              break;
+            }
+          }
+          if (modal) { StoryMap.__loadStoryModal(obj); }
+            StoryMap.__renderMap();
+          }
+      });
+    },
+    __updateStoryLabels: function (id, data, modal) {
+      var obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0];
+      StoryMap.issue.addLabelsIssue(obj.number, [data.name], function (err, res) {
+        if (err) {
+          console.log(err);
+        } else {
+          obj.labels.push(data);
+          if (modal) { StoryMap.__loadStoryModal(obj); }
+          StoryMap.__renderMap();
+        }
+      });
+    },
+    __addLabelToIssue: function (id) {
+      if (StoryMap.__gitinit() && StoryMap.issue) {
+        var labelName = $('#labellist').val();
+        var data = { name:labelName, color:$('#newLabelColorInput').val().replace('#', '')};
+        var notInArray = true;
+        for (var i = StoryMap.labelsList.length - 1; i >= 0; i--) {
+          if(StoryMap.labelsList[i].name === data.name) {
+            notInArray = false;
+          }
+        };
+        if (notInArray) {
+          StoryMap.issue.createLabel(data, function (err, res) {            
+            if (err) {
+              console.log(err);
+            } else {
+              StoryMap.labelsList.push(data);
+              StoryMap.__updateStoryLabels(id, data, true);
+            }
+          });
+        } else {
+          StoryMap.__updateStoryLabels(id, data, true);
+        }
+      }
+    },
     __loadStory: function(el) {
       var id = $(el).attr('id');
       var obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0];
-      var context = {};
+      StoryMap.__loadStoryModal(obj);
+    },
+    __loadStoryModal: function(obj) {  
+      var context = {}, id = obj.number;
       for (var prop in obj) {
         context[prop] = obj[prop];
       }
@@ -351,7 +406,7 @@
           $('#storySubmit').html('Create')
         }       
         $(this).html( text );
-        $(this).attr('state', newstate)
+        $(this).attr('state', newstate);
       });
       var labels = new Bloodhound({
         datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.name); },
@@ -362,20 +417,36 @@
       $('#labellist').typeahead(null, {highlight: true, source: labels.ttAdapter(), displayKey: 'name'});
       $('#labellist').on('typeahead:selected', null, function(event, obj, dataset) {
         $('#labellist').css('background-color', '#'+obj.color);
+        $('#newLabelColorInput').val('#'+obj.color);
         $('#labellist').css('color', '#fff');
       });
       $('#labellist').on('typeahead:autocompleted', null, function(event, obj, dataset) {
         $('#labellist').css('background-color', '#'+obj.color);
+        $('#newLabelColorInput').val('#'+obj.color);
         $('#labellist').css('color', '#fff');
       });
       $('#labellist').on('typeahead:open', null, function(event) {
         $('#labellist').css('background-color', '#fff');
+        $('#newLabelColorInput').val('#fff');
         $('#labellist').css('color', '#000');
       });
       $('#labellist').on('typeahead:cursorchanged', null, function(event, obj, dataset) {
         $('#labellist').css('background-color', '#'+obj.color);
+        $('#newLabelColorInput').val('#'+obj.color);
         $('#labellist').css('color', '#fff');
       });
+      $('#newLabelColor').click(function(event) {
+        $('#newLabelColorInput').colorpicker('show');
+      });
+      $('#newLabelColorInput').colorpicker().on('changeColor', function(ev){
+        $('#labellist').css('background-color', ev.color.toHex());
+      });
+      $('#newLabel').click(function(event) { 
+        StoryMap.__addLabelToIssue(id);
+      });
+      $('.delete-label').click(function (event) {
+        StoryMap.__deleteStoryLabel(id, $(this).attr('data-value'), true);
+      })
       $('.btn-state').click(function(event) {
         var state = $(this).attr('value');
         StoryMap.__updateStoryState(id, state, obj.title);

@@ -85,12 +85,18 @@
           <div class="col-md-12">
             <span class="help-block">Labels</span>
             {{#each labels}}
-              <span class="label-cloud label" style="background-color:#{{color}}"><input hidden name="labels[]" value="{{name}}">{{name}}</span>
+              <span class="label-cloud label" style="background-color:#{{color}}">
+              <input hidden name="labels[]" value="{{name}}"/>{{name}}
+              <span class="glyphicon glyphicon-remove-circle delete-label" data-value="{{name}}"></span>
+              </span>
             {{/each}}
             <span class="edit label-cloud new-label">
               <input id="labellist" type="text" class="typeahead form-control btn-start"/>
-              <button class="btn btn-default btn-middle btn-merge" type="button">Color<span class="caret"></span></button>
-              <button class="btn btn-success btn-end btn-merge" type="button">Add</button>
+              <input id="newLabelColorInput" type="text" value=""/>
+              <button id="newLabelColor" class="btn btn-default btn-middle btn-merge" type="button">Color
+              <span class="caret"></span>
+              </button>
+              <button id="newLabel" class="btn btn-success btn-end btn-merge" type="button">Add</button>
             </span>
           </div>
         </div>
@@ -101,7 +107,7 @@
     {{#each states}}
       <button type="button"
       {{#ifvalue this.state value=../state.state}}disabled="disabled"{{/ifvalue}}
-      value="{{this.state}}" class="btn btn-sm btn-state" 
+      value="{{this.state}}" class="not-edit btn btn-sm btn-state" 
       style="background-color:#{{this.color}};">{{this.verb}}</button>
     {{/each}}
   </div>
