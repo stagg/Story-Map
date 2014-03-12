@@ -113,7 +113,7 @@
     },
     projects: function(username) {
       if (StoryMap.__gitinit()) {
-        var project_tmpl = Handlebars.gestTemplate('project_select'),
+        var project_tmpl = Handlebars.getTemplate('project_select'),
             context = { project:[] },
             user = StoryMap.github.getUser(),
             repolist = function(err, repos) {
