@@ -213,7 +213,7 @@
         var dfd = $.Deferred();
         NProgress.start();
         StoryMap.issue.issueComments(id, null, function(err, comments) {
-          $('#collapseComments').html(Handlebars.getTemplate('story_modal_comments')({"comments":comments}));
+          $('#storyCollapse').html(Handlebars.getTemplate('story_modal_comments')({"comments":comments}));
           StoryMap.__addComment(id);
           $('span.comment-delete').click(function (argument) {
             NProgress.start();
@@ -233,6 +233,18 @@
         return dfd.promise();
       }
     },
+    __loadEvents: function (id) {
+        if (StoryMap.__gitinit() && StoryMap.issue) {
+          var dfd = $.Deferred();
+          NProgress.start();
+          StoryMap.issue.issueEvents(id, null, function(err, events) {
+            $('#storyCollapse').html(Handlebars.getTemplate('story_modal_events')({"events":events}));
+            NProgress.done();
+            dfd.resolve();
+          });
+          return dfd.promise();
+        }
+      },
     __updateStory: function (id, el) {
       NProgress.start();
       var form = $('#story-form').serializeArray();
@@ -465,15 +477,29 @@
         StoryMap.__updateStory(id, this);
       });
       $('#storyComments').click(function() {
-        if ( $('#collapseComments').html() == "") {
+        if ( $('#storyCollapse').attr('state') !== '1' ) {
+          $('#storyCollapse').attr('state', '1');
           var commentsLoaded = StoryMap.__loadComments(id);
           $.when(commentsLoaded).done(function() {
-              $('#collapseComments').toggle();
+              $('#storyCollapse').show();
           });
         } else {
-          $('#collapseComments').toggle();
+          $('#storyCollapse').attr('state', '0');
+          $('#storyCollapse').hide();
         }
-      })
+      });
+      $('#storyEvents').click(function() {
+        if ( $('#storyCollapse').attr('state') !== '2' ) {
+          $('#storyCollapse').attr('state', '2');
+          var eventsLoaded = StoryMap.__loadEvents(id);
+          $.when(eventsLoaded).done(function() {
+            $('#storyCollapse').show();
+          });
+        } else {
+          $('#storyCollapse').attr('state', '0');
+          $('#storyCollapse').hide();
+        }
+      });
     },
     __createStory: function(story) {
       var body = StoryMap.__parseStoryBody(story);

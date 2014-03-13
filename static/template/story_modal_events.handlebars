@@ -1,0 +1,14 @@
+<ul class="list-group">
+  {{#each events}}
+    <li class="list-group-item">
+      <p>
+        <a href="{{this.actor.html_url}}">
+          <img class="avatar" src="{{this.actor.avatar_url}}"><span>{{this.actor.login}}</span>
+        </a>
+        <span class="event-date">{{date this.created_at}}</span>
+      </p>
+      <br>
+      <p>{{this.event}}</p>
+    </li>
+  {{/each}}
+</ul>
