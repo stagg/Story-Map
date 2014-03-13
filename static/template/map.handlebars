@@ -28,7 +28,16 @@
             <li id="sprint-menu"  class="nav">
                 <ul class="nav nav-stacked nav-pills">
                   {{#each sprint}}
-                    <li><a href="#nav{{id}}" class="sprint-link">{{name}}</a></li>
+                    <li>
+                        <a href="#nav{{id}}" class="sprint-link">{{name}}
+                        <div class="progress progress-striped progress-sprint"> 
+                          <div class="progress-bar progress-bar-success" role="progressbar" 
+                            aria-valuenow="{{prc}}" aria-valuemin="0" 
+                            aria-valuemax="100" style="width: {{prc}}%;">            
+                          </div>
+                        </div>
+                        </a>
+                    </li>
                   {{/each}}
                 </ul>
             </li>
@@ -47,8 +56,11 @@
           <div class="row epics break-word">
             {{#each epic}}
             <div class="col-map">
+              {{#unlessvalue name value="unspecified" }}<span class="glyphicon glyphicon-remove-circle delete-epic" data-value="{{name}}"></span>{{/unlessvalue}}
               <div class="panel panel-default" style="background-color:#{{color}};">
-                <div class="panel-body feature"><strong>{{name}}</strong></div>
+                <div class="panel-body feature">
+                <strong>{{name}}</strong>
+                </div>
               </div>
             </div>
             {{/each}}

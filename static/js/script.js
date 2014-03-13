@@ -33,6 +33,13 @@ Handlebars.registerHelper('ifvalue', function (conditional, options) {
     return options.inverse(this);
   }
 });
+Handlebars.registerHelper('unlessvalue', function (conditional, options) {
+  if (options.hash.value !== conditional) {
+    return options.fn(this)
+  } else {
+    return options.inverse(this);
+  }
+});
 Handlebars.registerHelper('ellipsis', function (text) {
   return text.length < 64 ? text : text.slice(0,64).trim()+'...';
 });

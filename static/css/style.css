@@ -101,17 +101,11 @@ a:hover.nolink {
   color: #ccc;
   font-size: 0.8em;
 }
-.cost {
-  color: #333;
-  text-align: center;
-  background-color: #fff; 
-  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  border-radius: 15px;
-  min-height: 1em;
-  min-width: 1em;
-  padding-left: 5px;
-  padding-right: 5px;
+.delete-epic {
+  color: #444;
+  float: right;
+  cursor: pointer;
+  margin: 5px;
 }
 .story-title {
   font-size: 1em;
@@ -131,6 +125,7 @@ a:hover.nolink {
   cursor: pointer;
   color: #fff;
   font-weight: bold;
+  margin-right: 2px;
 }
 .tt-dropdown-menu {
   z-index: 1050 !important;
@@ -177,6 +172,10 @@ a:hover.nolink {
 .btn-state {
   color: #FFF;
 }
+.btn-state.disabled, .btn-state[disabled], fieldset[disabled] .btn-state {
+  opacity: .20;
+  filter: alpha(opacity=20);
+}
 #labellist {
   max-width: 8em;
 }
@@ -222,8 +221,13 @@ a:hover.nolink {
 .break-word {
   word-wrap: break-word;
 }
-@media (min-width: 1200px) {
+.progress-sprint {
+  height: 10px;
+  margin-bottom: 0;
+}
+@media (min-width: 1024px) {
     .container-large{
-        width: 80%;
+        width: 90%;
+        float: right;
     }
 }

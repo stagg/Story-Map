@@ -25,7 +25,7 @@
             <img class="avatar" src="{{assignee.avatar}}"/>{{assignee.name}}
           </a>
         </span>
-          <select id="storyAsigneeEdit" class="form-control edit" name="assignee">
+          <select id="storyAsigneeEdit" class="form-control edit dropdown" name="assignee">
             <option selected disabled>Asignee</option>
             {{#each assignees}}
             <option {{#ifvalue this value=../assignee.name}}selected{{/ifvalue}}>{{this}}</option>
@@ -33,6 +33,7 @@
           </select>
         </div>
         <div class="col-md-4">
+          <h4 class="not-edit"><small>Priority: </small><span id="storyPriority" class="label label-success">{{priority}}</span></h4>
           <select id="storyPriorityEdit" class="form-control edit" name="priority">
             <option selected disabled value="">Priority</option>
             {{#each priorities}}
@@ -42,7 +43,7 @@
           </select>
         </div>
         <div class="col-md-4">    
-          <span id="storyPoints" class="not-edit label label-default hidden pull-right">{{cost}}</span>
+          <h4 class="not-edit"><small>Story points: </small><span id="storyPoints" class="not-edit label label-primary">{{cost}}</span></h4>
           <select id="storyPointsEdit" class="form-control edit" name="cost">
             <option selected disabled>Story Points</option>
             {{#each costs}}
@@ -54,7 +55,7 @@
       <p>
         <div class="row">
           <div class="col-md-6">
-            <h4><span id="storySprint" class="not-edit label label-info">{{sprint}}</span></h4>
+            <h4 class="not-edit"><small>Sprint: </small><span id="storySprint" class="not-edit label label-info">{{sprint}}</span></h4>
             <select id="storySprintEdit" class="form-control edit" name="milestone">
               <option selected disabled>Sprint</option>
               {{#each sprints}}                      
@@ -63,7 +64,7 @@
             </select>
           </div>
           <div class="col-md-6">
-            <h4><span id="storyEpic" class="not-edit label" style="background-color: #{{epic.color}}">{{epic.name}}</span></h4>
+            <h4 class="not-edit"><small>Feature: </small><span id="storyEpic" class="not-edit label" style="background-color: #{{epic.color}}">{{epic.name}}</span></h4>
             <select id="storyEpicEdit" class="edit form-control" name="feature">
               <option selected disabled value="">Feature</option>
               {{#each epics}}                      

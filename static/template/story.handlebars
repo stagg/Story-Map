@@ -1,21 +1,24 @@
 <div class="panel panel-default story" id="{{number}}" style="border:2px solid #{{state.color}};">
-<div class="panel-header">
-    <span>
-        <a href="{{url}}" class="issueid pull-left">#{{number}}</a>
-        {{#if comments}}
-        <span>
-            <span class="comments">{{comments}}</span>
-            <span class="glyphicon glyphicon-comment"></span>
-        </span>
-        {{/if}}
-        {{#if cost}}<span class="cost pull-right">{{cost}}</span>{{/if}}
-    </span>
-</div>
-<div class="panel-body panel-story">
-  <p class="story-title " data-toggle="modal"  data-target="#storyModal">
-      <a class="nolink" href="#">
-        {{ellipsis name}}
-      </a>
+  <div class="panel-header">
+      <span>
+          <a href="{{url}}" class="issueid pull-left">#{{number}}</a>
+          {{#if comments}}
+          <span>
+              <span class="comments">{{comments}}</span>
+              <span class="glyphicon glyphicon-comment"></span>
+          </span>
+          {{/if}}
+          {{#if cost}}<span class="badge pull-right">{{cost}}</span>{{/if}}
+      </span>
+  </div>
+  <div class="panel-body panel-story">
+    <p class="story-title " data-toggle="modal"  data-target="#storyModal">
+        <a class="nolink" href="#">
+          {{ellipsis name}}
+        </a>
+    </p>
+  </div>
+  <p>
+  <center>{{#if priority}}<small class="label label-default">Priority: {{priority}}</small>{{/if}}</center>
   </p>
-</div>
 </div>

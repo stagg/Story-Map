@@ -1,27 +1,26 @@
-(function() {
+(function () {
   "use strict";
+  if (jQuery === 'undefined') {
+    console.log("StoryMap requires jQuery");
+    return;
+  }
+
+  if (Github === 'undefined') {
+    console.log("StoryMap requires Github.js");
+    return;
+  }
+
   var config = {
     base_uri: window.location.origin + '/',
     callback_uri: window.location.origin + '/auth/'
-  };
-
-  if (typeof jQuery == 'undefined') {
-      console.log("StoryMap requires jQuery");
-      return;
-  }
-
-  if (typeof Github == 'undefined') {
-      console.log("StoryMap requires Github.js");
-      return;
-  }
-
-  var storymap = {
+  },
+  storymap = {
     github: null,
     config: config,
     userinfo: null,
     githubStates: {OPEN: "open", CLOSED: "closed"},
-    states: [{state:"closed", color:"D9534F", verb:'Close'}, {state:"open", color:"5CB85C", verb: 'Open'}],
-    costs: ['1','2','3','5','8','13','20','40','100'],
+    states: [{state: "closed", color: "D9534F", verb: 'Close'}, {state: "open", color: "5CB85C", verb: 'Open'}],
+    costs: ['1', '2', '3', '5', '8', '13', '20', '40', '100'],
     priorities: ['1', '2', '3', '4', '5'],
     labels: {IN_PROGRESS: "in progress", BLOCKED: "blocked", STORY: "story"},
     metadata: {COST: "SP", PRIORITY: "Priority", START: "Start"},
@@ -33,24 +32,25 @@
     assigneesList: [],
     labelsList: [],
     util: {
-      __generateId: function ( length ) {
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        for( var i=0; i < length; i++ )
+      __generateId: function (length) {
+        var 
+          text = "",
+          possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (var i=0; i < length; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
-
+        }
         return text;
       }
     },
     cookie: {
-      __create: function ( name, value ) {
+      __create: function (name, value) {
         StoryMap.cookie.__erase(name);
         var date = new Date();
         date.setTime(date.getTime() + 360000); // +60 mins
         var expires = "; expires="+date.toGMTString();
-        document.cookie = name+"="+value+expires+"; path=/";
+        document.cookie = name + "=" + value + expires + "; path=/";
       },
-      __read: function ( name ) {
+      __read: function (name) {
         var nameEQ = name + "=";
         var ca = document.cookie.split(';');
         for(var i = 0; i < ca.length; i++) {
@@ -63,7 +63,7 @@
       __erase: function ( name ) {
         var date = new Date();
         date.setTime(date.getTime() - 86400000);
-        document.cookie = name+"=; expires="+date.toGMTString()+"; path=/";
+        document.cookie = name + "=; expires=" + date.toGMTString() + "; path=/";
       }
     },
     uri:{
@@ -257,6 +257,10 @@
           }
         } else if(obj.name === "labels[]") {
           data.labels.push(obj.value);
+        } else if(obj.name === "milestone") {
+          if (obj.value != -1) {
+            data["milestone"] = obj.value
+          }
         } else {
           data[obj.name] = obj.value;
         }
@@ -631,11 +635,22 @@
       NProgress.set(0.80);
       for (var i = context.sprint.length - 1; i >= 0; i--) {
         var obj = context.sprint[i];
-        obj.prc = (obj.open / (obj.close + obj.open)) * 100;
+        obj.prc = (obj.close / (obj.close + obj.open)) * 100;
       };
       $('#story-map').html(map_tmpl(context));
       NProgress.done();
-      // gridlineIt();
+      $('.delete-epic').click(function(event) {
+        var name = encodeURI(StoryMap.__convertToMetaDataString($(this).attr('data-value')));
+        NProgress.start();
+        StoryMap.issue.deleteLabel(name , null, function (err, res) {
+          NProgress.set(0.60);
+          var repopulatedEpics = StoryMap.__populateEpicsList(StoryMap.issue);
+          $.when(repopulatedEpics).done(function() {
+            StoryMap.__renderMap();
+            NProgress.done();
+          });
+        });
+      });
       $('body').scrollspy({ target: '#sprint-menu' });
       $('a.sprint-link').click(function (e) {
         $($(this).attr('href')).goTo();
