@@ -195,6 +195,13 @@ a:hover.nolink {
   padding-left: 10px;
   padding-right: 10px;
 }
+.over {
+  border: 2px dashed #fff;
+  border-radius: 5px;
+}
+.dragged {
+  opacity: 0.4;
+}
 .col-sprint {
   width:210px;
 }

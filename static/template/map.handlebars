@@ -69,7 +69,7 @@
         {{#each sprint}}
         <div id="nav{{id}}" class="row{{#if_odd @index}} odd{{/if_odd}} break-word">
           {{#each epic}}
-          <div class="col-map">
+          <div class="col-map dd" draggable="true" data-milestone="{{../id}}" data-epic="{{@index}}">
             {{#each this}}
               {{> story this}}
             {{/each}}

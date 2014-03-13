@@ -1,11 +1,11 @@
 (function () {
   "use strict";
-  if (jQuery === 'undefined') {
+  if (typeof jQuery === 'undefined') {
     console.log("StoryMap requires jQuery");
     return;
   }
 
-  if (Github === 'undefined') {
+  if (typeof Github === 'undefined') {
     console.log("StoryMap requires Github.js");
     return;
   }
@@ -334,9 +334,12 @@
               break;
             }
           }
-          if (modal) { StoryMap.__loadStoryModal(obj); }
+          if (modal) { 
+            StoryMap.__loadStoryModal(obj); 
             StoryMap.__renderMap();
           }
+            
+        }
       });
     },
     __updateStoryLabels: function (id, data, modal) {
@@ -346,8 +349,10 @@
           console.log(err);
         } else {
           obj.labels.push(data);
-          if (modal) { StoryMap.__loadStoryModal(obj); }
-          StoryMap.__renderMap();
+          if (modal) { 
+            StoryMap.__loadStoryModal(obj); 
+            StoryMap.__renderMap();
+          }
         }
       });
     },
@@ -620,6 +625,70 @@
         StoryMap.__renderMap();
       });
     },
+    __setupDragAndDrop: function () {
+      $('.dd').on('dragover', function (e) {
+        e.originalEvent.preventDefault()
+        e.originalEvent.dataTransfer.dropEffect = 'move';
+      });
+      $('.dd').on('dragstart', function (e) {
+        $(this).addClass('dragged');
+        var id = $(this).children('.story').attr('id');
+        if (typeof id != 'undefined') {
+          e.originalEvent.dataTransfer.effectAllowed = 'move';
+          e.originalEvent.dataTransfer.setData('text', id);
+        }
+      });
+      $('.dd').on('dragend', function (e) {
+        $(this).removeClass('dragged');
+      });
+      $('.dd').on('dragenter', function (e) {
+        $(this).addClass('over');
+      });
+      $('.dd').on('dragleave', function (e) {
+        $(this).removeClass('over');
+      });
+      $('.dd').on('drop', function (e) {
+        e.originalEvent.preventDefault();
+        // event.stopPropagation();
+        /* Act on the event */
+        $(this).removeClass('over');
+        var 
+          id = e.originalEvent.dataTransfer.getData('text'),
+          milestoneid = $(this).attr('data-milestone'),
+          epicpos = $(this).attr('data-epic'),
+          epic = StoryMap.epicsList[epicpos],
+          obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0],
+          data = {title: obj.name, milestone:milestoneid},
+          label = StoryMap.__convertToMetaDataString(epic.name);
+
+        if (epic.name !== obj.name) {
+          StoryMap.__deleteStoryLabel(id, StoryMap.__convertToMetaDataString(obj.epic));
+          StoryMap.issue.addLabelsIssue(id, [label], function (err, res) {
+              if (res) {
+
+              }
+          });
+        } 
+
+        StoryMap.issue.editIssue(id, data, function (err, response) {
+          if (response) {
+            var story = StoryMap.__createStory(response);
+            for (var i = StoryMap.storiesList.length - 1; i >= 0; i--) {
+              var obj = StoryMap.storiesList[i];
+              if (obj.number === story.number) {
+                StoryMap.storiesList[i] = story;
+                break;
+              }
+            }; 
+            StoryMap.__loadStoryModal(story);
+            StoryMap.__renderMap();
+          } else {
+            console.log(err);
+          }
+        });
+        
+      });
+    },
     __renderMap: function() {
       NProgress.start();
       var map_tmpl = Handlebars.getTemplate('map');
@@ -651,6 +720,7 @@
           });
         });
       });
+      StoryMap.__setupDragAndDrop();
       $('body').scrollspy({ target: '#sprint-menu' });
       $('a.sprint-link').click(function (e) {
         $($(this).attr('href')).goTo();
