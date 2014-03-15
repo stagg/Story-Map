@@ -652,67 +652,89 @@
       });
     },
     __setupDragAndDrop: function () {
-      $('.dd').on('dragover', function (e) {
+      var dragsource;
+      $('.dd-drag').on('dragstart', function (e) {
+        var id = $(this).attr('id');
+        if (typeof id != 'undefined') {
+          dragsource = this;
+          var html = $(this).clone().wrap('<p>').parent().html();
+          $(this).addClass('dragged');
+          e.originalEvent.dataTransfer.effectAllowed = 'move';
+          e.originalEvent.dataTransfer.setData('text/html', html);
+        }
+      });
+      $('.dd-drag').on('dragend', function (e) {
+        $(this).removeClass('dragged');
+      });
+      $('.dd-drop').on('dragover', function (e) {
         e.originalEvent.preventDefault()
         e.originalEvent.dataTransfer.dropEffect = 'move';
       });
-      $('.dd').on('dragstart', function (e) {
-        $(this).addClass('dragged');
-        var id = $(this).children('.story').attr('id');
-        if (typeof id != 'undefined') {
-          e.originalEvent.dataTransfer.effectAllowed = 'move';
-          e.originalEvent.dataTransfer.setData('text', id);
-        }
-      });
-      $('.dd').on('dragend', function (e) {
-        $(this).removeClass('dragged');
-      });
-      $('.dd').on('dragenter', function (e) {
+      $('.dd-drop').on('dragenter', function (e) {
         $(this).addClass('over');
       });
-      $('.dd').on('dragleave', function (e) {
+      $('.dd-drop').on('dragleave', function (e) {
         $(this).removeClass('over');
       });
-      $('.dd').on('drop', function (e) {
+      $('.dd-drop').on('drop', function (e) {
         e.originalEvent.preventDefault();
-        // event.stopPropagation();
+        // e.originalEvent.stopPropagation();
         /* Act on the event */
         $(this).removeClass('over');
         var 
-          id = e.originalEvent.dataTransfer.getData('text'),
+          id = $(dragsource).attr('id'),
+          html = e.originalEvent.dataTransfer.getData('text/html');
+          $(dragsource).remove();
+          dragsource = null;
+        var  
           milestoneid = $(this).attr('data-milestone'),
           epicpos = $(this).attr('data-epic'),
           epic = StoryMap.epicsList[epicpos],
           obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0],
-          data = {title: obj.name, milestone:milestoneid},
-          label = StoryMap.__convertToMetaDataString(epic.name);
+          milestone = $.grep(StoryMap.sprintsList, function(e){ return e.id == milestoneid; })[0];
 
-        if (epic.name !== obj.name) {
-          StoryMap.__deleteStoryLabel(id, StoryMap.__convertToMetaDataString(obj.epic));
-          StoryMap.issue.addLabelsIssue(id, [label], function (err, res) {
-              if (res) {
-
+        if (epic.name != obj.epic) {
+          var oldEpic = obj.epic, newEpic = epic.name;
+          obj.epic = epic.name;
+          StoryMap.issue.deleteLabelIssue(obj.number, [StoryMap.__convertToMetaDataString(oldEpic)], function (err, res) {
+            if (err) {
+              console.log(err);
+            } else {
+              for (var i = obj.labels.length - 1; i >= 0; i--) {
+                if (obj.labels[i].name === name) {
+                  obj.labels.splice(i, 1);
+                  break;
+                }
               }
+              StoryMap.issue.addLabelsIssue(id, [StoryMap.__convertToMetaDataString(newEpic)], function (err, res) {
+                if (err) {
+                  console.log(err);
+                }
+              });                
+            }
           });
         } 
 
-        StoryMap.issue.editIssue(id, data, function (err, response) {
-          if (response) {
-            var story = StoryMap.__createStory(response);
-            for (var i = StoryMap.storiesList.length - 1; i >= 0; i--) {
-              var obj = StoryMap.storiesList[i];
-              if (obj.number === story.number) {
-                StoryMap.storiesList[i] = story;
-                break;
-              }
-            }; 
-            StoryMap.__loadStoryModal(story);
-            StoryMap.__renderMap();
-          } else {
-            console.log(err);
-          }
-        });
-        
+        if (obj.sprint != milestone.name) {
+          obj.sprint = milestone.name;
+          var data = {title: obj.name, milestone:milestoneid};
+          StoryMap.issue.editIssue(id, data, function (err, response) {
+            if (response) {
+              var story = StoryMap.__createStory(response);
+              for (var i = StoryMap.storiesList.length - 1; i >= 0; i--) {
+                var obj = StoryMap.storiesList[i];
+                if (obj.number === story.number) {
+                  StoryMap.storiesList[i] = story;
+                  break;
+                }
+              };
+            } else {
+              console.log(err);
+            }
+          });
+        }
+        $(this).append(html); 
+        StoryMap.__renderMap();      
       });
     },
     __renderMap: function() {
