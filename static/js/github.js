@@ -126,6 +126,15 @@
       // List user organizations
       // -------
 
+      this.userOrgs = function(username, cb) {
+        _request("GET", "/user/"+username+"/orgs", null, function(err, res) {
+          cb(err, res);
+        });
+      };
+
+      // List user organizations
+      // -------
+
       this.orgs = function(cb) {
         _request("GET", "/user/orgs", null, function(err, res) {
           cb(err, res);
@@ -186,7 +195,7 @@
       this.orgRepos = function(orgname, cb) {
         // Github does not always honor the 1000 limit so we want to iterate over the data set.
         _requestAllPages("/orgs/"+orgname+"/repos?type=all&&page_num=1000&sort=updated&direction=desc", function(err, res) {
-          cb(err, res);
+          cb(orgname, err, res);
         });
       };
 

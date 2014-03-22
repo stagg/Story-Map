@@ -20,11 +20,11 @@
       <p></p>
       <div class="row">
         <div class="col-md-4">
-        <span id="storyAsignee" class="not-edit hidden">
-          <a {{#if assignee.url}} href="{{assignee.url}}"{{else}} class="nolink" {{/if}} target="_blank">
-            <img class="avatar" src="{{assignee.avatar}}"/>{{assignee.name}}
-          </a>
-        </span>
+          <span id="storyAsignee" class="not-edit">
+            <a {{#if assignee.url}} href="{{assignee.url}}"{{else}} class="nolink" {{/if}} target="_blank">
+              <img class="avatar" src="{{assignee.avatar}}"/>{{assignee.name}}
+            </a>
+          </span>
           <select id="storyAsigneeEdit" class="form-control edit dropdown" name="assignee">
             <option selected disabled>Asignee</option>
             {{#each assignees}}

@@ -55,17 +55,19 @@ a:hover.nolink {
   border-radius: 5px;
   margin-right: 8px;
 }
-.ss-container {
-  position: relative;
-  width: 180px;
-  height: 700px;
+.org-project {
+  background-color: #FCF8E9;
 }
-.ss-container div {
-  height: 120px;
-  position: absolute;
-  width: 120px;
-}
+
 /* Features */
+#story-map-headers {
+  background-color: #eee;
+  position: fixed;
+  margin-left: -20px;
+  padding-left: 20px;
+  border-bottom: 3px #CCC solid;
+  z-index: 100;
+}
 .feature {
   height: 4em;
   padding: 8px;
@@ -209,13 +211,22 @@ a:hover.nolink {
   overflow: scroll;
   padding-left: 10px;
 }
-.horizontal .row {
+.horizontal-inner {
+  padding-top: 150px;
+}
+.horizontal-inner .row {
   min-height: 100px;
+}
+.epics, 
+.epic {
+  min-height: 50px;
 }
 #menu {
   position: fixed;
   z-index: 1010;
   padding: 15px;
+  width:200px;
+  background-color: #eee;
 }
 #createModal a, #createModal span {
   color: #000;

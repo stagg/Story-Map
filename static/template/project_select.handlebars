@@ -2,7 +2,9 @@
 <ul class="list-group">
 	{{#each project}}
 	  	<a href="{{link}}">
-	      <li class="list-group-item">{{name}}</li>
+	      <li class="list-group-item{{#if org}} org-project{{/if}}">{{name}}
+          {{#if org}}<span class="pull-right"><small>{{org}}</small></span>{{/if}}
+          </li>
 		</a>
 	{{else}}
 	  <p>Sorry, no repositories</p>

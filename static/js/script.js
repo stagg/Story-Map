@@ -78,13 +78,20 @@ routie({
       routie('');
     }
   },
+  '/about' : function(){
+    $('#content').removeClass('container-large');
+    $('#content').html(Handlebars.getTemplate('usermanual'));
+  },
   '/projects/:username?': function(username) {
+    $('#content').removeClass('container-large');
     StoryMap.projects(username);
   },
   '/storymap/:user/repo/:project': function(user, project) {
+    $('#content').addClass('container-large');
     StoryMap.issues(user, project);
   },
   '*': function() {
+    $('#content').removeClass('container-large');
     if (StoryMap.cookie.__read('access_token')) {
       routie('/projects');
     } else {

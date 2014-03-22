@@ -46,26 +46,26 @@
 <div id="scroll-map" class="row">
   <div class="col-map col-sprint"></div>
   <div class="horizontal">
-    <div style="width:{{style.width}}px;">
-        <div id="story-map-headers">
-          <div class="row heading">
-            <div class="col">
-              <h3 class="text-center">Features</p></h3>
+    <div id="story-map-headers" style="width:{{style.width}}px;">
+      <div class="row heading">
+        <div class="col">
+          <h3 class="text-center">Features</p></h3>
+        </div>
+      </div>
+      <div class="row epics break-word">
+        {{#each epic}}
+        <div class="col-map epic">
+          {{#unlessvalue name value="unspecified" }}<span class="glyphicon glyphicon-remove-circle delete-epic" data-value="{{name}}"></span>{{/unlessvalue}}
+          <div class="panel panel-default" style="background-color:#{{color}};">
+            <div class="panel-body feature">
+            <strong>{{name}}</strong>
             </div>
-          </div>
-          <div class="row epics break-word">
-            {{#each epic}}
-            <div class="col-map">
-              {{#unlessvalue name value="unspecified" }}<span class="glyphicon glyphicon-remove-circle delete-epic" data-value="{{name}}"></span>{{/unlessvalue}}
-              <div class="panel panel-default" style="background-color:#{{color}};">
-                <div class="panel-body feature">
-                <strong>{{name}}</strong>
-                </div>
-              </div>
-            </div>
-            {{/each}}
           </div>
         </div>
+        {{/each}}
+      </div>
+    </div>
+    <div style="width:{{style.width}}px;" class="horizontal-inner">                 
         {{#each sprint}}
         <div id="nav{{id}}" class="row{{#if_odd @index}} odd{{/if_odd}} break-word">
           {{#each epic}}

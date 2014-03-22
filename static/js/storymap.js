@@ -114,8 +114,10 @@
     projects: function(username) {
       if (StoryMap.__gitinit()) {
         var project_tmpl = Handlebars.getTemplate('project_select'),
-            context = { project:[] },
+            context = { project:[]},
             user = StoryMap.github.getUser(),
+            usrRepo = $.Deferred(),
+            orgRepo = $.Deferred(),
             repolist = function(err, repos) {
               for (var i = repos.length - 1; i >= 0; i--) {
                 context.project.unshift({
@@ -123,14 +125,48 @@
                   link: config.base_uri+'#/storymap/'+repos[i].owner.login+'/repo/'+repos[i].name
                 });
               };
-              $('#content').html(project_tmpl(context));
+              usrRepo.resolve();             
+            },
+            orgList = function(err, orgs) {
+              if (err) { orgRepo.resolve(); }
+              var reposdfd = {};
+              for (var i = orgs.length - 1; i >= 0; i--) {
+                var orgname = orgs[i].login; 
+                reposdfd[orgname] = $.Deferred();
+                reposdfd[orgname].promise();
+                user.orgRepos(orgname, function(orgtitle, err, repos) {
+                    for (var j = repos.length - 1; j >= 0; j--) {
+                      context.project.push({
+                        name: repos[j].name,
+                        org: orgtitle,
+                        link: config.base_uri+'#/storymap/'+repos[j].owner.login+'/repo/'+repos[j].name
+                      });
+                    }
+                    reposdfd[orgtitle].resolve();  
+                  });
+              };
+              var dfds = [];
+              for (var key in reposdfd) {
+                dfds.push(reposdfd[key]);
+              };
+
+              $.when.apply($, dfds).done(function() {
+                orgRepo.resolve();
+              });                
             };
+        usrRepo.promise();
+        orgRepo.promise();
         if (username) {
-          user.userRepos(username, repolist);
+          user.userOrgs(username, orgList);
+          user.userRepos(username, repolist);          
         } else {
+          user.orgs(orgList);          
           user.repos(repolist);
         }
-        StoryMap.user();     
+        $.when(usrRepo, orgRepo).done( function() {
+          $('#content').html(project_tmpl(context));
+          StoryMap.user();   
+        }); 
       } else {
         routie('');
       }
@@ -185,6 +221,14 @@
           StoryMap.__setupCreateStoryModal(issue);
           StoryMap.__setupFiltersModal();
           StoryMap.__renderMap();
+
+          $('.horizontal').scroll(function(event) {
+            /* Act on the event */
+            var offset = ($('.horizontal').scrollLeft()+20)*-1;
+            $('#story-map-headers').css('margin-left', offset);
+
+          });
+
           $('#story-map').on('click', '.story', function() {StoryMap.__loadStory(this)});
         });
       } else {
@@ -545,6 +589,7 @@
         issue.createMilestone(data, function(err, createdSprint) {
           var repopulatedSprints = StoryMap.__populateSprintsList(issue);
           $.when(repopulatedSprints).done(function() {
+            StoryMap.__resetStoryModal();
             StoryMap.__renderMap();
           });
         });
@@ -569,6 +614,7 @@
         issue.createLabel(data, function(err, createdEpic) {
           var repopulatedEpics = StoryMap.__populateEpicsList(issue);
           $.when(repopulatedEpics).done(function() {
+            StoryMap.__resetStoryModal();
             StoryMap.__renderMap();
           });
         });
@@ -578,7 +624,7 @@
           $("#createEpicColour").val("");
       });
     },
-    __setupCreateStoryModal: function(issue) {
+    __resetStoryModal: function() {
       var modal_tmpl = Handlebars.getTemplate('create_story_modal');
       var context = {"assignees": StoryMap.assigneesList,
                      "priorities": StoryMap.priorities,
@@ -586,6 +632,9 @@
                      "sprints": StoryMap.sprintsList,
                      "epics": StoryMap.epicsList};
       $('#createStoryModal').html(modal_tmpl(context));
+    },
+    __setupCreateStoryModal: function(issue) {
+      StoryMap.__resetStoryModal();
       $('#createStoryModal').on('click', '#createStoryBtn', function() {
         var data = {}
         var priority = $("#createStoryPriority").val();
@@ -769,10 +818,12 @@
         });
       });
       StoryMap.__setupDragAndDrop();
-      $('body').scrollspy({ target: '#sprint-menu' });
+      $('body').scrollspy({ target: '#sprint-menu'});
       $('a.sprint-link').click(function (e) {
-        $($(this).attr('href')).goTo();
         e.preventDefault();
+        $($(this).attr('href')).goTo();
+        //$($(this).attr('href'))[0].scrollIntoView();
+        scrollBy(0, -80);
       });
     },
     __processEpics: function(epicsMap, context) {
