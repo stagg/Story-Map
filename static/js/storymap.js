@@ -221,14 +221,6 @@
           StoryMap.__setupCreateStoryModal(issue);
           StoryMap.__setupFiltersModal();
           StoryMap.__renderMap();
-
-          $('.horizontal').scroll(function(event) {
-            /* Act on the event */
-            var offset = ($('.horizontal').scrollLeft()+20)*-1;
-            $('#story-map-headers').css('margin-left', offset);
-
-          });
-
           $('#story-map').on('click', '.story', function() {StoryMap.__loadStory(this)});
         });
       } else {
@@ -819,6 +811,10 @@
       });
       StoryMap.__setupDragAndDrop();
       $('body').scrollspy({ target: '#sprint-menu'});
+      $('.horizontal').scroll(function(event) {
+        var offset = ($('.horizontal').scrollLeft()+20)*-1;
+        $('#story-map-headers').css('margin-left', offset);
+      });
       $('a.sprint-link').click(function (e) {
         e.preventDefault();
         $($(this).attr('href')).goTo();
