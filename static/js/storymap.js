@@ -217,7 +217,7 @@
         $.when(haveAssignees, haveEpics, haveSprints, haveStories, haveLabels).done(function() {
           StoryMap.__populateStateList(StoryMap.labelsList);
           StoryMap.__setupCreateSprintModal(issue);
-          StoryMap.__setupCreateEpicModal(issue);
+          StoryMap.__setupEpicModal(issue);
           StoryMap.__setupCreateStoryModal(issue);
           StoryMap.__setupFiltersModal();
           StoryMap.__renderMap();
@@ -537,6 +537,58 @@
         }
       });
     },
+    __loadCreateEpicModal: function(issue) {
+      $('#epicLabel').html('Create Feature');
+      $('#epicBtn').text('Create');
+      $('#epicModal').off('click', '#epicBtn');
+      $('#epicModal').on('click', '#epicBtn', function() {
+        var data = StoryMap.__parseEpicModalFields();
+        issue.createLabel(data, function(err, createdEpic) {
+          var repopulatedEpics = StoryMap.__populateEpicsList(issue);
+          $.when(repopulatedEpics).done(function() {
+            StoryMap.__resetStoryModal();
+            StoryMap.__renderMap();
+          });
+        });
+      });
+    },
+    __loadEditEpicModal: function(el) {
+      var id = $(el).attr('id');
+      var obj = $.grep(StoryMap.epicsList, function(e){ return e.id == id; })[0];
+      if (obj.name == "unspecified") {
+        return;
+      }
+      $('#epicLabel').html('Edit Feature');
+      $('#epicName').val(obj.name);
+      $('#epicColour').val('#'+obj.color);
+      $('#epicColour').colorpicker('setValue', '#'+obj.color);
+      $('#epicBtn').text('Update');
+      $('#epicModal').modal();
+      $('#epicModal').off('click', '#epicBtn');
+      $('#epicModal').on('click', '#epicBtn', function() {
+        var data = StoryMap.__parseEpicModalFields();
+        StoryMap.issue.updateLabel(StoryMap.__convertToMetaDataString(obj.name), data, function(err, updatedLabel) {
+          if (updatedLabel) {
+            var epic = StoryMap.__createEpic(updatedLabel);
+            for (var i = 0; i < StoryMap.epicsList.length; ++i) {
+              if (StoryMap.epicsList[i].name == obj.name) {
+                StoryMap.epicsList[i] = epic;
+                break;
+              }
+            }
+            StoryMap.__renderMap();
+          }
+        });
+      });
+    },
+    __parseEpicModalFields: function() {
+      var data = {}
+      var name = $("#epicName").val();
+      var colour = $("#epicColour").val();
+      data.name = StoryMap.__convertToMetaDataString(name);
+      data.color = colour.replace("#", "");
+      return data;
+    },
     __createStory: function(story) {
       var body = StoryMap.__parseStoryBody(story);
       var state = StoryMap.__getStoryState(story);
@@ -558,6 +610,12 @@
         priority: body.priority,
         labels: cleanlabels
       };
+    },
+    __createEpic: function(epic) {
+      var epicName = epic.name.match(StoryMap.metaRegexp)[0];
+      var epicId = epicName.replace(/\s/g, "");
+      var epicColor = epic.color;
+      return {name: epicName, id: epicId, color: epicColor};
     },
     __setupCreateSprintModal: function(issue) {
       $('#createSprintStartDate').datepicker({format: "yyyy-mm-dd"});
@@ -593,27 +651,13 @@
           $("#createSprintDueDate").val("");
       });
     },
-    __setupCreateEpicModal: function(issue) {
-      $('#createEpicColour').colorpicker();
-      $('#createEpicModal').on('click', '#createEpicBtn', function() {
-        var data = {};
-        var name = $("#createEpicName").val();
-        var colour = $("#createEpicColour").val();
-
-        data.name = StoryMap.__convertToMetaDataString(name);
-        data.color = colour.replace("#", "");
-
-        issue.createLabel(data, function(err, createdEpic) {
-          var repopulatedEpics = StoryMap.__populateEpicsList(issue);
-          $.when(repopulatedEpics).done(function() {
-            StoryMap.__resetStoryModal();
-            StoryMap.__renderMap();
-          });
-        });
-      });
-      $('#createEpicModal').on('hidden.bs.modal', function() {
-          $("#createEpicName").val("");
-          $("#createEpicColour").val("");
+    __setupEpicModal: function(issue) {
+      $('#epicColour').colorpicker();
+      $('#story-map').on('click', '#createEpicBtn', function() {StoryMap.__loadCreateEpicModal(issue)});
+      $('#story-map').on('click', '.panel.epic', function() {StoryMap.__loadEditEpicModal(this)});
+      $('#epicModal').on('hidden.bs.modal', function() {
+        $("#epicName").val("");
+        $("#epicColour").val("");
       });
     },
     __resetStoryModal: function() {
@@ -830,7 +874,7 @@
         var epic = StoryMap.epicsList[i];
         if (!nameFilter || nameFilter == epic.name || epic.name == "unspecified") {
           epicsMap[epic.name] = numEpics;
-          context.epic.push({name:epic.name, color:epic.color});
+          context.epic.push({name:epic.name, id:epic.id, color:epic.color});
           ++numEpics;
         }
       }
@@ -902,12 +946,12 @@
       var dfd = $.Deferred();
       issue.labels(null, function(err, labels) {
         for (var i = 0; i < labels.length; i++) {
-          var epic = labels[i].name.match(StoryMap.metaRegexp);
-          if (epic != null) {
-            StoryMap.epicsList.push({name:epic[0], color:labels[i].color});
+          var label = labels[i];
+          if (label.name.match(StoryMap.metaRegexp) != null) {
+            StoryMap.epicsList.push(StoryMap.__createEpic(label));
           }
         }
-        StoryMap.epicsList.push({name:'unspecified', color:'F5F5F5'});
+        StoryMap.epicsList.push({name:'unspecified', id:'unspecified', color:'F5F5F5'});
         dfd.resolve();
       });
       return dfd.promise();

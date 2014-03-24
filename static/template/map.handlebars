@@ -7,7 +7,7 @@
               <ul id="createModal" class="nav nav-stacked nav-pills collapse" style="width:100%;">
                 <li class="nav">
                   <a href="javascript:void(0)">
-                    <span data-toggle="modal" data-target="#createEpicModal" class="glyphicon glyphicon-plus">Feature</span>
+                    <span id="createEpicBtn" data-toggle="modal" data-target="#epicModal" class="glyphicon glyphicon-plus">Feature</span>
                   </a>
                 </li>
                 <li class="nav">
@@ -56,7 +56,7 @@
         {{#each epic}}
         <div class="col-map epic">
           {{#unlessvalue name value="unspecified" }}<span class="glyphicon glyphicon-remove-circle delete-epic" data-value="{{name}}"></span>{{/unlessvalue}}
-          <div class="panel panel-default" style="background-color:#{{color}};">
+          <div class="panel panel-default epic" id="{{id}}" style="background-color:#{{color}};">
             <div class="panel-body feature">
             <strong>{{name}}</strong>
             </div>
