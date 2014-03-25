@@ -216,7 +216,7 @@
         var haveLabels = StoryMap.__populateLabelsList(issue);
         $.when(haveAssignees, haveEpics, haveSprints, haveStories, haveLabels).done(function() {
           StoryMap.__populateStateList(StoryMap.labelsList);
-          StoryMap.__setupCreateSprintModal(issue);
+          StoryMap.__setupSprintModal(issue);
           StoryMap.__setupEpicModal(issue);
           StoryMap.__setupCreateStoryModal(issue);
           StoryMap.__setupFiltersModal();
@@ -617,25 +617,22 @@
       var epicColor = epic.color;
       return {name: epicName, id: epicId, color: epicColor};
     },
-    __setupCreateSprintModal: function(issue) {
-      $('#createSprintStartDate').datepicker({format: "yyyy-mm-dd"});
-      $('#createSprintDueDate').datepicker({format: "yyyy-mm-dd"});
-      $('#createSprintModal').on('click', '#createSprintBtn', function() {
-        var data = {};
-        var start = $("#createSprintStartDate").val();
-        var due = $("#createSprintDueDate").val();
-        var desc = $("#createSprintDesc").val();
-        var body = "";
-        if (start) {
-          body += StoryMap.__convertToMetaDataString(
-            StoryMap.metadata.START + StoryMap.metaDelimiter + start) + "\n";
-        }
-        body += desc;
-
-        data.title = $("#createSprintTitle").val();
-        data.description = body;
-        data.due_on = due + "T00:00:00Z";
-
+    __createSprint: function(sprint) {
+      var description = StoryMap.__parseSprintDescription(sprint);
+      return {
+        name: sprint.title,
+        id: sprint.number,
+        description: sprint.description,
+        start: description.start,
+        due: sprint.due_on
+      };
+    },
+    __loadCreateSprintModal: function(issue) {
+      $('#sprintLabel').html('Create Sprint');
+      $('#sprintBtn').text('Create');
+      $('#sprintModal').off('click', '#epicBtn');
+      $('#sprintModal').on('click', '#sprintBtn', function() {
+        var data = StoryMap.__parseSprintModalFields();
         issue.createMilestone(data, function(err, createdSprint) {
           var repopulatedSprints = StoryMap.__populateSprintsList(issue);
           $.when(repopulatedSprints).done(function() {
@@ -644,11 +641,67 @@
           });
         });
       });
-      $('#createSprintModal').on('hidden.bs.modal', function() {
-          $("#createSprintTitle").val("");
-          $("#createSprintDesc").val("");
-          $("#createSprintStartDate").val("");
-          $("#createSprintDueDate").val("");
+    },
+    __loadEditSprintModal: function(el) {
+      var id = $(el).attr('id').split("-")[1];
+      var obj = $.grep(StoryMap.sprintsList, function(e){ return e.id == id; })[0];
+      if (obj.name == "backlog") {
+        return;
+      }
+      $('#sprintLabel').html('Edit Sprint');
+      $('#sprintTitle').val(obj.name);
+      $('#sprintDesc').val(StoryMap.__removeMetaDataStrings(obj.description));
+      $('#sprintStartDate').val(obj.start);
+      $('#sprintStartDate').datepicker('setValue', obj.start)
+      $('#sprintDueDate').val(obj.due.split("T")[0]);
+      $('#sprintDueDate').datepicker('setValue', obj.due.split("T")[0]);
+      $('#sprintBtn').text('Update');
+      $('#sprintModal').modal();
+      $('#sprintModal').off('click', '#sprintBtn');
+      $('#sprintModal').on('click', '#sprintBtn', function() {
+        var data = StoryMap.__parseSprintModalFields();
+        StoryMap.issue.editMilestone(id, data, function(err, updatedSprint) {
+          if (updatedSprint) {
+            var sprint = StoryMap.__createSprint(updatedSprint);
+            for (var i = 0; i < StoryMap.sprintsList.length; ++i) {
+              if (StoryMap.sprintsList[i].id == id) {
+                StoryMap.sprintsList[i] = sprint;
+                break;
+              }
+            }
+            StoryMap.__renderMap();
+          }
+        });
+      });
+    },
+    __parseSprintModalFields: function() {
+      var data = {};
+      var start = $("#sprintStartDate").val();
+      var due = $("#sprintDueDate").val();
+      var desc = $("#sprintDesc").val();
+      var body = "";
+      if (start) {
+        body += StoryMap.__convertToMetaDataString(
+          StoryMap.metadata.START + StoryMap.metaDelimiter + start) + "\n";
+      }
+      body += desc;
+
+      data.title = $("#sprintTitle").val();
+      data.description = body;
+      data.due_on = due + "T00:00:00Z";
+
+      return data;
+    },
+    __setupSprintModal: function(issue) {
+      $('#sprintStartDate').datepicker({format: "yyyy-mm-dd"});
+      $('#sprintDueDate').datepicker({format: "yyyy-mm-dd"});
+      $('#story-map').on('click', '#createSprintBtn', function() {StoryMap.__loadCreateSprintModal(issue)});
+      $('#story-map').on('click', '.sprint-link', function() {StoryMap.__loadEditSprintModal(this)});
+      $('#sprintModal').on('hidden.bs.modal', function() {
+        $("#sprintTitle").val("");
+        $("#sprintDesc").val("");
+        $("#sprintStartDate").val("");
+        $("#sprintDueDate").val("");
       });
     },
     __setupEpicModal: function(issue) {
@@ -965,7 +1018,8 @@
           var closedSprintObjs = sprintObjs;
           var allSprintObjs = closedSprintObjs.concat(openSprintObjs).sort(StoryMap.__compareSprints);
           for (var i = 0; i < allSprintObjs.length; i++) {
-            StoryMap.sprintsList.push({name:allSprintObjs[i].title, id:allSprintObjs[i].number});
+            var sprint = allSprintObjs[i];
+            StoryMap.sprintsList.push(StoryMap.__createSprint(sprint));
           }
           StoryMap.sprintsList.push({name:'backlog', id:-1});
           dfd.resolve();
@@ -1071,6 +1125,20 @@
         }
       }
       return bodyData;
+    },
+    __parseSprintDescription: function(sprint) {
+      var descData = {start: ""};
+      var desc = sprint.description.match(StoryMap.metaRegexp);
+      if (desc === null) {
+        return descData;
+      }
+      for (var i = 0; i < desc.length; ++i) {
+        var data = desc[i].split(StoryMap.metaDelimiter);
+        if (data[0] == StoryMap.metadata.START) {
+          descData.start = data[1];
+        }
+      }
+      return descData;
     },
     __getEpicObject: function(epicName) {
       for (var i = 0; i < StoryMap.epicsList.length; ++i) {
