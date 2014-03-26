@@ -651,8 +651,8 @@
       $('#sprintLabel').html('Edit Sprint');
       $('#sprintTitle').val(obj.name);
       $('#sprintDesc').val(StoryMap.__removeMetaDataStrings(obj.description));
-      $('#sprintStartDate').val(obj.start);
       $('#sprintStartDate').datepicker('setValue', obj.start)
+      $('#sprintStartDate').val(obj.start);
       $('#sprintDueDate').val(obj.due.split("T")[0]);
       $('#sprintDueDate').datepicker('setValue', obj.due.split("T")[0]);
       $('#sprintBtn').text('Update');
