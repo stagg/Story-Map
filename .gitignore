@@ -1,3 +1,7 @@
 node_modules/
 config.js
 config-dev.js
+server.crt
+server.key
+npm-debug.log
+dump.rdb

@@ -1,6 +1,10 @@
 var express = require('express'),
     rest = require('restler'),
+    fs = require('fs'),
+    http = require('http'),
+    https = require('https'),
     app = express(),
+    credentials = {key:'', cert:''},
     config;
 
 if (process.env.NODE_ENV === 'dev') {
@@ -9,6 +13,13 @@ if (process.env.NODE_ENV === 'dev') {
 } else {
   console.log('Loading PROD config');
   config = require('./config');
+}
+
+if (config.ssl !== false) {
+  var privateKey = fs.readFileSync('./server.key', 'utf8');
+  var certificate = fs.readFileSync('./server.crt', 'utf8');
+  credentials.key = privateKey;
+  credentials.cert = certificate;
 }
 
 app.configure(function(){
@@ -117,6 +128,10 @@ app.del('/api/*', function(req, res) {
   });
 });
 
-app.listen(config.port);
+if (config.ssl === true) {
+  https.createServer(credentials, app).listen(config.port);
+} else {
+  http.createServer(app).listen(config.port);
+}
 
 console.log('Server is listening on: '+config.url);
