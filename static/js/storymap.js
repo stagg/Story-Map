@@ -907,20 +907,21 @@
         });
       });
       StoryMap.__setupDragAndDrop();
-      $('body').scrollspy({ target: '#sprint-menu'});
+      $('body').scrollspy({target: '#sprint-menu', offset:200});
       $('.horizontal').scroll(function(event) {
         var offset = ($('.horizontal').scrollLeft()+20)*-1;
         $('#story-map-headers').css('margin-left', offset);
       });
       $('a.sprint-link').click(function (e) {
         e.preventDefault();
-        $($(this).attr('href')).goTo();
-        //$($(this).attr('href'))[0].scrollIntoView();
-        scrollBy(0, -80);
+        $($(this).attr('href'))[0].scrollIntoView();
+        scrollBy(0, -200);
       });
     },
     __processEpics: function(epicsMap, context) {
-      context.style.width = StoryMap.epicsList.length * 150;
+      context.style.innerwidth = StoryMap.epicsList.length * 150;
+      context.style.width = context.style.innerwidth + 50;
+
       var numEpics = 0;
       var nameFilter = $("#filterEpicName").val();
       for (var i = 0; i < StoryMap.epicsList.length; ++i) {

@@ -212,7 +212,7 @@ a:hover.nolink {
   padding-left: 10px;
 }
 .horizontal-inner {
-  padding-top: 150px;
+  margin-top: 150px;
 }
 .horizontal-inner .row {
   min-height: 100px;
@@ -227,6 +227,7 @@ a:hover.nolink {
   padding: 15px;
   width:200px;
   background-color: #eee;
+  margin-left: -10px;
 }
 #createModal a, #createModal span {
   color: #000;
