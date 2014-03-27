@@ -38,7 +38,7 @@ a:hover.nolink {
   background-color: #DDD;
 }
 .profile {
-  float:right;
+  float:left;
   padding: 5px 15px;
   font-size: 18px;
   line-height: 20px;
@@ -224,10 +224,20 @@ a:hover.nolink {
 #menu {
   position: fixed;
   z-index: 1010;
-  padding: 15px;
-  width:200px;
+  padding: 10px;
+  width:215px;
   background-color: #eee;
-  margin-left: -10px;
+  margin-left: -20px;
+}
+.sprint-link {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.edit-sprint {
+  margin-right: 3px;
+  margin-top: 8px;
+  cursor: pointer;
+  z-index: 100;
 }
 #createModal a, #createModal span {
   color: #000;
@@ -237,6 +247,9 @@ a:hover.nolink {
   padding-left: 10px;
   padding-right: 10px;
 }
+.features-title {
+  padding-left: 20px;
+}
 .break-word {
   word-wrap: break-word;
 }
@@ -244,9 +257,7 @@ a:hover.nolink {
   height: 10px;
   margin-bottom: 0;
 }
-@media (min-width: 1024px) {
-    .container-large{
-        width: 90%;
-        float: right;
-    }
+.container-large{
+    width: 100%;
+    float: right;
 }

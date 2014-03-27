@@ -696,7 +696,7 @@
       $('#sprintStartDate').datepicker({format: "yyyy-mm-dd"});
       $('#sprintDueDate').datepicker({format: "yyyy-mm-dd"});
       $('#story-map').on('click', '#createSprintBtn', function() {StoryMap.__loadCreateSprintModal(issue)});
-      $('#story-map').on('click', '.sprint-link', function() {StoryMap.__loadEditSprintModal(this)});
+      $('#story-map').on('click', '.edit-sprint', function() {StoryMap.__loadEditSprintModal(this)});
       $('#sprintModal').on('hidden.bs.modal', function() {
         $("#sprintTitle").val("");
         $("#sprintDesc").val("");
