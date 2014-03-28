@@ -51,24 +51,25 @@
                 <div class="col-md-3">
                   <select id="filterStoryAssignee" class="form-control" name="assignee">
                     <option selected disabled value="">Assignee</option>
+                    <option>Unassigned</option>
                     {{#each assignees}}
                       <option>{{this}}</option>
                     {{/each}}
                   </select>
                 </div>
                 <div class="col-md-3">
-                  <select id="filterStoryPriority" class="form-control" name="priority">
+                  <select id="filterStoryPriority" class="form-control" dir="rtl"  style="text-align:right;" name="priority">
                     <option selected disabled value="">Priority</option>
                     {{#each priorities}}
-                      <option>{{this}}</option>
+                      <option style="text-align:right;">{{this}}</option>
                     {{/each}}
                   </select>
                 </div>
                 <div class="col-md-3">
-                  <select id="filterStoryPoints" class="form-control" name="cost">
+                  <select id="filterStoryPoints" class="form-control"  dir="rtl"  style="text-align:right;" name="cost">
                     <option selected disabled value="">Story Points</option>
                     {{#each costs}}
-                      <option>{{this}}</option>
+                      <option style="text-align:right;">{{this}}</option>
                     {{/each}}
                   </select>
                 </div>
