@@ -239,6 +239,10 @@ a:hover.nolink {
   cursor: pointer;
   z-index: 100;
 }
+.sprint-avatar {
+	max-height: 30px;
+	max-width: 30px;
+}
 #createModal a, #createModal span {
   color: #000;
 }

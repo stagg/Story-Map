@@ -941,7 +941,7 @@
         if (!nameFilter || nameFilter == sprint.name || sprint.name == "backlog") {
           sprintsMap[sprint.name] = numSprints;
           var sprintObj = {name: sprint.name, id:sprint.id, epic: [], prc:0,
-                           claimedSP: 0, totalSP: 0};
+                           claimedSP: 0, totalSP: 0, assignees: []};
           for (var j = 0; j < context.epic.length; ++j) {
             sprintObj.epic.push([]);
           }
@@ -966,6 +966,9 @@
               (!assigneeFilter || assigneeFilter == story.assignee.name) &&
               (!priorityFilter || priorityFilter == story.priority) &&
               (!costFilter || costFilter == story.cost)) {
+            if (!StoryMap.__assigneeInSprint(story.assignee, context.sprint[storySprint])) {
+              context.sprint[storySprint].assignees.push(story.assignee);
+            }
             var storyCost = null;
             if (!story.cost) {
               storyCost = 0;
@@ -1062,6 +1065,14 @@
         var story = stories[i];
         StoryMap.storiesList.push(StoryMap.__createStory(story));
       }
+    },
+    __assigneeInSprint: function(assignee, sprint) {
+      for (var i = 0; i < sprint.assignees.length; ++i) {
+        if (sprint.assignees[i].name === assignee.name) {
+          return true;
+        }
+      }
+      return false;
     },
     __getStoryState: function(story) {
       if (story.state == StoryMap.githubStates.CLOSED) {
