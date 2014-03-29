@@ -313,6 +313,7 @@
           data[obj.name] = obj.value;
         }
       };
+      data.labels.push("story");
       NProgress.inc();
       if (StoryMap.__gitinit() && StoryMap.issue) {
         StoryMap.issue.editIssue(id, data, function (err, response) {
