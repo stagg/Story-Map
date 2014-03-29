@@ -890,7 +890,7 @@
       NProgress.set(0.80);
       for (var i = context.sprint.length - 1; i >= 0; i--) {
         var obj = context.sprint[i];
-        obj.prc = (obj.close / (obj.close + obj.open)) * 100;
+        obj.prc = (obj.claimedSP / obj.totalSP) * 100;
       };
       $('#story-map').html(map_tmpl(context));
       NProgress.done();
@@ -940,7 +940,8 @@
         var sprint = StoryMap.sprintsList[i];
         if (!nameFilter || nameFilter == sprint.name || sprint.name == "backlog") {
           sprintsMap[sprint.name] = numSprints;
-          var sprintObj = {name: sprint.name, id:sprint.id, epic: [], prc:0, close: 0, open: 0};
+          var sprintObj = {name: sprint.name, id:sprint.id, epic: [], prc:0,
+                           claimedSP: 0, totalSP: 0};
           for (var j = 0; j < context.epic.length; ++j) {
             sprintObj.epic.push([]);
           }
@@ -965,10 +966,15 @@
               (!assigneeFilter || assigneeFilter == story.assignee.name) &&
               (!priorityFilter || priorityFilter == story.priority) &&
               (!costFilter || costFilter == story.cost)) {
-            if (story.state.state.toLowerCase() !== StoryMap.githubStates['CLOSED'].toLowerCase()) {
-              context.sprint[storySprint].open++;
+            var storyCost = null;
+            if (!story.cost) {
+              storyCost = 0;
             } else {
-              context.sprint[storySprint].close++;
+              storyCost = parseInt(story.cost);
+            }
+            context.sprint[storySprint].totalSP += storyCost;
+            if (story.state.state.toLowerCase() === StoryMap.githubStates['CLOSED'].toLowerCase()) {
+              context.sprint[storySprint].claimedSP += storyCost;
             }
             context.sprint[storySprint].epic[storyEpic].push(story);
           }
