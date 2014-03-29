@@ -109,6 +109,9 @@ a:hover.nolink {
   cursor: pointer;
   margin: 5px;
 }
+.pointer {
+	cursor: pointer;
+}
 .story-title {
   font-size: 1em;
   font-weight: bold;

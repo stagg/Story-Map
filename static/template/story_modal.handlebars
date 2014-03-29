@@ -86,10 +86,12 @@
           <div class="col-md-12">
             <span class="help-block">Labels</span>
             {{#each labels}}
+              {{#unlessvalue name value="story"}}
               <span class="label-cloud label" style="background-color:#{{color}}">
               <input hidden name="labels[]" value="{{name}}"/>{{name}}
               <span class="glyphicon glyphicon-remove-circle delete-label" data-value="{{name}}"></span>
               </span>
+              {{/unlessvalue}}
             {{/each}}
             <span class="edit label-cloud new-label">
               <input id="labellist" type="text" class="typeahead form-control btn-start"/>

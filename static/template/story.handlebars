@@ -8,7 +8,8 @@
               <span class="glyphicon glyphicon-comment"></span>
           </span>
           {{/if}}
-          {{#if cost}}<span class="badge pull-right">{{cost}}</span>{{/if}}
+          {{#if cost}}<span class="badge">{{cost}}</span>{{/if}}
+          <span class="glyphicon glyphicon-remove-circle delete-story pull-right pointer" data-value="{{number}}"></span>
       </span>
   </div>
   <div class="panel-body panel-story">
