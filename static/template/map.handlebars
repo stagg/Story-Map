@@ -33,22 +33,22 @@
                         <span id="edit-{{id}}" class="glyphicon glyphicon-pencil pull-right edit-sprint"/>
                         {{/unlessvalue}}                      
                         <a href="#nav{{id}}" id="sprint-{{id}}" class="sprint-link">                  
-                        {{name}}
-                        <div class="progress progress-striped progress-sprint" title="{{claimedSP}}/{{totalSP}}"> 
-                          <div class="progress-bar progress-bar-success" role="progressbar" 
-                            aria-valuenow="{{prc}}" aria-valuemin="0" 
-                            aria-valuemax="100" style="width: {{prc}}%;">            
+                          {{name}}
+                          <div class="workers">
+                          {{#each assignees}}
+                            {{#unlessvalue name value="Unassigned"}}
+                              <span {{#if url}} onclick="window.open('{{url}}');"{{else}} class="nolink" {{/if}}>
+                                <img class="sprint-avatar" src="{{avatar}}"/>
+                              </span>
+                            {{/unlessvalue}}
+                          {{/each}}
                           </div>
-                        </div>
-                        <div>
-                        {{#each assignees}}
-                        {{#unlessvalue name value="Unassigned"}}
-                        <a {{#if url}} href="{{url}}"{{else}} class="nolink" {{/if}} target="_blank">
-                          <img class="sprint-avatar" src="{{avatar}}"/>
-                        </a>
-                        {{/unlessvalue}}
-                        {{/each}}
-                        </div>
+                            <div class="progress progress-striped progress-sprint" title="{{claimedSP}}/{{totalSP}}"> 
+                              <div class="progress-bar progress-bar-success" role="progressbar" 
+                                aria-valuenow="{{prc}}" aria-valuemin="0" 
+                                aria-valuemax="100" style="width: {{prc}}%;">            
+                              </div>
+                            </div>                          
                         </a>
                     </li>
                   {{/each}}
