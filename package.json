@@ -1,0 +1,35 @@
+{
+  "name": "Story-Map-master",
+  "version": "0.8.0",
+  "description": "402 Story Map",
+  "main": "./server.js",
+  "dependencies": {
+    "ejs": "~0.8.5",
+	"express": ">=3.4.8",
+	"restler": ">=3.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stagg/Story-Map.git"
+  },
+  "keywords": [
+    "402",
+    "Story",
+    "Map",
+    "Agile"
+  ],
+  "contributors": [
+    {"name": "Josh Stagg"},
+    {"name": "Elvis Lin"},
+    {"name": "Aaron Yong"}
+  ],
+  "license": "Apache",
+  "bugs": {
+    "url": "https://github.com/stagg/Story-Map/issues"
+  },
+  "homepage": "https://github.com/stagg/Story-Map"
+}
