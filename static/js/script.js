@@ -1,4 +1,5 @@
 // Handlebar extensions
+
 Handlebars.getTemplate = function(name) {
   if (Handlebars.templates === undefined || Handlebars.templates[name] === undefined) {
     NProgress.start();
@@ -70,9 +71,9 @@ $('#nav').ready( function() {
 routie({
   '/auth': function() {
     $('#content').html('');
-    var code = StoryMap.cookie.__read('auth_code');
+    var code = StoryMap.util.cookie.__read('auth_code');
     if (code != null) {
-      StoryMap.cookie.__erase('auth_code');
+      StoryMap.util.cookie.__erase('auth_code');
       StoryMap.oauth(code).done(function(){ routie('/projects') });
     } else {
       routie('');
@@ -92,7 +93,7 @@ routie({
   },
   '*': function() {
     $('#content').removeClass('container-large');
-    if (StoryMap.cookie.__read('access_token')) {
+    if (StoryMap.util.cookie.__read('access_token')) {
       routie('/projects');
     } else {
       $('#content').html(Handlebars.getTemplate('login'));

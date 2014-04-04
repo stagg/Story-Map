@@ -1,4 +1,31 @@
-(function () {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: storymap.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: storymap.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>(function () {
   "use strict";
   if (typeof jQuery === 'undefined') {
     console.log("StoryMap requires jQuery");
@@ -73,7 +100,7 @@
     */
     user: function(username) {
       if (StoryMap.__gitinit()) {
-        if (StoryMap.userinfo != null && StoryMap.userinfo.login != null) {
+        if (StoryMap.userinfo != null &amp;&amp; StoryMap.userinfo.login != null) {
           $('#nav').html(Handlebars.getTemplate('nav')(StoryMap.userinfo));
         } else {
           var user = StoryMap.github.getUser();
@@ -274,7 +301,7 @@
       @memberof StoryMap 
     */
     __loadComments: function (id) {
-      if (StoryMap.__gitinit() && StoryMap.issue) {
+      if (StoryMap.__gitinit() &amp;&amp; StoryMap.issue) {
         var dfd = $.Deferred();
         NProgress.start();
         StoryMap.issue.issueComments(id, null, function(err, comments) {
@@ -307,7 +334,7 @@
       @memberof StoryMap 
     */
     __loadEvents: function (id) {
-      if (StoryMap.__gitinit() && StoryMap.issue) {
+      if (StoryMap.__gitinit() &amp;&amp; StoryMap.issue) {
         var dfd = $.Deferred();
         NProgress.start();
         StoryMap.issue.issueEvents(id, null, function(err, events) {
@@ -341,7 +368,7 @@
         } else if (obj.name === "cost") {
           data.body += StoryMap.__convertToMetaDataString(
             StoryMap.metadata.COST + StoryMap.metaDelimiter + obj.value) + "\n";
-        } else if (obj.name === "feature" && obj.value !== "unspecified") {
+        } else if (obj.name === "feature" &amp;&amp; obj.value !== "unspecified") {
           data.labels.push(StoryMap.__convertToMetaDataString(obj.value));
         } else if (obj.name === "state") {
           if (obj.value === StoryMap.githubStates.OPEN || obj.value === StoryMap.githubStates.CLOSED) {
@@ -362,7 +389,7 @@
       };
       data.labels.push("story");
       NProgress.inc();
-      if (StoryMap.__gitinit() && StoryMap.issue) {
+      if (StoryMap.__gitinit() &amp;&amp; StoryMap.issue) {
         StoryMap.issue.editIssue(id, data, function (err, response) {
           if (response) {
             var story = StoryMap.__createStory(response);
@@ -391,11 +418,11 @@
     __updateStoryState: function(id, state) {
       var obj = $.grep(StoryMap.storiesList, function(e){ return e.number == id; })[0];
       var data = {title:obj.name, state:StoryMap.githubStates.OPEN, labels:[]};
-      if (StoryMap.__gitinit() && StoryMap.issue) {
+      if (StoryMap.__gitinit() &amp;&amp; StoryMap.issue) {
         for (var i = obj.labels.length - 1; i >= 0; i--) {
           data.labels.push(obj.labels[i].name);
         };
-        if (obj.epic !== null && obj.epic.toLowerCase() !== "unspecified") {
+        if (obj.epic !== null &amp;&amp; obj.epic.toLowerCase() !== "unspecified") {
           data.labels.push(StoryMap.__convertToMetaDataString(obj.epic));
         }
         if (state == StoryMap.githubStates.CLOSED) {
@@ -477,7 +504,7 @@
       @memberof StoryMap 
     */
     __addLabelToIssue: function (id) {
-      if (StoryMap.__gitinit() && StoryMap.issue) {
+      if (StoryMap.__gitinit() &amp;&amp; StoryMap.issue) {
         var labelName = $('#labellist').val();
         var data = { name:labelName, color:$('#newLabelColorInput').val().replace('#', '')};
         var notInArray = true;
@@ -632,18 +659,14 @@
       $('#epicBtn').text('Create');
       $('#epicModal').off('click', '#epicBtn');
       $('#epicModal').on('click', '#epicBtn', function() {
-        var valid = StoryMap.__validateRequiredFields('#epicModal');
-        if (valid) {
-          $('#epicModal').modal('hide');
-	      var data = StoryMap.__parseEpicModalFields();
-	      issue.createLabel(data, function(err, createdEpic) {
-	        var repopulatedEpics = StoryMap.__populateEpicsList(issue);
-	        $.when(repopulatedEpics).done(function() {
-	          StoryMap.__resetStoryModal();
-	          StoryMap.__renderMap();
-	        });
-	      });
-        }
+        var data = StoryMap.__parseEpicModalFields();
+        issue.createLabel(data, function(err, createdEpic) {
+          var repopulatedEpics = StoryMap.__populateEpicsList(issue);
+          $.when(repopulatedEpics).done(function() {
+            StoryMap.__resetStoryModal();
+            StoryMap.__renderMap();
+          });
+        });
       });
     },
     /**
@@ -666,23 +689,19 @@
       $('#epicModal').modal();
       $('#epicModal').off('click', '#epicBtn');
       $('#epicModal').on('click', '#epicBtn', function() {
-        var valid = StoryMap.__validateRequiredFields('#epicModal');
-        if (valid) {
-          $('#epicModal').modal('hide');
-          var data = StoryMap.__parseEpicModalFields();
-          StoryMap.issue.updateLabel(StoryMap.__convertToMetaDataString(obj.name), data, function(err, updatedLabel) {
-            if (updatedLabel) {
-              var epic = StoryMap.__createEpic(updatedLabel);
-              for (var i = 0; i < StoryMap.epicsList.length; ++i) {
-                if (StoryMap.epicsList[i].name == obj.name) {
-                  StoryMap.epicsList[i] = epic;
-                  break;
-                }
+        var data = StoryMap.__parseEpicModalFields();
+        StoryMap.issue.updateLabel(StoryMap.__convertToMetaDataString(obj.name), data, function(err, updatedLabel) {
+          if (updatedLabel) {
+            var epic = StoryMap.__createEpic(updatedLabel);
+            for (var i = 0; i &lt; StoryMap.epicsList.length; ++i) {
+              if (StoryMap.epicsList[i].name == obj.name) {
+                StoryMap.epicsList[i] = epic;
+                break;
               }
-              StoryMap.__renderMap();
             }
-          });
-        }
+            StoryMap.__renderMap();
+          }
+        });
       });
     },
     /**
@@ -766,18 +785,14 @@
       $('#sprintBtn').text('Create');
       $('#sprintModal').off('click', '#epicBtn');
       $('#sprintModal').on('click', '#sprintBtn', function() {
-        var valid = StoryMap.__validateRequiredFields('#sprintModal');
-        if (valid) {
-          $('#sprintModal').modal('hide');
-          var data = StoryMap.__parseSprintModalFields();
-          issue.createMilestone(data, function(err, createdSprint) {
-            var repopulatedSprints = StoryMap.__populateSprintsList(issue);
-            $.when(repopulatedSprints).done(function() {
-              StoryMap.__resetStoryModal();
-              StoryMap.__renderMap();
-            });
+        var data = StoryMap.__parseSprintModalFields();
+        issue.createMilestone(data, function(err, createdSprint) {
+          var repopulatedSprints = StoryMap.__populateSprintsList(issue);
+          $.when(repopulatedSprints).done(function() {
+            StoryMap.__resetStoryModal();
+            StoryMap.__renderMap();
           });
-        }
+        });
       });
     },
     /**
@@ -803,23 +818,19 @@
       $('#sprintModal').modal();
       $('#sprintModal').off('click', '#sprintBtn');
       $('#sprintModal').on('click', '#sprintBtn', function() {
-        var valid = StoryMap.__validateRequiredFields('#sprintModal');
-        if (valid) {
-          $('#sprintModal').modal('hide');
-	      var data = StoryMap.__parseSprintModalFields();
-	      StoryMap.issue.editMilestone(id, data, function(err, updatedSprint) {
-	        if (updatedSprint) {
-	          var sprint = StoryMap.__createSprint(updatedSprint);
-	          for (var i = 0; i < StoryMap.sprintsList.length; ++i) {
-	            if (StoryMap.sprintsList[i].id == id) {
-	              StoryMap.sprintsList[i] = sprint;
-	              break;
-	            }
-	          }
-	          StoryMap.__renderMap();
-	        }
-	      });
-        }
+        var data = StoryMap.__parseSprintModalFields();
+        StoryMap.issue.editMilestone(id, data, function(err, updatedSprint) {
+          if (updatedSprint) {
+            var sprint = StoryMap.__createSprint(updatedSprint);
+            for (var i = 0; i &lt; StoryMap.sprintsList.length; ++i) {
+              if (StoryMap.sprintsList[i].id == id) {
+                StoryMap.sprintsList[i] = sprint;
+                break;
+              }
+            }
+            StoryMap.__renderMap();
+          }
+        });
       });
     },
     /**
@@ -846,22 +857,6 @@
 
       return data;
     },
-    __validateRequiredFields: function(element) {
-      var valid = true;
-      $(element).find('.required').each(function() {
-        if (!$(this).val()) {
-          valid = false;
-          $(this).parent().closest('div').addClass('has-error');
-        }
-        else {
-          $(this).parent().closest('div').removeClass('has-error');
-        }
-      });
-      if (valid) {
-        return true;
-      }
-      return false;
-    },
     /**
 
       @method 
@@ -878,9 +873,6 @@
         $("#sprintDesc").val("");
         $("#sprintStartDate").val("");
         $("#sprintDueDate").val("");
-        $(this).find('.has-error').each(function() {
-          $(this).removeClass('has-error');
-        });
       });
     },
     /**
@@ -896,9 +888,6 @@
       $('#epicModal').on('hidden.bs.modal', function() {
         $("#epicName").val("");
         $("#epicColour").val("");
-        $(this).find('.has-error').each(function() {
-          $(this).removeClass('has-error');
-        });
       });
     },
     /**
@@ -925,45 +914,41 @@
     __setupCreateStoryModal: function(issue) {
       StoryMap.__resetStoryModal();
       $('#createStoryModal').on('click', '#createStoryBtn', function() {
-        var valid = StoryMap.__validateRequiredFields('#createStoryModal');
-        if (valid) {
-          $('#createStoryModal').modal('hide');
-          var data = {}
-          var priority = $("#createStoryPriority").val();
-          var cost = $("#createStoryPoints").val();
-          var desc = $("#createStoryDesc").val();
-          var sprint = $("#createStorySprint").val();
-          var epic = $("#createStoryEpic").val();
-          var labels = [StoryMap.labels.STORY];
-          var body = ""
-          if (priority !== null) {
-            body += StoryMap.__convertToMetaDataString(
-              StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + priority) + "\n";
-          }
-          if (cost !== null) {
-            body += StoryMap.__convertToMetaDataString(
-              StoryMap.metadata.COST + StoryMap.metaDelimiter + cost) + "\n";
-          }
-          if (epic !== null && epic.toLowerCase() !== "unspecified") {
-            labels.push(StoryMap.__convertToMetaDataString(epic));
-          }
-          body += desc;
-
-          data.title = $("#createStoryTitle").val();
-          data.body = body;
-          data.assignee = $("#createStoryAssignee").val();
-          data.milestone =  sprint < 0 ? null : sprint;
-          data.labels = labels;
-
-          issue.createIssue(data, function(err, createdStory) {
-            if (createdStory) {
-              StoryMap.storiesList.push(StoryMap.__createStory(createdStory));
-              StoryMap.__renderMap();
-            } else {
-              console.log(err);
-            }
-          });
+        var data = {}
+        var priority = $("#createStoryPriority").val();
+        var cost = $("#createStoryPoints").val();
+        var desc = $("#createStoryDesc").val();
+        var sprint = $("#createStorySprint").val();
+        var epic = $("#createStoryEpic").val();
+        var labels = [StoryMap.labels.STORY];
+        var body = ""
+        if (priority !== null) {
+          body += StoryMap.__convertToMetaDataString(
+            StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + priority) + "\n";
         }
+        if (cost !== null) {
+          body += StoryMap.__convertToMetaDataString(
+            StoryMap.metadata.COST + StoryMap.metaDelimiter + cost) + "\n";
+        }
+        if (epic !== null &amp;&amp; epic.toLowerCase() !== "unspecified") {
+          labels.push(StoryMap.__convertToMetaDataString(epic));
+        }
+        body += desc;
+        
+        data.title = $("#createStoryTitle").val();
+        data.body = body;
+        data.assignee = $("#createStoryAssignee").val();
+        data.milestone =  sprint &lt; 0 ? null : sprint;
+        data.labels = labels;
+        // TODO validation
+        issue.createIssue(data, function(err, createdStory) {
+          if (createdStory) {
+            StoryMap.storiesList.push(StoryMap.__createStory(createdStory));
+            StoryMap.__renderMap();
+          } else {
+            console.log(err);
+          }
+        });
       });
       $('#createStoryModal').on('hidden.bs.modal', function() {
         $("#createStoryTitle").val("");
@@ -971,11 +956,6 @@
         $("#createStoryPriority").val("");
         $("#createStoryPoints").val("");
         $("#createStoryAssignee").val("");
-        $('#createStorySprint').val("");
-        $('#createStoryEpic').val("");
-        $(this).find('.has-error').each(function() {
-          $(this).removeClass('has-error');
-        });
       });
     },
     /**
@@ -996,7 +976,7 @@
                            "#filterStoryName", "#filterStoryState",
                            "#filterStoryAssignee", "#filterStoryPriority",
                            "#filterStoryPoints"];
-        for (var i = 0; i < inputFields.length; ++i) {
+        for (var i = 0; i &lt; inputFields.length; ++i) {
           $(inputFields[i]).val("");
         }
       });
@@ -1014,35 +994,25 @@
       $('#story-map').on('click', '.story', function() {StoryMap.__loadStory(this)});
       $('#story-map').on('click', '.delete-epic', function() {
         var name = encodeURI(StoryMap.__convertToMetaDataString($(this).attr('data-value')));
-        $('#confirmModal').modal('show');
-        $('#confirmModal').off('click', '#confirmBtn');
-        $('#confirmModal').on('click', '#confirmBtn', function() {
-          $('#confirmModal').modal('hide');
-          NProgress.start();
-          StoryMap.issue.deleteLabel(name , null, function (err, res) {
-            NProgress.set(0.60);
-            var repopulatedEpics = StoryMap.__populateEpicsList(StoryMap.issue);
-            $.when(repopulatedEpics).done(function() {
-              StoryMap.__renderMap();
-              NProgress.done();
-            });
+        NProgress.start();
+        StoryMap.issue.deleteLabel(name , null, function (err, res) {
+          NProgress.set(0.60);
+          var repopulatedEpics = StoryMap.__populateEpicsList(StoryMap.issue);
+          $.when(repopulatedEpics).done(function() {
+            StoryMap.__renderMap();
+            NProgress.done();
           });
         });
       });
       $('#story-map').on('click', '.delete-story', function() {
         var id = $(this).attr('data-value');
-        $('#confirmModal').modal('show');
-        $('#confirmModal').off('click', '#confirmBtn');
-        $('#confirmModal').on('click', '#confirmBtn', function() {
-          $('#confirmModal').modal('hide');
-          NProgress.start();
-          StoryMap.issue.deleteLabelIssue(id, "story", function (err, res) {
-            NProgress.set(0.60);
-            var repopulatedStories = StoryMap.__populateStoriesList(StoryMap.issue);
-            $.when(repopulatedStories).done(function() {
-              StoryMap.__renderMap();
-              NProgress.done();
-            });
+        NProgress.start();
+        StoryMap.issue.deleteLabelIssue(id, "story", function (err, res) {
+          NProgress.set(0.60);
+          var repopulatedStories = StoryMap.__populateStoriesList(StoryMap.issue);
+          $.when(repopulatedStories).done(function() {
+            StoryMap.__renderMap();
+            NProgress.done();
           });
         });
       });
@@ -1059,7 +1029,7 @@
         var id = $(this).attr('id');
         if (typeof id != 'undefined') {
           dragsource = this;
-          var html = $(this).clone().wrap('<p>').parent().html();
+          var html = $(this).clone().wrap('&lt;p>').parent().html();
           $(this).addClass('dragged');
           e.originalEvent.dataTransfer.effectAllowed = 'move';
           e.originalEvent.dataTransfer.setData('text/html', html);
@@ -1188,7 +1158,7 @@
 
       var numEpics = 0;
       var nameFilter = $("#filterEpicName").val();
-      for (var i = 0; i < StoryMap.epicsList.length; ++i) {
+      for (var i = 0; i &lt; StoryMap.epicsList.length; ++i) {
         var epic = StoryMap.epicsList[i];
         if (!nameFilter || nameFilter == epic.name || epic.name == "unspecified") {
           epicsMap[epic.name] = numEpics;
@@ -1206,13 +1176,13 @@
     __processSprints: function(sprintsMap, context) {
       var numSprints = 0;
       var nameFilter = $("#filterSprintName").val();
-      for (var i = 0; i < StoryMap.sprintsList.length; ++i) {
+      for (var i = 0; i &lt; StoryMap.sprintsList.length; ++i) {
         var sprint = StoryMap.sprintsList[i];
         if (!nameFilter || nameFilter == sprint.name || sprint.name == "backlog") {
           sprintsMap[sprint.name] = numSprints;
           var sprintObj = {name: sprint.name, id:sprint.id, epic: [], prc:0,
                            claimedSP: 0, totalSP: 0, assignees: []};
-          for (var j = 0; j < context.epic.length; ++j) {
+          for (var j = 0; j &lt; context.epic.length; ++j) {
             sprintObj.epic.push([]);
           }
           context.sprint.push(sprintObj);
@@ -1232,15 +1202,15 @@
       var assigneeFilter = $("#filterStoryAssignee").val();
       var priorityFilter = $("#filterStoryPriority").val();
       var costFilter = $("#filterStoryPoints").val();
-      for (var i = 0; i < StoryMap.storiesList.length; ++i) {
+      for (var i = 0; i &lt; StoryMap.storiesList.length; ++i) {
         var story = StoryMap.storiesList[i];
         var storySprint = sprintsMap[story.sprint];
         var storyEpic = epicsMap[story.epic];
-        if (typeof(storySprint) != "undefined" && typeof(storyEpic) != "undefined") {
-          if ((!nameFilter || nameFilter == story.name) &&
-              (!stateFilter || stateFilter == story.state.state) &&
-              (!assigneeFilter || assigneeFilter == story.assignee.name) &&
-              (!priorityFilter || priorityFilter == story.priority) &&
+        if (typeof(storySprint) != "undefined" &amp;&amp; typeof(storyEpic) != "undefined") {
+          if ((!nameFilter || nameFilter == story.name) &amp;&amp;
+              (!stateFilter || stateFilter == story.state.state) &amp;&amp;
+              (!assigneeFilter || assigneeFilter == story.assignee.name) &amp;&amp;
+              (!priorityFilter || priorityFilter == story.priority) &amp;&amp;
               (!costFilter || costFilter == story.cost)) {
             if (!StoryMap.__assigneeInSprint(story.assignee, context.sprint[storySprint])) {
               context.sprint[storySprint].assignees.push(story.assignee);
@@ -1270,7 +1240,7 @@
       StoryMap.assigneesList = [];
       var dfd = $.Deferred();
       issue.assignees(null, function(err, assignees) {
-        for (var i = 0; i < assignees.length; ++i) {
+        for (var i = 0; i &lt; assignees.length; ++i) {
           StoryMap.assigneesList.push(assignees[i].login);
         }
         dfd.resolve();
@@ -1302,7 +1272,7 @@
       StoryMap.epicsList = [];
       var dfd = $.Deferred();
       issue.labels(null, function(err, labels) {
-        for (var i = 0; i < labels.length; i++) {
+        for (var i = 0; i &lt; labels.length; i++) {
           var label = labels[i];
           if (label.name.match(StoryMap.metaRegexp) != null) {
             StoryMap.epicsList.push(StoryMap.__createEpic(label));
@@ -1327,7 +1297,7 @@
         issue.milestones({state: StoryMap.githubStates['CLOSED']}, function(err, sprintObjs) {
           var closedSprintObjs = sprintObjs;
           var allSprintObjs = closedSprintObjs.concat(openSprintObjs).sort(StoryMap.__compareSprints);
-          for (var i = 0; i < allSprintObjs.length; i++) {
+          for (var i = 0; i &lt; allSprintObjs.length; i++) {
             var sprint = allSprintObjs[i];
             StoryMap.sprintsList.push(StoryMap.__createSprint(sprint));
           }
@@ -1363,7 +1333,7 @@
       @memberof StoryMap 
     */
     __populateStateList: function(labels) {
-      for (var i = 0; i < labels.length; ++i) {
+      for (var i = 0; i &lt; labels.length; ++i) {
         var label = labels[i];
         if (label.name == StoryMap.labels.IN_PROGRESS) {
           StoryMap.states.push({state:StoryMap.labels.IN_PROGRESS, verb:'In progress', color:label.color});
@@ -1379,7 +1349,7 @@
       @memberof StoryMap 
     */
     __addStoriesToList: function(stories) {
-      for (var i = 0; i < stories.length; ++i) {
+      for (var i = 0; i &lt; stories.length; ++i) {
         var story = stories[i];
         StoryMap.storiesList.push(StoryMap.__createStory(story));
       }
@@ -1391,7 +1361,7 @@
       @memberof StoryMap 
     */
     __assigneeInSprint: function(assignee, sprint) {
-      for (var i = 0; i < sprint.assignees.length; ++i) {
+      for (var i = 0; i &lt; sprint.assignees.length; ++i) {
         if (sprint.assignees[i].name === assignee.name) {
           return true;
         }
@@ -1408,7 +1378,7 @@
       if (story.state == StoryMap.githubStates.CLOSED) {
         return {state:"closed", color:"D9534F"};
       }
-      for (var i = 0; i < story.labels.length; ++i) {
+      for (var i = 0; i &lt; story.labels.length; ++i) {
         var label = story.labels[i];
         if (label.name == StoryMap.labels.IN_PROGRESS) {
           return {state:StoryMap.labels.IN_PROGRESS, color:label.color};
@@ -1442,7 +1412,7 @@
       @memberof StoryMap 
     */
     __getStoryEpic: function(story) {
-      for (var i = 0; i < story.labels.length; ++i) {
+      for (var i = 0; i &lt; story.labels.length; ++i) {
         var epic = story.labels[i].name.match(StoryMap.metaRegexp);
         if (epic !== null) {
           return epic[0];
@@ -1474,8 +1444,8 @@
       for (var i = story.labels.length - 1; i >= 0; i--) {
         var label = story.labels[i];
         if (label.name != StoryMap.labels.IN_PROGRESS 
-          && label.name != StoryMap.labels.BLOCKED 
-          && !label.name.match(StoryMap.metaRegexp)) {
+          &amp;&amp; label.name != StoryMap.labels.BLOCKED 
+          &amp;&amp; !label.name.match(StoryMap.metaRegexp)) {
           labels.push(label);
         }
       };
@@ -1493,7 +1463,7 @@
       if (body === null) {
         return bodyData;
       }
-      for (var i = 0; i < body.length; ++i) {
+      for (var i = 0; i &lt; body.length; ++i) {
         var data = body[i].split(StoryMap.metaDelimiter);
         if (data[0] == StoryMap.metadata.COST) {
           bodyData.cost = data[1];
@@ -1516,7 +1486,7 @@
       if (desc === null) {
         return descData;
       }
-      for (var i = 0; i < desc.length; ++i) {
+      for (var i = 0; i &lt; desc.length; ++i) {
         var data = desc[i].split(StoryMap.metaDelimiter);
         if (data[0] == StoryMap.metadata.START) {
           descData.start = data[1];
@@ -1531,7 +1501,7 @@
       @memberof StoryMap 
     */
     __getEpicObject: function(epicName) {
-      for (var i = 0; i < StoryMap.epicsList.length; ++i) {
+      for (var i = 0; i &lt; StoryMap.epicsList.length; ++i) {
         if (StoryMap.epicsList[i].name == epicName) {
           return StoryMap.epicsList[i];
         }
@@ -1567,7 +1537,7 @@
       @memberof StoryMap 
     */
     __compareSprints: function (a, b) {
-      if (a.due_on == null && b.due_on == null) {
+      if (a.due_on == null &amp;&amp; b.due_on == null) {
         return 0
       } else if (a.due_on == null) {
         return 1;
@@ -1578,7 +1548,7 @@
       var aDueDate = Date.parse(a.due_on);
       var bDueDate = Date.parse(b.due_on);
 
-      if (aDueDate < bDueDate) {
+      if (aDueDate &lt; bDueDate) {
         return -1;
       } else if (aDueDate > bDueDate) {
         return 1;
@@ -1589,3 +1559,26 @@
   };
 
 })();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="StoryMap.html">StoryMap</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Apr 02 2014 21:16:21 GMT-0600 (MDT)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
