@@ -818,9 +818,9 @@
         });
       };
 
-      this.label = function(name, options, cb) {
+      this.label = function(name, cb) {
         var path = "/repos/" + user + "/" + repo + "/labels/" + name;
-        _request("GET", path, options, function(err, res) {
+        _request("GET", path, null, function(err, res) {
           cb(err,res)
         });
       };

@@ -216,25 +216,63 @@
       StoryMap.__setupProject();
       StoryMap.user();
       if (StoryMap.__gitinit()) {
-        var issue = StoryMap.github.getIssues(user, project);
-        StoryMap.issue = issue;
-        var haveAssignees = StoryMap.__populateAssigneesList(issue);
-        var haveEpics = StoryMap.__populateEpicsList(issue);
-        var haveSprints = StoryMap.__populateSprintsList(issue);
-        var haveStories = StoryMap.__populateStoriesList(issue);
-        var haveLabels = StoryMap.__populateLabelsList(issue);
-        $.when(haveAssignees, haveEpics, haveSprints, haveStories, haveLabels).done(function() {
-          StoryMap.__populateStateList(StoryMap.labelsList);
-          StoryMap.__setupSprintModal(issue);
-          StoryMap.__setupEpicModal(issue);
-          StoryMap.__setupCreateStoryModal(issue);
-          StoryMap.__setupFiltersModal();
-          StoryMap.__setupMapListeners();
-          StoryMap.__renderMap();
-        });
+        var issue = StoryMap.issue = StoryMap.github.getIssues(user, project);
+        $.when(StoryMap.__initMetaLabels(issue)).done(function() {
+          // Populating the story map
+          var haveAssignees = StoryMap.__populateAssigneesList(issue);
+          var haveEpics = StoryMap.__populateEpicsList(issue);
+          var haveSprints = StoryMap.__populateSprintsList(issue);
+          var haveStories = StoryMap.__populateStoriesList(issue);
+          var haveLabels = StoryMap.__populateLabelsList(issue);
+          $.when(haveAssignees, haveEpics, haveSprints, haveStories, haveLabels).done(function() {
+            StoryMap.__populateStateList(StoryMap.labelsList);
+            StoryMap.__setupSprintModal(issue);
+            StoryMap.__setupEpicModal(issue);
+            StoryMap.__setupCreateStoryModal(issue);
+            StoryMap.__setupFiltersModal();
+            StoryMap.__setupMapListeners();
+            StoryMap.__renderMap();
+          });
+        });        
       } else {
         routie('');
       }
+    },
+    /**
+      Intialization call to verify basic meta-data exists
+      @method __setupProject
+      @memberof StoryMap 
+    */
+    __initMetaLabels: function(issue) {
+      var 
+        init = $.Deferred(),
+        labels = [{"name": "story", "color": "0052cc"}, 
+            {"name": "in progress", "color": "207de5"}, 
+            {"name": "blocked", "color": "e11d21"}],
+        dfds = [];
+
+      for (var i = labels.length - 1; i >= 0; i--) {                
+        dfds.push(StoryMap.__initMetaLabel(issue, labels[i]));        
+      };
+
+      $.when.apply($, dfds).done(function() {
+        init.resolve();
+      });  
+
+      return init.promise();      
+    },
+    __initMetaLabel: function(issue, label) {
+      var dfd = $.Deferred();
+      issue.label(label.name, function(err, res) {
+        if (res && res.message === "Not Found") { 
+          issue.createLabel(label, function(err, res) {
+            dfd.resolve();
+          }); 
+        } else {
+          dfd.resolve();
+        }
+      }); 
+      return dfd.promise();
     },
     /**
       Intialization call for the story map that loads in the base template.
@@ -242,6 +280,7 @@
       @memberof StoryMap 
     */
     __setupProject: function() {
+      NProgress.start();
       $('#content').html(Handlebars.getTemplate('project'));
     },
     /**
@@ -797,8 +836,9 @@
       $('#sprintDesc').val(StoryMap.__removeMetaDataStrings(obj.description));
       $('#sprintStartDate').datepicker('setValue', obj.start)
       $('#sprintStartDate').val(obj.start);
-      $('#sprintDueDate').val(obj.due.split("T")[0]);
-      $('#sprintDueDate').datepicker('setValue', obj.due.split("T")[0]);
+      var dueDate = obj.due ? Date.parse(obj.due) : '';
+      $('#sprintDueDate').val(dueDate);
+      $('#sprintDueDate').datepicker('setValue', dueDate);
       $('#sprintBtn').text('Update');
       $('#sprintModal').modal();
       $('#sprintModal').off('click', '#sprintBtn');
@@ -872,7 +912,10 @@
       $('#sprintStartDate').datepicker({format: "yyyy-mm-dd"});
       $('#sprintDueDate').datepicker({format: "yyyy-mm-dd"});
       $('#story-map').on('click', '#createSprintBtn', function() {StoryMap.__loadCreateSprintModal(issue)});
-      $('#story-map').on('click', '.edit-sprint', function() {StoryMap.__loadEditSprintModal(this)});
+      $('#story-map').on('click', '.edit-sprint', function(event) {
+        event.preventDefault();
+        StoryMap.__loadEditSprintModal(this);
+      });
       $('#sprintModal').on('hidden.bs.modal', function() {
         $("#sprintTitle").val("");
         $("#sprintDesc").val("");
@@ -1087,8 +1130,7 @@
           id = $(dragsource).attr('id'),
           html = e.originalEvent.dataTransfer.getData('text/html');
           $(dragsource).remove();
-          dragsource = null;
-        var  
+          dragsource = null,  
           milestoneid = $(this).attr('data-milestone'),
           epicpos = $(this).attr('data-epic'),
           epic = StoryMap.epicsList[epicpos],
@@ -1170,10 +1212,16 @@
         var offset = ($('.horizontal').scrollLeft()+20)*-1;
         $('#story-map-headers').css('margin-left', offset);
       });
+      $(".horizontal").scroll(function(){
+        $(".horizontal-scroll").scrollLeft($(".horizontal").scrollLeft());
+      });
+      $(".horizontal-scroll").scroll(function(){
+        $(".horizontal").scrollLeft($(".horizontal-scroll").scrollLeft());
+      });
       $('a.sprint-link').click(function (e) {
         e.preventDefault();
         $($(this).attr('href'))[0].scrollIntoView();
-        scrollBy(0, -200);
+        scrollBy(0, -199);
       });
     },
     /**
@@ -1204,17 +1252,20 @@
       @memberof StoryMap 
     */
     __processSprints: function(sprintsMap, context) {
-      var numSprints = 0;
-      var nameFilter = $("#filterSprintName").val();
+      var numSprints = 0,
+        nameFilter = $("#filterSprintName").val(),
+        date = Date();
       for (var i = 0; i < StoryMap.sprintsList.length; ++i) {
         var sprint = StoryMap.sprintsList[i];
         if (!nameFilter || nameFilter == sprint.name || sprint.name == "backlog") {
           sprintsMap[sprint.name] = numSprints;
           var sprintObj = {name: sprint.name, id:sprint.id, epic: [], prc:0,
-                           claimedSP: 0, totalSP: 0, assignees: []};
+                           claimedSP: 0, totalSP: 0, closed: false, assignees: []};
           for (var j = 0; j < context.epic.length; ++j) {
             sprintObj.epic.push([]);
           }
+
+          sprintObj.closed = sprint.due ? Date.parse(sprint.due).valueOf() < Date.parse(date).valueOf() : false;
           context.sprint.push(sprintObj);
           ++numSprints;
         }

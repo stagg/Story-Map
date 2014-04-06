@@ -4,7 +4,19 @@
     window.StoryMap = {};
   }
 
+  /**
+    Generation of the storymap utility object that contains utility functions 
+    used in and outside the StoryMap
+    @namespace StoryMap.util
+    @global 
+  */
   window.StoryMap.util = {
+    /**
+
+      @method 
+      @summary 
+      @memberof StoryMap.util 
+    */
     __generateId: function (length) {
       var 
         text = "",
@@ -14,7 +26,19 @@
       }
       return text;
     },
+    /**
+
+      @summary 
+      @memberof StoryMap.util 
+      @namespace StoryMap.util.cookie
+    */
     cookie: {
+      /**
+
+      @method 
+      @summary 
+      @memberof StoryMap.util.cookie 
+      */
       __create: function (name, value) {
         StoryMap.util.cookie.__erase(name);
         var date = new Date();
@@ -22,6 +46,12 @@
         var expires = "; expires="+date.toGMTString();
         document.cookie = name + "=" + value + expires + "; path=/";
       },
+      /**
+
+      @method 
+      @summary 
+      @memberof StoryMap.util.cookie 
+      */
       __read: function (name) {
         var nameEQ = name + "=";
         var ca = document.cookie.split(';');
@@ -32,18 +62,42 @@
         }
         return null;
       },
+      /**
+
+      @method 
+      @summary 
+      @memberof StoryMap.util.cookie
+      */
       __erase: function ( name ) {
         var date = new Date();
         date.setTime(date.getTime() - 86400000);
         document.cookie = name + "=; expires=" + date.toGMTString() + "; path=/";
       }
     },
+    /**
+
+      @summary 
+      @memberof StoryMap.util 
+      @namespace StoryMap.util.uri
+    */
     uri:{
+      /**
+
+      @method 
+      @summary 
+      @memberof StoryMap.util.uri
+      */
       __decode: function () {
           var search = location.search.substring(1);
           return search ? JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}',
                  function(key, value) { return key===""?value:decodeURIComponent(value) }):{};
       }, 
+      /**
+
+      @method 
+      @summary 
+      @memberof StoryMap.util.uri
+      */
       __encode: function(obj, prefix) {
         var str = [];
         for(var p in obj) {

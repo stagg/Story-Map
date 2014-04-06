@@ -7,7 +7,7 @@
   /* Removes padding behaviour on widths */
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
-         box-sizing: border-box;
+          box-sizing: border-box;
 }
 body {
   padding-bottom: 40px;
@@ -210,6 +210,10 @@ a:hover.nolink {
 .col-sprint {
   width:210px;
 }
+.horizontal-scroll {
+  height: 20px
+  ;
+}
 .horizontal {
   overflow: scroll;
   padding-left: 10px;
@@ -219,6 +223,9 @@ a:hover.nolink {
 }
 .horizontal-inner .row {
   min-height: 100px;
+}
+.row .closed {
+  opacity: 0.7;
 }
 .epics, 
 .epic {
@@ -231,6 +238,9 @@ a:hover.nolink {
   width:215px;
   background-color: #eee;
   margin-left: -20px;
+  overflow-y: scroll;
+  height: 100%;
+  padding-bottom: 50px;
 }
 .sprint-link {
   white-space: nowrap;
@@ -238,8 +248,6 @@ a:hover.nolink {
   text-overflow: ellipsis;
 }
 .edit-sprint {
-  margin-right: 3px;
-  margin-top: 8px;
   cursor: pointer;
   z-index: 100;
 }
@@ -256,6 +264,7 @@ a:hover.nolink {
 }
 #createModal a, #createModal span {
   color: #000;
+  font-family: 'Glyphicons Halflings','Helvetica Neue',Helvetica,Arial,sans-serif;;
 }
 #createModal .glyphicon-plus:before {
   font-size: 0.8em;

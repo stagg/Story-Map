@@ -28,11 +28,11 @@
             <li id="sprint-menu"  class="nav">
                 <ul class="nav nav-stacked nav-pills">
                   {{#each sprint}}
-                    <li>   
+                    <li>                      
+                        <a href="#nav{{id}}" id="sprint-{{id}}" class="sprint-link">  
                         {{#unlessvalue id value=-1}}
                         <span id="edit-{{id}}" class="glyphicon glyphicon-pencil pull-right edit-sprint"/>
-                        {{/unlessvalue}}                      
-                        <a href="#nav{{id}}" id="sprint-{{id}}" class="sprint-link">                  
+                        {{/unlessvalue}}                   
                           {{name}}
                           <div class="workers">
                           {{#each assignees}}
@@ -57,10 +57,10 @@
         </ul>
       </nav>
 <div id="scroll-map" class="row">
-  <div class="col-map col-sprint"></div>
+  <div class="col-map col-sprint"></div>  
   <div class="horizontal">
     <div id="story-map-headers" style="width:{{style.width}}px;">
-      <div class="row heading">
+      <div class="row heading">        
         <div class="col">
           <h3 class="features-title">Features</p></h3>
         </div>
@@ -80,7 +80,7 @@
     </div>
     <div style="width:{{style.innerwidth}}px;" class="horizontal-inner">                 
         {{#each sprint}}
-        <div id="nav{{id}}" class="row{{#if_odd @index}} odd{{/if_odd}} break-word">
+        <div id="nav{{id}}" class="row{{#if_odd @index}} odd{{/if_odd}} break-word {{#if closed}}closed{{/if}}">
           {{#each epic}}
           <div class="col-map dd-drop" data-milestone="{{../id}}" data-epic="{{@index}}">
             {{#each this}}

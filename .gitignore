@@ -3,5 +3,6 @@ config.js
 config-dev.js
 server.crt
 server.key
+server.csr
 npm-debug.log
 dump.rdb
