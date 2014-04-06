@@ -543,14 +543,18 @@
       $('#epicBtn').text('Create');
       $('#epicModal').off('click', '#epicBtn');
       $('#epicModal').on('click', '#epicBtn', function() {
-        var data = StoryMap.__parseEpicModalFields();
-        issue.createLabel(data, function(err, createdEpic) {
-          var repopulatedEpics = StoryMap.__populateEpicsList(issue);
-          $.when(repopulatedEpics).done(function() {
-            StoryMap.__resetStoryModal();
-            StoryMap.__renderMap();
-          });
-        });
+        var valid = StoryMap.__validateRequiredFields('#epicModal');
+        if (valid) {
+          $('#epicModal').modal('hide');
+	      var data = StoryMap.__parseEpicModalFields();
+	      issue.createLabel(data, function(err, createdEpic) {
+	        var repopulatedEpics = StoryMap.__populateEpicsList(issue);
+	        $.when(repopulatedEpics).done(function() {
+	          StoryMap.__resetStoryModal();
+	          StoryMap.__renderMap();
+	        });
+	      });
+        }
       });
     },
     __loadEditEpicModal: function(el) {
@@ -567,19 +571,23 @@
       $('#epicModal').modal();
       $('#epicModal').off('click', '#epicBtn');
       $('#epicModal').on('click', '#epicBtn', function() {
-        var data = StoryMap.__parseEpicModalFields();
-        StoryMap.issue.updateLabel(StoryMap.__convertToMetaDataString(obj.name), data, function(err, updatedLabel) {
-          if (updatedLabel) {
-            var epic = StoryMap.__createEpic(updatedLabel);
-            for (var i = 0; i < StoryMap.epicsList.length; ++i) {
-              if (StoryMap.epicsList[i].name == obj.name) {
-                StoryMap.epicsList[i] = epic;
-                break;
+        var valid = StoryMap.__validateRequiredFields('#epicModal');
+        if (valid) {
+          $('#epicModal').modal('hide');
+          var data = StoryMap.__parseEpicModalFields();
+          StoryMap.issue.updateLabel(StoryMap.__convertToMetaDataString(obj.name), data, function(err, updatedLabel) {
+            if (updatedLabel) {
+              var epic = StoryMap.__createEpic(updatedLabel);
+              for (var i = 0; i < StoryMap.epicsList.length; ++i) {
+                if (StoryMap.epicsList[i].name == obj.name) {
+                  StoryMap.epicsList[i] = epic;
+                  break;
+                }
               }
+              StoryMap.__renderMap();
             }
-            StoryMap.__renderMap();
-          }
-        });
+          });
+        }
       });
     },
     __parseEpicModalFields: function() {
@@ -633,14 +641,18 @@
       $('#sprintBtn').text('Create');
       $('#sprintModal').off('click', '#epicBtn');
       $('#sprintModal').on('click', '#sprintBtn', function() {
-        var data = StoryMap.__parseSprintModalFields();
-        issue.createMilestone(data, function(err, createdSprint) {
-          var repopulatedSprints = StoryMap.__populateSprintsList(issue);
-          $.when(repopulatedSprints).done(function() {
-            StoryMap.__resetStoryModal();
-            StoryMap.__renderMap();
+        var valid = StoryMap.__validateRequiredFields('#sprintModal');
+        if (valid) {
+          $('#sprintModal').modal('hide');
+          var data = StoryMap.__parseSprintModalFields();
+          issue.createMilestone(data, function(err, createdSprint) {
+            var repopulatedSprints = StoryMap.__populateSprintsList(issue);
+            $.when(repopulatedSprints).done(function() {
+              StoryMap.__resetStoryModal();
+              StoryMap.__renderMap();
+            });
           });
-        });
+        }
       });
     },
     __loadEditSprintModal: function(el) {
@@ -660,19 +672,23 @@
       $('#sprintModal').modal();
       $('#sprintModal').off('click', '#sprintBtn');
       $('#sprintModal').on('click', '#sprintBtn', function() {
-        var data = StoryMap.__parseSprintModalFields();
-        StoryMap.issue.editMilestone(id, data, function(err, updatedSprint) {
-          if (updatedSprint) {
-            var sprint = StoryMap.__createSprint(updatedSprint);
-            for (var i = 0; i < StoryMap.sprintsList.length; ++i) {
-              if (StoryMap.sprintsList[i].id == id) {
-                StoryMap.sprintsList[i] = sprint;
-                break;
-              }
-            }
-            StoryMap.__renderMap();
-          }
-        });
+        var valid = StoryMap.__validateRequiredFields('#sprintModal');
+        if (valid) {
+          $('#sprintModal').modal('hide');
+	      var data = StoryMap.__parseSprintModalFields();
+	      StoryMap.issue.editMilestone(id, data, function(err, updatedSprint) {
+	        if (updatedSprint) {
+	          var sprint = StoryMap.__createSprint(updatedSprint);
+	          for (var i = 0; i < StoryMap.sprintsList.length; ++i) {
+	            if (StoryMap.sprintsList[i].id == id) {
+	              StoryMap.sprintsList[i] = sprint;
+	              break;
+	            }
+	          }
+	          StoryMap.__renderMap();
+	        }
+	      });
+        }
       });
     },
     __parseSprintModalFields: function() {
@@ -693,6 +709,22 @@
 
       return data;
     },
+    __validateRequiredFields: function(element) {
+      var valid = true;
+      $(element).find('.required').each(function() {
+        if (!$(this).val()) {
+          valid = false;
+          $(this).parent().closest('div').addClass('has-error');
+        }
+        else {
+          $(this).parent().closest('div').removeClass('has-error');
+        }
+      });
+      if (valid) {
+        return true;
+      }
+      return false;
+    },
     __setupSprintModal: function(issue) {
       $('#sprintStartDate').datepicker({format: "yyyy-mm-dd"});
       $('#sprintDueDate').datepicker({format: "yyyy-mm-dd"});
@@ -703,6 +735,9 @@
         $("#sprintDesc").val("");
         $("#sprintStartDate").val("");
         $("#sprintDueDate").val("");
+        $(this).find('.has-error').each(function() {
+          $(this).removeClass('has-error');
+        });
       });
     },
     __setupEpicModal: function(issue) {
@@ -712,6 +747,9 @@
       $('#epicModal').on('hidden.bs.modal', function() {
         $("#epicName").val("");
         $("#epicColour").val("");
+        $(this).find('.has-error').each(function() {
+          $(this).removeClass('has-error');
+        });
       });
     },
     __resetStoryModal: function() {
@@ -726,41 +764,45 @@
     __setupCreateStoryModal: function(issue) {
       StoryMap.__resetStoryModal();
       $('#createStoryModal').on('click', '#createStoryBtn', function() {
-        var data = {}
-        var priority = $("#createStoryPriority").val();
-        var cost = $("#createStoryPoints").val();
-        var desc = $("#createStoryDesc").val();
-        var sprint = $("#createStorySprint").val();
-        var epic = $("#createStoryEpic").val();
-        var labels = [StoryMap.labels.STORY];
-        var body = ""
-        if (priority !== null) {
-          body += StoryMap.__convertToMetaDataString(
-            StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + priority) + "\n";
-        }
-        if (cost !== null) {
-          body += StoryMap.__convertToMetaDataString(
-            StoryMap.metadata.COST + StoryMap.metaDelimiter + cost) + "\n";
-        }
-        if (epic !== null && epic.toLowerCase() !== "unspecified") {
-          labels.push(StoryMap.__convertToMetaDataString(epic));
-        }
-        body += desc;
-        
-        data.title = $("#createStoryTitle").val();
-        data.body = body;
-        data.assignee = $("#createStoryAssignee").val();
-        data.milestone =  sprint < 0 ? null : sprint;
-        data.labels = labels;
-        // TODO validation
-        issue.createIssue(data, function(err, createdStory) {
-          if (createdStory) {
-            StoryMap.storiesList.push(StoryMap.__createStory(createdStory));
-            StoryMap.__renderMap();
-          } else {
-            console.log(err);
+        var valid = StoryMap.__validateRequiredFields('#createStoryModal');
+        if (valid) {
+          $('#createStoryModal').modal('hide');
+          var data = {}
+          var priority = $("#createStoryPriority").val();
+          var cost = $("#createStoryPoints").val();
+          var desc = $("#createStoryDesc").val();
+          var sprint = $("#createStorySprint").val();
+          var epic = $("#createStoryEpic").val();
+          var labels = [StoryMap.labels.STORY];
+          var body = ""
+          if (priority !== null) {
+            body += StoryMap.__convertToMetaDataString(
+              StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + priority) + "\n";
           }
-        });
+          if (cost !== null) {
+            body += StoryMap.__convertToMetaDataString(
+              StoryMap.metadata.COST + StoryMap.metaDelimiter + cost) + "\n";
+          }
+          if (epic !== null && epic.toLowerCase() !== "unspecified") {
+            labels.push(StoryMap.__convertToMetaDataString(epic));
+          }
+          body += desc;
+
+          data.title = $("#createStoryTitle").val();
+          data.body = body;
+          data.assignee = $("#createStoryAssignee").val();
+          data.milestone =  sprint < 0 ? null : sprint;
+          data.labels = labels;
+
+          issue.createIssue(data, function(err, createdStory) {
+            if (createdStory) {
+              StoryMap.storiesList.push(StoryMap.__createStory(createdStory));
+              StoryMap.__renderMap();
+            } else {
+              console.log(err);
+            }
+          });
+        }
       });
       $('#createStoryModal').on('hidden.bs.modal', function() {
         $("#createStoryTitle").val("");
@@ -768,6 +810,11 @@
         $("#createStoryPriority").val("");
         $("#createStoryPoints").val("");
         $("#createStoryAssignee").val("");
+        $('#createStorySprint').val("");
+        $('#createStoryEpic').val("");
+        $(this).find('.has-error').each(function() {
+          $(this).removeClass('has-error');
+        });
       });
     },
     __setupFiltersModal: function() {

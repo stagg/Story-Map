@@ -9,7 +9,7 @@
               <p>
                 <div class="row">
                   <div class="col-md-12">
-                    <input id="createStoryTitle" type="text" class="form-control" placeholder="Title" />
+                    <input id="createStoryTitle" type="text" class="form-control required" placeholder="Title" />
                   </div>
                 </div>
               </p>
@@ -24,7 +24,7 @@
                     </select>
                   </div>
                   <div class="col-md-4">
-                    <select id="createStoryPriority" class="form-control" name="Priority">
+                    <select id="createStoryPriority" class="form-control required" name="Priority">
                       <option selected disabled value="">Priority</option>
                       {{#each priorities}}
                       <option value={{this}}>{{this}}</option>
@@ -33,7 +33,7 @@
                     </select>
                   </div>
                   <div class="col-md-4">
-                    <select id="createStoryPoints" class="form-control" name="Story Points">
+                    <select id="createStoryPoints" class="form-control required" name="Story Points">
                       <option selected disabled value="">Story Points</option>
                       {{#each costs}}
                         <option value={{this}}>{{this}}</option>
@@ -73,7 +73,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-success" id="createStoryBtn" data-dismiss="modal">Create</button>
+            <button type="button" class="btn btn-success" id="createStoryBtn">Create</button>
           </div>
         </div>
       </div>
