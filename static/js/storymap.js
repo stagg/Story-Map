@@ -841,25 +841,35 @@
       $('#story-map').on('click', '.story', function() {StoryMap.__loadStory(this)});
       $('#story-map').on('click', '.delete-epic', function() {
         var name = encodeURI(StoryMap.__convertToMetaDataString($(this).attr('data-value')));
-        NProgress.start();
-        StoryMap.issue.deleteLabel(name , null, function (err, res) {
-          NProgress.set(0.60);
-          var repopulatedEpics = StoryMap.__populateEpicsList(StoryMap.issue);
-          $.when(repopulatedEpics).done(function() {
-            StoryMap.__renderMap();
-            NProgress.done();
+        $('#confirmModal').modal('show');
+        $('#confirmModal').off('click', '#confirmBtn');
+        $('#confirmModal').on('click', '#confirmBtn', function() {
+          $('#confirmModal').modal('hide');
+          NProgress.start();
+          StoryMap.issue.deleteLabel(name , null, function (err, res) {
+            NProgress.set(0.60);
+            var repopulatedEpics = StoryMap.__populateEpicsList(StoryMap.issue);
+            $.when(repopulatedEpics).done(function() {
+              StoryMap.__renderMap();
+              NProgress.done();
+            });
           });
         });
       });
       $('#story-map').on('click', '.delete-story', function() {
         var id = $(this).attr('data-value');
-        NProgress.start();
-        StoryMap.issue.deleteLabelIssue(id, "story", function (err, res) {
-          NProgress.set(0.60);
-          var repopulatedStories = StoryMap.__populateStoriesList(StoryMap.issue);
-          $.when(repopulatedStories).done(function() {
-            StoryMap.__renderMap();
-            NProgress.done();
+        $('#confirmModal').modal('show');
+        $('#confirmModal').off('click', '#confirmBtn');
+        $('#confirmModal').on('click', '#confirmBtn', function() {
+          $('#confirmModal').modal('hide');
+          NProgress.start();
+          StoryMap.issue.deleteLabelIssue(id, "story", function (err, res) {
+            NProgress.set(0.60);
+            var repopulatedStories = StoryMap.__populateStoriesList(StoryMap.issue);
+            $.when(repopulatedStories).done(function() {
+              StoryMap.__renderMap();
+              NProgress.done();
+            });
           });
         });
       });
