@@ -17,9 +17,11 @@ if (process.env.NODE_ENV === 'dev') {
 
 if (config.ssl !== false) {
   var privateKey = fs.readFileSync('./server.key', 'utf8');
-  var certificate = fs.readFileSync('./server.crt', 'utf8');
+  var certificate = fs.readFileSync('./cert.crt', 'utf8');
+  var intermediate = fs.readFileSync('./inter.crt', 'utf8');
   credentials.key = privateKey;
   credentials.cert = certificate;
+  credentials.ca = intermediate;
 }
 
 app.configure(function(){
@@ -130,6 +132,11 @@ app.del('/api/*', function(req, res) {
 
 if (config.ssl === true) {
   https.createServer(credentials, app).listen(config.port);
+  var redirect = express();
+  redirect.get('*',function(req,res){
+    res.redirect(config.url+req.url)
+  });
+  http.createServer(redirect).listen(80);
 } else {
   http.createServer(app).listen(config.port);
 }

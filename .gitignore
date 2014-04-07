@@ -4,5 +4,7 @@ config-dev.js
 server.crt
 server.key
 server.csr
+inter.crt
+cert.crt
 npm-debug.log
 dump.rdb

@@ -357,14 +357,14 @@
         return dfd.promise();
       }
     },
-    /*
+    /**
       Submission method on the Story modal that updates an edited issue and posts it
       to github. The github response is used to do an inplace replacment of the story
       in the internal mapping. 
       @method __updateStory
       @summary Story modal submit to github.
       @param {integer} id The github issue id
-      @param el 
+      @param el Dom element
       @memberof StoryMap 
     */
     __updateStory: function (id, el) {
@@ -422,9 +422,12 @@
       }
     },
     /**
-
-      @method 
-      @summary 
+      Method call that rebuilds an internal story with the new state and updates it
+      against Github. The Github response is paresed and updates the internal map.
+      @method __updateStoryState
+      @summary Change the state of a Github issue.
+      @param {integer} id Github issue id.
+      @param {string} state Issue state one of; open, closed, in progress, blocked 
       @memberof StoryMap 
     */
     __updateStoryState: function(id, state) {
@@ -464,9 +467,14 @@
       }
     },
     /**
+      Method that removes a label from a story (Github issue) by updating the internal 
+      mapping and updates it on Github.
 
-      @method 
-      @summary 
+      @method __deleteStoryLabel
+      @summary Removes a label from a story.
+      @param {integer} id Github issue id.
+      @param {string} name Label name.
+      @param {boolean} modal Flag to indicate if this was triggered from a modal.
       @memberof StoryMap 
     */
     __deleteStoryLabel: function (id, name, modal) {
@@ -490,9 +498,13 @@
       });
     },
     /**
-
-      @method 
-      @summary 
+      Adds a specific label to a story by calling github with the name (data.name)
+      and updating it against github.
+      @method __updateStoryLabels
+      @summary Add a label to a story.
+      @param {integer} id Github issue id.
+      @param {object} data representing a label {name:'', color:''}.
+      @param {boolean} modal Flag to indicate if this was triggered from a modal.
       @memberof StoryMap 
     */
     __updateStoryLabels: function (id, data, modal) {
@@ -510,9 +522,12 @@
       });
     },
     /**
-
-      @method 
-      @summary 
+      This adds a label to a story by first checking if the label exists, if it does 
+      StoryMap.__updateStoryLabels is used. Otherwise the label is created and added 
+      to the internal label list. 
+      @method __addLabelToIssue
+      @summary Method that adds a label to a story, creating it if necessary.  
+      @param {integer} id Github issue id. 
       @memberof StoryMap 
     */
     __addLabelToIssue: function (id) {
@@ -540,9 +555,12 @@
       }
     },
     /**
+      Helper function for StoryMap.__loadStoryModal that looks the story from 
+      the internal story mapping.
 
-      @method 
-      @summary 
+      @method __loadStory
+      @summary Loads the story modal popup
+      @param el Dom element 
       @memberof StoryMap 
     */
     __loadStory: function(el) {
@@ -551,9 +569,11 @@
       StoryMap.__loadStoryModal(obj);
     },
     /**
-
-      @method 
-      @summary 
+      Heavy method that loads the story modal with data from the story object. 
+      This includes click listeners and the Bloodhound label drop down setup.
+      @method __loadStoryModal
+      @summary Loads the story modal
+      @param {object} obj Object representing a Story (github issue)
       @memberof StoryMap 
     */
     __loadStoryModal: function(obj) {  
@@ -661,9 +681,10 @@
       });
     },
     /**
-
-      @method 
-      @summary 
+      Loads the create epic modal 
+      @method __loadCreateEpicModal
+      @summary Loads the create epic modal.
+      @param {Github.issue} Github issue namespace.
       @memberof StoryMap 
     */
     __loadCreateEpicModal: function(issue) {
@@ -687,7 +708,7 @@
     },
     /**
 
-      @method 
+      @method __loadEditEpicModal
       @summary 
       @memberof StoryMap 
     */
@@ -726,7 +747,7 @@
     },
     /**
 
-      @method 
+      @method __parseEpicModalFields
       @summary 
       @memberof StoryMap 
     */
@@ -740,7 +761,7 @@
     },
     /**
 
-      @method 
+      @method __createStory
       @summary 
       @memberof StoryMap 
     */
@@ -768,7 +789,7 @@
     },
     /**
 
-      @method 
+      @method __createEpic
       @summary 
       @memberof StoryMap 
     */
@@ -780,7 +801,7 @@
     },
     /**
 
-      @method 
+      @method __createSprint
       @summary 
       @memberof StoryMap 
     */
@@ -796,7 +817,7 @@
     },
     /**
 
-      @method 
+      @method __loadCreateSprintModal
       @summary 
       @memberof StoryMap 
     */
@@ -821,7 +842,7 @@
     },
     /**
 
-      @method 
+      @method __loadEditSprintModal
       @summary 
       @memberof StoryMap 
     */
@@ -864,7 +885,7 @@
     },
     /**
 
-      @method 
+      @method __parseSprintModalFields
       @summary 
       @memberof StoryMap 
     */
@@ -886,6 +907,12 @@
 
       return data;
     },
+    /**
+
+      @method __validateRequiredFields
+      @summary 
+      @memberof StoryMap 
+    */
     __validateRequiredFields: function(element) {
       var valid = true;
       $(element).find('.required').each(function() {
@@ -904,7 +931,7 @@
     },
     /**
 
-      @method 
+      @method __setupSprintModal
       @summary 
       @memberof StoryMap 
     */
@@ -928,7 +955,7 @@
     },
     /**
 
-      @method 
+      @method __setupEpicModal
       @summary 
       @memberof StoryMap 
     */
@@ -946,7 +973,7 @@
     },
     /**
 
-      @method 
+      @method __resetStoryModal
       @summary 
       @memberof StoryMap 
     */
@@ -961,7 +988,7 @@
     },
     /**
 
-      @method 
+      @method __setupCreateStoryModal
       @summary 
       @memberof StoryMap 
     */
@@ -1023,7 +1050,7 @@
     },
     /**
 
-      @method 
+      @method __setupFiltersModal
       @summary 
       @memberof StoryMap 
     */
@@ -1049,7 +1076,7 @@
     },
     /**
 
-      @method 
+      @method __setupMapListeners
       @summary 
       @memberof StoryMap 
     */
@@ -1092,7 +1119,7 @@
     },
     /**
 
-      @method 
+      @method __setupDragAndDrop
       @summary 
       @memberof StoryMap 
     */
@@ -1129,8 +1156,11 @@
         var 
           id = $(dragsource).attr('id'),
           html = e.originalEvent.dataTransfer.getData('text/html');
-          $(dragsource).remove();
-          dragsource = null,  
+
+        $(dragsource).remove();
+        dragsource = null;
+
+        var 
           milestoneid = $(this).attr('data-milestone'),
           epicpos = $(this).attr('data-epic'),
           epic = StoryMap.epicsList[epicpos],
@@ -1183,7 +1213,7 @@
     },
     /**
 
-      @method 
+      @method __renderMap
       @summary 
       @memberof StoryMap 
     */
@@ -1226,7 +1256,7 @@
     },
     /**
 
-      @method 
+      @method __processEpics
       @summary 
       @memberof StoryMap 
     */
@@ -1247,7 +1277,7 @@
     },
     /**
 
-      @method 
+      @method __processSprints
       @summary 
       @memberof StoryMap 
     */
@@ -1273,7 +1303,7 @@
     },
     /**
 
-      @method 
+      @method __processStories
       @summary 
       @memberof StoryMap 
     */
@@ -1313,7 +1343,7 @@
     },
     /**
 
-      @method 
+      @method __populateAssigneesList
       @summary 
       @memberof StoryMap 
     */
@@ -1330,7 +1360,7 @@
     },
     /**
 
-      @method 
+      @method __populateLabelsList
       @summary 
       @memberof StoryMap 
     */
@@ -1345,7 +1375,7 @@
     },
     /**
 
-      @method 
+      @method __populateEpicsList
       @summary 
       @memberof StoryMap 
     */
@@ -1366,7 +1396,7 @@
     },
     /**
 
-      @method 
+      @method __populateSprintsList
       @summary 
       @memberof StoryMap 
     */
@@ -1390,7 +1420,7 @@
     },
     /**
 
-      @method 
+      @method __populateStoriesList
       @summary 
       @memberof StoryMap 
     */
@@ -1409,7 +1439,7 @@
     },
     /**
 
-      @method 
+      @method __populateStateList
       @summary 
       @memberof StoryMap 
     */
@@ -1425,7 +1455,7 @@
     },
     /**
 
-      @method 
+      @method __addStoriesToList
       @summary 
       @memberof StoryMap 
     */
@@ -1437,7 +1467,7 @@
     },
     /**
 
-      @method 
+      @method __assigneeInSprint
       @summary 
       @memberof StoryMap 
     */
@@ -1451,7 +1481,7 @@
     },
     /**
 
-      @method 
+      @method __getStoryState
       @summary 
       @memberof StoryMap 
     */
@@ -1472,7 +1502,7 @@
     },
     /**
 
-      @method 
+      @method __getStoryAssignee
       @summary 
       @memberof StoryMap 
     */
@@ -1488,7 +1518,7 @@
     },
     /**
 
-      @method 
+      @method __getStoryEpic
       @summary 
       @memberof StoryMap 
     */
@@ -1503,7 +1533,7 @@
     },
     /**
 
-      @method 
+      @method __getStorySprint
       @summary 
       @memberof StoryMap 
     */
@@ -1516,7 +1546,7 @@
     },
     /**
 
-      @method 
+      @method __getStoryLabels
       @summary 
       @memberof StoryMap 
     */
@@ -1534,7 +1564,7 @@
     },
     /**
 
-      @method 
+      @method __parseStoryBody
       @summary 
       @memberof StoryMap 
     */
@@ -1557,7 +1587,7 @@
     },
     /**
 
-      @method 
+      @method __parseSprintDescription
       @summary 
       @memberof StoryMap 
     */
@@ -1577,7 +1607,7 @@
     },
     /**
 
-      @method 
+      @method __getEpicObject
       @summary 
       @memberof StoryMap 
     */
@@ -1591,7 +1621,7 @@
     },
     /**
 
-      @method 
+      @method __convertToMetaDataString
       @summary 
       @memberof StoryMap 
     */
@@ -1602,7 +1632,7 @@
     },
     /**
 
-      @method 
+      @method __removeMetaDataStrings
       @summary 
       @memberof StoryMap 
     */
@@ -1613,7 +1643,7 @@
     },
     /**
 
-      @method 
+      @method __compareSprints
       @summary 
       @memberof StoryMap 
     */
