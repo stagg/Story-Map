@@ -67,11 +67,11 @@
     assigneesList: [],
     labelsList: [],
     /**
-      Intialization of the Github.js object which is used to 
-      communicate with the github.com api.
+      Initialization of the Github.js object which is used to 
+      communicate with the github.com API.
 
       @method __gitinit
-      @summary Github.js Object intializaion.
+      @summary Github.js Object initialization.
       @returns {boolean} If the Github.js object has been created.
       @memberof StoryMap  
     */
@@ -174,7 +174,7 @@
           user.orgs(orgList);          
           user.repos(repolist);
         }
-        $.when(usrRepo, orgRepo).done( function() {
+        $.when(usrRepo, orgRepo).done( function() {          
           $('#content').html(project_tmpl(context));
           StoryMap.user();   
         }); 
@@ -243,25 +243,64 @@
       StoryMap.__setupProject();
       StoryMap.user();
       if (StoryMap.__gitinit()) {
-        var issue = StoryMap.github.getIssues(user, project);
-        StoryMap.issue = issue;
-        var haveAssignees = StoryMap.__populateAssigneesList(issue);
-        var haveEpics = StoryMap.__populateEpicsList(issue);
-        var haveSprints = StoryMap.__populateSprintsList(issue);
-        var haveStories = StoryMap.__populateStoriesList(issue);
-        var haveLabels = StoryMap.__populateLabelsList(issue);
-        $.when(haveAssignees, haveEpics, haveSprints, haveStories, haveLabels).done(function() {
-          StoryMap.__populateStateList(StoryMap.labelsList);
-          StoryMap.__setupSprintModal(issue);
-          StoryMap.__setupEpicModal(issue);
-          StoryMap.__setupCreateStoryModal(issue);
-          StoryMap.__setupFiltersModal();
-          StoryMap.__setupMapListeners();
-          StoryMap.__renderMap();
-        });
+        var issue = StoryMap.issue = StoryMap.github.getIssues(user, project);
+        $.when(StoryMap.__initMetaLabels(issue)).done(function() {
+          // Populating the story map
+          var haveAssignees = StoryMap.__populateAssigneesList(issue);
+          var haveEpics = StoryMap.__populateEpicsList(issue);
+          var haveSprints = StoryMap.__populateSprintsList(issue);
+          var haveStories = StoryMap.__populateStoriesList(issue);
+          var haveLabels = StoryMap.__populateLabelsList(issue);
+          $.when(haveAssignees, haveEpics, haveSprints, haveStories, haveLabels).done(function() {
+            StoryMap.__populateStateList(StoryMap.labelsList);
+            StoryMap.__setupSprintModal(issue);
+            StoryMap.__setupEpicModal(issue);
+            StoryMap.__setupCreateStoryModal(issue);
+            StoryMap.__setupFiltersModal();
+            StoryMap.__setupMapListeners();
+            StoryMap.__renderMap();
+          });
+        });        
       } else {
         routie('');
       }
+    },
+    /**
+      Intialization call to verify basic meta-data exists
+      @method __initMetaLabels
+      @param {Github.issue} Github issue namespace.
+      @memberof StoryMap 
+    */
+    __initMetaLabels: function(issue) {
+      var 
+        init = $.Deferred(),
+        labels = [{"name": "story", "color": "0052cc"}, 
+            {"name": "in progress", "color": "207de5"}, 
+            {"name": "blocked", "color": "e11d21"}],
+        dfds = [];
+
+      for (var i = labels.length - 1; i >= 0; i--) {                
+        dfds.push(StoryMap.__initMetaLabel(issue, labels[i]));        
+      };
+
+      $.when.apply($, dfds).done(function() {
+        init.resolve();
+      });  
+
+      return init.promise();      
+    },
+    __initMetaLabel: function(issue, label) {
+      var dfd = $.Deferred();
+      issue.label(label.name, function(err, res) {
+        if (res &amp;&amp; res.message === "Not Found") { 
+          issue.createLabel(label, function(err, res) {
+            dfd.resolve();
+          }); 
+        } else {
+          dfd.resolve();
+        }
+      }); 
+      return dfd.promise();
     },
     /**
       Intialization call for the story map that loads in the base template.
@@ -269,6 +308,7 @@
       @memberof StoryMap 
     */
     __setupProject: function() {
+      NProgress.start();
       $('#content').html(Handlebars.getTemplate('project'));
     },
     /**
@@ -345,14 +385,14 @@
         return dfd.promise();
       }
     },
-    /*
+    /**
       Submission method on the Story modal that updates an edited issue and posts it
       to github. The github response is used to do an inplace replacment of the story
       in the internal mapping. 
       @method __updateStory
       @summary Story modal submit to github.
       @param {integer} id The github issue id
-      @param el 
+      @param el Dom element
       @memberof StoryMap 
     */
     __updateStory: function (id, el) {
@@ -410,9 +450,12 @@
       }
     },
     /**
-
-      @method 
-      @summary 
+      Method call that rebuilds an internal story with the new state and updates it
+      against Github. The Github response is paresed and updates the internal map.
+      @method __updateStoryState
+      @summary Change the state of a Github issue.
+      @param {integer} id Github issue id.
+      @param {string} state Issue state one of; open, closed, in progress, blocked 
       @memberof StoryMap 
     */
     __updateStoryState: function(id, state) {
@@ -452,9 +495,14 @@
       }
     },
     /**
+      Method that removes a label from a story (Github issue) by updating the internal 
+      mapping and updates it on Github.
 
-      @method 
-      @summary 
+      @method __deleteStoryLabel
+      @summary Removes a label from a story.
+      @param {integer} id Github issue id.
+      @param {string} name Label name.
+      @param {boolean} modal Flag to indicate if this was triggered from a modal.
       @memberof StoryMap 
     */
     __deleteStoryLabel: function (id, name, modal) {
@@ -478,9 +526,13 @@
       });
     },
     /**
-
-      @method 
-      @summary 
+      Adds a specific label to a story by calling github with the name (data.name)
+      and updating it against github.
+      @method __updateStoryLabels
+      @summary Add a label to a story.
+      @param {integer} id Github issue id.
+      @param {object} data representing a label {name:'', color:''}.
+      @param {boolean} modal Flag to indicate if this was triggered from a modal.
       @memberof StoryMap 
     */
     __updateStoryLabels: function (id, data, modal) {
@@ -498,9 +550,12 @@
       });
     },
     /**
-
-      @method 
-      @summary 
+      This adds a label to a story by first checking if the label exists, if it does 
+      StoryMap.__updateStoryLabels is used. Otherwise the label is created and added 
+      to the internal label list. 
+      @method __addLabelToIssue
+      @summary Method that adds a label to a story, creating it if necessary.  
+      @param {integer} id Github issue id. 
       @memberof StoryMap 
     */
     __addLabelToIssue: function (id) {
@@ -528,9 +583,12 @@
       }
     },
     /**
+      Helper function for StoryMap.__loadStoryModal that looks the story from 
+      the internal story mapping.
 
-      @method 
-      @summary 
+      @method __loadStory
+      @summary Loads the story modal popup
+      @param el Dom element 
       @memberof StoryMap 
     */
     __loadStory: function(el) {
@@ -539,9 +597,11 @@
       StoryMap.__loadStoryModal(obj);
     },
     /**
-
-      @method 
-      @summary 
+      Heavy method that loads the story modal with data from the story object. 
+      This includes click listeners and the Bloodhound label drop down setup.
+      @method __loadStoryModal
+      @summary Loads the story modal
+      @param {object} obj Object representing a Story (github issue)
       @memberof StoryMap 
     */
     __loadStoryModal: function(obj) {  
@@ -649,31 +709,37 @@
       });
     },
     /**
-
-      @method 
-      @summary 
-      @memberof StoryMap 
+      Loads the create epic modal 
+      @method __loadCreateEpicModal
+      @summary Loads the create epic modal.
+      @param {Github.issue} Github issue namespace.
+      @memberof StoryMap
     */
     __loadCreateEpicModal: function(issue) {
       $('#epicLabel').html('Create Feature');
       $('#epicBtn').text('Create');
       $('#epicModal').off('click', '#epicBtn');
       $('#epicModal').on('click', '#epicBtn', function() {
-        var data = StoryMap.__parseEpicModalFields();
-        issue.createLabel(data, function(err, createdEpic) {
-          var repopulatedEpics = StoryMap.__populateEpicsList(issue);
-          $.when(repopulatedEpics).done(function() {
-            StoryMap.__resetStoryModal();
-            StoryMap.__renderMap();
-          });
-        });
+        var valid = StoryMap.__validateRequiredFields('#epicModal');
+        if (valid) {
+          $('#epicModal').modal('hide');
+	      var data = StoryMap.__parseEpicModalFields();
+	      issue.createLabel(data, function(err, createdEpic) {
+	        var repopulatedEpics = StoryMap.__populateEpicsList(issue);
+	        $.when(repopulatedEpics).done(function() {
+	          StoryMap.__resetStoryModal();
+	          StoryMap.__renderMap();
+	        });
+	      });
+        }
       });
     },
     /**
-
-      @method 
-      @summary 
-      @memberof StoryMap 
+      Loads the edit epic modal
+      @method __loadEditEpicModal
+      @summary Loads the edit epic modal.
+      @param el Dom element of the epic to be loaded
+      @memberof StoryMap
     */
     __loadEditEpicModal: function(el) {
       var id = $(el).attr('id');
@@ -689,26 +755,31 @@
       $('#epicModal').modal();
       $('#epicModal').off('click', '#epicBtn');
       $('#epicModal').on('click', '#epicBtn', function() {
-        var data = StoryMap.__parseEpicModalFields();
-        StoryMap.issue.updateLabel(StoryMap.__convertToMetaDataString(obj.name), data, function(err, updatedLabel) {
-          if (updatedLabel) {
-            var epic = StoryMap.__createEpic(updatedLabel);
-            for (var i = 0; i &lt; StoryMap.epicsList.length; ++i) {
-              if (StoryMap.epicsList[i].name == obj.name) {
-                StoryMap.epicsList[i] = epic;
-                break;
+        var valid = StoryMap.__validateRequiredFields('#epicModal');
+        if (valid) {
+          $('#epicModal').modal('hide');
+          var data = StoryMap.__parseEpicModalFields();
+          StoryMap.issue.updateLabel(StoryMap.__convertToMetaDataString(obj.name), data, function(err, updatedLabel) {
+            if (updatedLabel) {
+              var epic = StoryMap.__createEpic(updatedLabel);
+              for (var i = 0; i &lt; StoryMap.epicsList.length; ++i) {
+                if (StoryMap.epicsList[i].name == obj.name) {
+                  StoryMap.epicsList[i] = epic;
+                  break;
+                }
               }
+              StoryMap.__renderMap();
             }
-            StoryMap.__renderMap();
-          }
-        });
+          });
+        }
       });
     },
     /**
-
-      @method 
-      @summary 
-      @memberof StoryMap 
+      Parse the input fields within the epic modal
+      @method __parseEpicModalFields
+      @summary Parse the input fields within the epic modal
+      @returns {Object} Object containing the parsed values
+      @memberof StoryMap
     */
     __parseEpicModalFields: function() {
       var data = {}
@@ -719,10 +790,12 @@
       return data;
     },
     /**
-
-      @method 
-      @summary 
-      @memberof StoryMap 
+      Create a StoryMap story object from a GitHub issue JSON object
+      @method __createStory
+      @summary Create a StoryMap story object from a GitHub issue JSON object
+      @param {Object} story A GitHub issue JSON object
+      @returns {Object} A StoryMap story object
+      @memberof StoryMap
     */
     __createStory: function(story) {
       var body = StoryMap.__parseStoryBody(story);
@@ -747,10 +820,12 @@
       };
     },
     /**
-
-      @method 
-      @summary 
-      @memberof StoryMap 
+      Create a StoryMap epic object from a GitHub label JSON object
+      @method __createEpic
+      @summary Create a StoryMap epic object from a GitHub label JSON object
+      @param {Object} epic A GitHub epic JSON object
+      @returns {Object} A StoryMap epic object
+      @memberof StoryMap
     */
     __createEpic: function(epic) {
       var epicName = epic.name.match(StoryMap.metaRegexp)[0];
@@ -759,10 +834,12 @@
       return {name: epicName, id: epicId, color: epicColor};
     },
     /**
-
-      @method 
-      @summary 
-      @memberof StoryMap 
+      Create a StoryMap sprint object from a GitHub milestone JSON object
+      @method __createSprint
+      @summary Create a StoryMap sprint object from a GitHub milestone JSON object
+      @param {Object} sprint A GitHub milestone JSON object
+      @returns {Object} A StoryMap sprint object
+      @memberof StoryMap
     */
     __createSprint: function(sprint) {
       var description = StoryMap.__parseSprintDescription(sprint);
@@ -775,31 +852,37 @@
       };
     },
     /**
-
-      @method 
-      @summary 
-      @memberof StoryMap 
+      Loads the create sprint modal 
+      @method __loadCreateSprintModal
+      @summary Loads the create sprint modal.
+      @param {Github.issue} Github issue namespace.
+      @memberof StoryMap
     */
     __loadCreateSprintModal: function(issue) {
       $('#sprintLabel').html('Create Sprint');
       $('#sprintBtn').text('Create');
       $('#sprintModal').off('click', '#epicBtn');
       $('#sprintModal').on('click', '#sprintBtn', function() {
-        var data = StoryMap.__parseSprintModalFields();
-        issue.createMilestone(data, function(err, createdSprint) {
-          var repopulatedSprints = StoryMap.__populateSprintsList(issue);
-          $.when(repopulatedSprints).done(function() {
-            StoryMap.__resetStoryModal();
-            StoryMap.__renderMap();
+        var valid = StoryMap.__validateRequiredFields('#sprintModal');
+        if (valid) {
+          $('#sprintModal').modal('hide');
+          var data = StoryMap.__parseSprintModalFields();
+          issue.createMilestone(data, function(err, createdSprint) {
+            var repopulatedSprints = StoryMap.__populateSprintsList(issue);
+            $.when(repopulatedSprints).done(function() {
+              StoryMap.__resetStoryModal();
+              StoryMap.__renderMap();
+            });
           });
-        });
+        }
       });
     },
     /**
-
-      @method 
-      @summary 
-      @memberof StoryMap 
+      Loads the edit sprint modal
+      @method __loadEditSprintModal
+      @summary Loads the edit sprint modal.
+      @param el Dom element of the sprint to be loaded
+      @memberof StoryMap
     */
     __loadEditSprintModal: function(el) {
       var id = $(el).attr('id').split("-")[1];
@@ -812,32 +895,38 @@
       $('#sprintDesc').val(StoryMap.__removeMetaDataStrings(obj.description));
       $('#sprintStartDate').datepicker('setValue', obj.start)
       $('#sprintStartDate').val(obj.start);
-      $('#sprintDueDate').val(obj.due.split("T")[0]);
-      $('#sprintDueDate').datepicker('setValue', obj.due.split("T")[0]);
+      var dueDate = obj.due ? Date.parse(obj.due) : '';
+      $('#sprintDueDate').val(dueDate);
+      $('#sprintDueDate').datepicker('setValue', dueDate);
       $('#sprintBtn').text('Update');
       $('#sprintModal').modal();
       $('#sprintModal').off('click', '#sprintBtn');
       $('#sprintModal').on('click', '#sprintBtn', function() {
-        var data = StoryMap.__parseSprintModalFields();
-        StoryMap.issue.editMilestone(id, data, function(err, updatedSprint) {
-          if (updatedSprint) {
-            var sprint = StoryMap.__createSprint(updatedSprint);
-            for (var i = 0; i &lt; StoryMap.sprintsList.length; ++i) {
-              if (StoryMap.sprintsList[i].id == id) {
-                StoryMap.sprintsList[i] = sprint;
-                break;
-              }
-            }
-            StoryMap.__renderMap();
-          }
-        });
+        var valid = StoryMap.__validateRequiredFields('#sprintModal');
+        if (valid) {
+          $('#sprintModal').modal('hide');
+	      var data = StoryMap.__parseSprintModalFields();
+	      StoryMap.issue.editMilestone(id, data, function(err, updatedSprint) {
+	        if (updatedSprint) {
+	          var sprint = StoryMap.__createSprint(updatedSprint);
+	          for (var i = 0; i &lt; StoryMap.sprintsList.length; ++i) {
+	            if (StoryMap.sprintsList[i].id == id) {
+	              StoryMap.sprintsList[i] = sprint;
+	              break;
+	            }
+	          }
+	          StoryMap.__renderMap();
+	        }
+	      });
+        }
       });
     },
     /**
-
-      @method 
-      @summary 
-      @memberof StoryMap 
+      Parse the input fields within the sprint modal
+      @method __parseSprintModalFields
+      @summary Parse the input fields within the sprint modal
+      @returns {Object} Object containing the parsed values
+      @memberof StoryMap
     */
     __parseSprintModalFields: function() {
       var data = {};
@@ -858,27 +947,59 @@
       return data;
     },
     /**
-
-      @method 
-      @summary 
+      Validate that the required fields within the element are filled
+      @method __validateRequiredFields
+      @summary Validate that the required fields within the element are filled.
+      @param element Dom element with the input fields to be validated
+      @returns {Boolean} True if all required fields are filled, otherwise false
+      @memberof StoryMap 
+    */
+    __validateRequiredFields: function(element) {
+      var valid = true;
+      $(element).find('.required').each(function() {
+        if (!$(this).val()) {
+          valid = false;
+          $(this).parent().closest('div').addClass('has-error');
+        }
+        else {
+          $(this).parent().closest('div').removeClass('has-error');
+        }
+      });
+      if (valid) {
+        return true;
+      }
+      return false;
+    },
+    /**
+      Setup the sprint modal
+      @method __setupSprintModal
+      @summary Setup the sprint modal.
+      @param {Github.issue} Github issue namespace.
       @memberof StoryMap 
     */
     __setupSprintModal: function(issue) {
       $('#sprintStartDate').datepicker({format: "yyyy-mm-dd"});
       $('#sprintDueDate').datepicker({format: "yyyy-mm-dd"});
       $('#story-map').on('click', '#createSprintBtn', function() {StoryMap.__loadCreateSprintModal(issue)});
-      $('#story-map').on('click', '.edit-sprint', function() {StoryMap.__loadEditSprintModal(this)});
+      $('#story-map').on('click', '.edit-sprint', function(event) {
+        event.preventDefault();
+        StoryMap.__loadEditSprintModal(this);
+      });
       $('#sprintModal').on('hidden.bs.modal', function() {
         $("#sprintTitle").val("");
         $("#sprintDesc").val("");
         $("#sprintStartDate").val("");
         $("#sprintDueDate").val("");
+        $(this).find('.has-error').each(function() {
+          $(this).removeClass('has-error');
+        });
       });
     },
     /**
-
-      @method 
-      @summary 
+      Setup the epic modal
+      @method __setupEpicModal
+      @summary Setup the epic modal.
+      @param {Github.issue} Github issue namespace.
       @memberof StoryMap 
     */
     __setupEpicModal: function(issue) {
@@ -888,12 +1009,15 @@
       $('#epicModal').on('hidden.bs.modal', function() {
         $("#epicName").val("");
         $("#epicColour").val("");
+        $(this).find('.has-error').each(function() {
+          $(this).removeClass('has-error');
+        });
       });
     },
     /**
-
-      @method 
-      @summary 
+      Update the fields of the create story modal with the latest data
+      @method __resetStoryModal
+      @summary Update the fields of the create story modal with the latest data.
       @memberof StoryMap 
     */
     __resetStoryModal: function() {
@@ -906,49 +1030,54 @@
       $('#createStoryModal').html(modal_tmpl(context));
     },
     /**
-
-      @method 
-      @summary 
+      Setup the create story modal
+      @method __setupCreateStoryModal
+      @summary Setup the create story modal.
+      @param {Github.issue} Github issue namespace.
       @memberof StoryMap 
     */
     __setupCreateStoryModal: function(issue) {
       StoryMap.__resetStoryModal();
       $('#createStoryModal').on('click', '#createStoryBtn', function() {
-        var data = {}
-        var priority = $("#createStoryPriority").val();
-        var cost = $("#createStoryPoints").val();
-        var desc = $("#createStoryDesc").val();
-        var sprint = $("#createStorySprint").val();
-        var epic = $("#createStoryEpic").val();
-        var labels = [StoryMap.labels.STORY];
-        var body = ""
-        if (priority !== null) {
-          body += StoryMap.__convertToMetaDataString(
-            StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + priority) + "\n";
-        }
-        if (cost !== null) {
-          body += StoryMap.__convertToMetaDataString(
-            StoryMap.metadata.COST + StoryMap.metaDelimiter + cost) + "\n";
-        }
-        if (epic !== null &amp;&amp; epic.toLowerCase() !== "unspecified") {
-          labels.push(StoryMap.__convertToMetaDataString(epic));
-        }
-        body += desc;
-        
-        data.title = $("#createStoryTitle").val();
-        data.body = body;
-        data.assignee = $("#createStoryAssignee").val();
-        data.milestone =  sprint &lt; 0 ? null : sprint;
-        data.labels = labels;
-        // TODO validation
-        issue.createIssue(data, function(err, createdStory) {
-          if (createdStory) {
-            StoryMap.storiesList.push(StoryMap.__createStory(createdStory));
-            StoryMap.__renderMap();
-          } else {
-            console.log(err);
+        var valid = StoryMap.__validateRequiredFields('#createStoryModal');
+        if (valid) {
+          $('#createStoryModal').modal('hide');
+          var data = {}
+          var priority = $("#createStoryPriority").val();
+          var cost = $("#createStoryPoints").val();
+          var desc = $("#createStoryDesc").val();
+          var sprint = $("#createStorySprint").val();
+          var epic = $("#createStoryEpic").val();
+          var labels = [StoryMap.labels.STORY];
+          var body = ""
+          if (priority !== null) {
+            body += StoryMap.__convertToMetaDataString(
+              StoryMap.metadata.PRIORITY + StoryMap.metaDelimiter + priority) + "\n";
           }
-        });
+          if (cost !== null) {
+            body += StoryMap.__convertToMetaDataString(
+              StoryMap.metadata.COST + StoryMap.metaDelimiter + cost) + "\n";
+          }
+          if (epic !== null &amp;&amp; epic.toLowerCase() !== "unspecified") {
+            labels.push(StoryMap.__convertToMetaDataString(epic));
+          }
+          body += desc;
+
+          data.title = $("#createStoryTitle").val();
+          data.body = body;
+          data.assignee = $("#createStoryAssignee").val();
+          data.milestone =  sprint &lt; 0 ? null : sprint;
+          data.labels = labels;
+
+          issue.createIssue(data, function(err, createdStory) {
+            if (createdStory) {
+              StoryMap.storiesList.push(StoryMap.__createStory(createdStory));
+              StoryMap.__renderMap();
+            } else {
+              console.log(err);
+            }
+          });
+        }
       });
       $('#createStoryModal').on('hidden.bs.modal', function() {
         $("#createStoryTitle").val("");
@@ -956,12 +1085,17 @@
         $("#createStoryPriority").val("");
         $("#createStoryPoints").val("");
         $("#createStoryAssignee").val("");
+        $('#createStorySprint').val("");
+        $('#createStoryEpic').val("");
+        $(this).find('.has-error').each(function() {
+          $(this).removeClass('has-error');
+        });
       });
     },
     /**
-
-      @method 
-      @summary 
+      Setup the filters modal
+      @method __setupFiltersModal
+      @summary Setup the filters modal.
       @memberof StoryMap 
     */
     __setupFiltersModal: function() {
@@ -985,42 +1119,52 @@
       });
     },
     /**
-
-      @method 
-      @summary 
+      Setup the persistent map listeners
+      @method __setupMapListeners
+      @summary Setup the persistent map listeners
       @memberof StoryMap 
     */
     __setupMapListeners: function() {
       $('#story-map').on('click', '.story', function() {StoryMap.__loadStory(this)});
       $('#story-map').on('click', '.delete-epic', function() {
         var name = encodeURI(StoryMap.__convertToMetaDataString($(this).attr('data-value')));
-        NProgress.start();
-        StoryMap.issue.deleteLabel(name , null, function (err, res) {
-          NProgress.set(0.60);
-          var repopulatedEpics = StoryMap.__populateEpicsList(StoryMap.issue);
-          $.when(repopulatedEpics).done(function() {
-            StoryMap.__renderMap();
-            NProgress.done();
+        $('#confirmModal').modal('show');
+        $('#confirmModal').off('click', '#confirmBtn');
+        $('#confirmModal').on('click', '#confirmBtn', function() {
+          $('#confirmModal').modal('hide');
+          NProgress.start();
+          StoryMap.issue.deleteLabel(name , null, function (err, res) {
+            NProgress.set(0.60);
+            var repopulatedEpics = StoryMap.__populateEpicsList(StoryMap.issue);
+            $.when(repopulatedEpics).done(function() {
+              StoryMap.__renderMap();
+              NProgress.done();
+            });
           });
         });
       });
       $('#story-map').on('click', '.delete-story', function() {
         var id = $(this).attr('data-value');
-        NProgress.start();
-        StoryMap.issue.deleteLabelIssue(id, "story", function (err, res) {
-          NProgress.set(0.60);
-          var repopulatedStories = StoryMap.__populateStoriesList(StoryMap.issue);
-          $.when(repopulatedStories).done(function() {
-            StoryMap.__renderMap();
-            NProgress.done();
+        $('#confirmModal').modal('show');
+        $('#confirmModal').off('click', '#confirmBtn');
+        $('#confirmModal').on('click', '#confirmBtn', function() {
+          $('#confirmModal').modal('hide');
+          NProgress.start();
+          StoryMap.issue.deleteLabelIssue(id, "story", function (err, res) {
+            NProgress.set(0.60);
+            var repopulatedStories = StoryMap.__populateStoriesList(StoryMap.issue);
+            $.when(repopulatedStories).done(function() {
+              StoryMap.__renderMap();
+              NProgress.done();
+            });
           });
         });
       });
     },
     /**
-
-      @method 
-      @summary 
+      Setup the drag and drop feature of the map
+      @method __setupDragAndDrop
+      @summary Setup the drag and drop feature of the map.
       @memberof StoryMap 
     */
     __setupDragAndDrop: function () {
@@ -1056,9 +1200,11 @@
         var 
           id = $(dragsource).attr('id'),
           html = e.originalEvent.dataTransfer.getData('text/html');
-          $(dragsource).remove();
-          dragsource = null;
-        var  
+
+        $(dragsource).remove();
+        dragsource = null;
+
+        var 
           milestoneid = $(this).attr('data-milestone'),
           epicpos = $(this).attr('data-epic'),
           epic = StoryMap.epicsList[epicpos],
@@ -1110,9 +1256,9 @@
       });
     },
     /**
-
-      @method 
-      @summary 
+      Render the map using the cached StoryMap data
+      @method __renderMap
+      @summary Render the map using the cached StoryMap data.
       @memberof StoryMap 
     */
     __renderMap: function() {
@@ -1136,20 +1282,20 @@
       NProgress.done();
       StoryMap.__setupDragAndDrop();
       $('body').scrollspy({target: '#sprint-menu', offset:200});
-      $('.horizontal').scroll(function(event) {
-        var offset = ($('.horizontal').scrollLeft()+20)*-1;
+      $(window).scroll(function(event) {
+        var offset = ($('body').scrollLeft())*-1;
         $('#story-map-headers').css('margin-left', offset);
       });
       $('a.sprint-link').click(function (e) {
         e.preventDefault();
         $($(this).attr('href'))[0].scrollIntoView();
-        scrollBy(0, -200);
+        scrollBy(0, -199);
       });
     },
     /**
-
-      @method 
-      @summary 
+      Process the cached StoryMap epics, and filter out where applicable
+      @method __processEpics
+      @summary Process the cached StoryMap epics, and filter out where applicable.
       @memberof StoryMap 
     */
     __processEpics: function(epicsMap, context) {
@@ -1168,32 +1314,35 @@
       }
     },
     /**
-
-      @method 
-      @summary 
+      Process the cached StoryMap sprints, and filter out where applicable
+      @method __processSprints
+      @summary Process the cached StoryMap sprints, and filter out where applicable.
       @memberof StoryMap 
     */
     __processSprints: function(sprintsMap, context) {
-      var numSprints = 0;
-      var nameFilter = $("#filterSprintName").val();
+      var numSprints = 0,
+        nameFilter = $("#filterSprintName").val(),
+        date = Date();
       for (var i = 0; i &lt; StoryMap.sprintsList.length; ++i) {
         var sprint = StoryMap.sprintsList[i];
         if (!nameFilter || nameFilter == sprint.name || sprint.name == "backlog") {
           sprintsMap[sprint.name] = numSprints;
           var sprintObj = {name: sprint.name, id:sprint.id, epic: [], prc:0,
-                           claimedSP: 0, totalSP: 0, assignees: []};
+                           claimedSP: 0, totalSP: 0, closed: false, assignees: []};
           for (var j = 0; j &lt; context.epic.length; ++j) {
             sprintObj.epic.push([]);
           }
+
+          sprintObj.closed = sprint.due ? Date.parse(sprint.due).valueOf() &lt; Date.parse(date).valueOf() : false;
           context.sprint.push(sprintObj);
           ++numSprints;
         }
       }
     },
     /**
-
-      @method 
-      @summary 
+      Process the cached StoryMap stories, and filter out where applicable
+      @method __processStories
+      @summary Process the cached StoryMap stories, and filter out where applicable.
       @memberof StoryMap 
     */
     __processStories: function(epicsMap, sprintsMap, context) {
@@ -1231,10 +1380,12 @@
       }
     },
     /**
-
-      @method 
-      @summary 
-      @memberof StoryMap 
+      Retrieve the list of assignees for a repository
+      @method __populateAssigneesList
+      @summary Retrieve the list of assignees for a repository.
+      @param {Github.issue} Github issue namespace.
+      @returns {Deferred} Promise for when the assignees have been retrieved 
+      @memberof StoryMap
     */
     __populateAssigneesList: function(issue) {
       StoryMap.assigneesList = [];
@@ -1248,9 +1399,11 @@
       return dfd.promise();
     },
     /**
-
-      @method 
-      @summary 
+      Retrieve the list of labels for a repository
+      @method __populateLabelsList
+      @summary Retrieve the list of labels for a repository.
+      @param {Github.issue} Github issue namespace.
+      @returns {Deferred} Promise for when the labels have been retrieved 
       @memberof StoryMap 
     */
     __populateLabelsList: function(issue) {
@@ -1263,9 +1416,11 @@
       return dfd.promise();
     },
     /**
-
-      @method 
-      @summary 
+      Retrieve the list of epics for a repository
+      @method __populateEpicsList
+      @summary Retrieve the list of epics for a repository.
+      @param {Github.issue} Github issue namespace.
+      @returns {Deferred} Promise for when the epics have been retrieved 
       @memberof StoryMap 
     */
     __populateEpicsList: function(issue) {
@@ -1284,9 +1439,11 @@
       return dfd.promise();
     },
     /**
-
-      @method 
-      @summary 
+      Retrieve the list of sprints for a repository
+      @method __populateSprintsList
+      @summary Retrieve the list of sprints for a repository.
+      @param {Github.issue} Github issue namespace.
+      @returns {Deferred} Promise for when the sprints have been retrieved 
       @memberof StoryMap 
     */
     __populateSprintsList: function(issue) {
@@ -1308,9 +1465,11 @@
       return dfd.promise();
     },
     /**
-
-      @method 
-      @summary 
+      Retrieve the list of stories for a repository
+      @method __populateStoriesList
+      @summary Retrieve the list of stories for a repository.
+      @param {Github.issue} Github issue namespace.
+      @returns {Deferred} Promise for when the stories have been retrieved 
       @memberof StoryMap 
     */
     __populateStoriesList: function(issue) {
@@ -1327,9 +1486,10 @@
       return dfd.promise();
     },
     /**
-
-      @method 
-      @summary 
+      Retrieve the list of states for a repository by looking through its labels
+      @method __populateStateList
+      @summary Retrieve the list of states for a repository by looking through its labels.
+      @param {Array} Array of GitHub labels
       @memberof StoryMap 
     */
     __populateStateList: function(labels) {
@@ -1343,9 +1503,10 @@
       }
     },
     /**
-
-      @method 
-      @summary 
+      Convert a list of GitHub issue JSON objects to StoryMap story objects, and cache them
+      @method __addStoriesToList
+      @summary Convert a list of GitHub issue JSON objects to StoryMap story objects, and cache them.
+      @param {Array} Array of GitHub issue JSON objects
       @memberof StoryMap 
     */
     __addStoriesToList: function(stories) {
@@ -1355,9 +1516,12 @@
       }
     },
     /**
-
-      @method 
-      @summary 
+      Check if an assignee is assigned to a story in a sprint
+      @method __assigneeInSprint
+      @summary Check if an assignee is assigned to a story in a sprint.
+      @param assignee An assignee
+      @param sprint A sprint
+      @returns {Boolean} True if the assignee is in the sprint, otherwise false
       @memberof StoryMap 
     */
     __assigneeInSprint: function(assignee, sprint) {
@@ -1369,9 +1533,11 @@
       return false;
     },
     /**
-
-      @method 
-      @summary 
+      Return the state of a story
+      @method __getStoryState
+      @summary Return the state of a story.
+      @param story A GitHub issue JSON object
+      @returns {Object} Object containing information on the story state
       @memberof StoryMap 
     */
     __getStoryState: function(story) {
@@ -1390,9 +1556,11 @@
       return {state:"open", color:"5CB85C"};
     },
     /**
-
-      @method 
-      @summary 
+      Return the assignee of a story
+      @method __getStoryAssignee
+      @summary Return the assignee of a story.
+      @param story A GitHub issue JSON object
+      @returns {Object} Object containing information on the story assignee
       @memberof StoryMap 
     */
     __getStoryAssignee: function(story) {
@@ -1406,9 +1574,11 @@
       };
     },
     /**
-
-      @method 
-      @summary 
+      Return the epic the story belongs to
+      @method __getStoryEpic
+      @summary Return the epic the story belongs to.
+      @param story A GitHub issue JSON object
+      @returns {String} The name of the epic the story belongs to
       @memberof StoryMap 
     */
     __getStoryEpic: function(story) {
@@ -1421,9 +1591,11 @@
       return "unspecified";
     },
     /**
-
-      @method 
-      @summary 
+      Return the sprint the story belongs to
+      @method __getStorySprint
+      @summary Return the sprint the story belongs to.
+      @param story A GitHub issue JSON object
+      @returns {String} The name of the sprint the story belongs to
       @memberof StoryMap 
     */
     __getStorySprint: function(story) {
@@ -1434,9 +1606,11 @@
       return "backlog";
     },
     /**
-
-      @method 
-      @summary 
+      Get the labels associated with a story
+      @method __getStoryLabels
+      @summary Get the labels associated with a story.
+      @param story A GitHub issue JSON object
+      @returns {Array} Array of labels associated with the story
       @memberof StoryMap 
     */
     __getStoryLabels: function(story) {
@@ -1452,9 +1626,11 @@
       return labels; 
     },
     /**
-
-      @method 
-      @summary 
+      Parse the body of a story for any metadata
+      @method __parseStoryBody
+      @summary Parse the body of a story for any metadata.
+      @param story A GitHub issue JSON object
+      @returns {Object} Object containing the parsed metadata
       @memberof StoryMap 
     */
     __parseStoryBody: function(story) {
@@ -1475,9 +1651,11 @@
       return bodyData;
     },
     /**
-
-      @method 
-      @summary 
+      Parse the sprint description for any metadata
+      @method __parseSprintDescription
+      @summary Parse the sprint description for any metadata
+      @param sprint A GitHub milestone JSON object
+      @returns {Object} Object containing the parsed metadata
       @memberof StoryMap 
     */
     __parseSprintDescription: function(sprint) {
@@ -1495,9 +1673,11 @@
       return descData;
     },
     /**
-
-      @method 
-      @summary 
+      Get the StoryMap epic object with a particular name
+      @method __getEpicObject
+      @summary Get the StoryMap epic object with a particular name
+      @param {String} epicName A name of an epic
+      @returns {Object} The StoryMap epic object
       @memberof StoryMap 
     */
     __getEpicObject: function(epicName) {
@@ -1509,9 +1689,11 @@
       return {};
     },
     /**
-
-      @method 
-      @summary 
+      Convert a string into a metadata string
+      @method __convertToMetaDataString
+      @summary Convert a string into a metadata string.
+      @param {String} string The string to be converted
+      @returns {String} The converted string
       @memberof StoryMap 
     */
     __convertToMetaDataString: function(string) {
@@ -1520,9 +1702,11 @@
       return "[" + string + "]";
     },
     /**
-
-      @method 
-      @summary 
+      Remove all metadata from a string
+      @method __removeMetaDataStrings
+      @summary Remove all metadata from a string.
+      @param {String} string String to clean
+      @returns {String} The cleaned string
       @memberof StoryMap 
     */
      __removeMetaDataStrings: function(string) {
@@ -1531,9 +1715,12 @@
       return string.replace(/\[(\w+:\s[^\]]+)]/g, "").replace(/^\r?\n|\r$/g, "");
     },
     /**
-
-      @method 
-      @summary 
+      Compare method used to order the sprints
+      @method __compareSprints
+      @summary Compare method used to order the sprints
+      @param {Object} a The first sprint object
+      @param {Object} b The second sprint object
+      @returns {number} 0 if equal, -1 if less than, 1 if greater than
       @memberof StoryMap 
     */
     __compareSprints: function (a, b) {
@@ -1575,7 +1762,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Apr 02 2014 21:16:21 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Apr 07 2014 23:13:22 GMT-0600 (Mountain Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

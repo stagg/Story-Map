@@ -182,7 +182,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line247">line 247</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line287">line 287</a>
     </li></ul></dd>
     
 
@@ -212,18 +212,74 @@
         
             
 <dt>
-    <h4 class="name" id="__addLabelToIssue"><span class="type-signature">&lt;static> </span>__addLabelToIssue<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__addLabelToIssue"><span class="type-signature">&lt;static> </span>__addLabelToIssue<span class="signature">(id)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Method that adds a label to a story, creating it if necessary.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        This adds a label to a story by first checking if the label exists, if it does 
+      StoryMap.__updateStoryLabels is used. Otherwise the label is created and added 
+      to the internal label list.
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Github issue id.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -249,7 +305,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line479">line 479</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line525">line 525</a>
     </li></ul></dd>
     
 
@@ -279,18 +335,72 @@
         
             
 <dt>
-    <h4 class="name" id="__addStoriesToList"><span class="type-signature">&lt;static> </span>__addStoriesToList<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__addStoriesToList"><span class="type-signature">&lt;static> </span>__addStoriesToList<span class="signature">(Array)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Convert a list of GitHub issue JSON objects to StoryMap story objects, and cache them.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Convert a list of GitHub issue JSON objects to StoryMap story objects, and cache them
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Array</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">of GitHub issue JSON objects</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -316,7 +426,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1324">line 1324</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1478">line 1478</a>
     </li></ul></dd>
     
 
@@ -346,18 +456,85 @@
         
             
 <dt>
-    <h4 class="name" id="__assigneeInSprint"><span class="type-signature">&lt;static> </span>__assigneeInSprint<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__assigneeInSprint"><span class="type-signature">&lt;static> </span>__assigneeInSprint<span class="signature">(assignee, sprint)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
 
+    
+    <p class="summary">Check if an assignee is assigned to a story in a sprint.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Check if an assignee is assigned to a story in a sprint
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>assignee</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An assignee</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sprint</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A sprint</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -383,7 +560,935 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1336">line 1336</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1491">line 1491</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    True if the assignee is in the sprint, otherwise false
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__compareSprints"><span class="type-signature">&lt;static> </span>__compareSprints<span class="signature">(a, b)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+    <p class="summary">Compare method used to order the sprints</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Compare method used to order the sprints
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The first sprint object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The second sprint object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1690">line 1690</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    0 if equal, -1 if less than, 1 if greater than
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__convertToMetaDataString"><span class="type-signature">&lt;static> </span>__convertToMetaDataString<span class="signature">(string)</span><span class="type-signature"> &rarr; {String}</span></h4>
+
+    
+    <p class="summary">Convert a string into a metadata string.</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Convert a string into a metadata string
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>string</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The string to be converted</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1664">line 1664</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The converted string
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__createEpic"><span class="type-signature">&lt;static> </span>__createEpic<span class="signature">(epic)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+    <p class="summary">Create a StoryMap epic object from a GitHub label JSON object</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Create a StoryMap epic object from a GitHub label JSON object
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>epic</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A GitHub epic JSON object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line795">line 795</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A StoryMap epic object
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__createSprint"><span class="type-signature">&lt;static> </span>__createSprint<span class="signature">(sprint)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+    <p class="summary">Create a StoryMap sprint object from a GitHub milestone JSON object</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Create a StoryMap sprint object from a GitHub milestone JSON object
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>sprint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A GitHub milestone JSON object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line809">line 809</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A StoryMap sprint object
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__createStory"><span class="type-signature">&lt;static> </span>__createStory<span class="signature">(story)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+    <p class="summary">Create a StoryMap story object from a GitHub issue JSON object</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Create a StoryMap story object from a GitHub issue JSON object
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>story</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A GitHub issue JSON object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line765">line 765</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A StoryMap story object
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__deleteStoryLabel"><span class="type-signature">&lt;static> </span>__deleteStoryLabel<span class="signature">(id, name, modal)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary">Removes a label from a story.</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Method that removes a label from a story (Github issue) by updating the internal 
+      mapping and updates it on Github.
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Github issue id.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Label name.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>modal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Flag to indicate if this was triggered from a modal.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line470">line 470</a>
     </li></ul></dd>
     
 
@@ -413,18 +1518,72 @@
         
             
 <dt>
-    <h4 class="name" id="__compareSprints"><span class="type-signature">&lt;static> </span>__compareSprints<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__getEpicObject"><span class="type-signature">&lt;static> </span>__getEpicObject<span class="signature">(epicName)</span><span class="type-signature"> &rarr; {Object}</span></h4>
 
+    
+    <p class="summary">Get the StoryMap epic object with a particular name</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Get the StoryMap epic object with a particular name
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>epicName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A name of an epic</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -450,7 +1609,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1512">line 1512</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1648">line 1648</a>
     </li></ul></dd>
     
 
@@ -473,6 +1632,28 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The StoryMap epic object
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
 
     
 </dd>
@@ -480,18 +1661,67 @@
         
             
 <dt>
-    <h4 class="name" id="__convertToMetaDataString"><span class="type-signature">&lt;static> </span>__convertToMetaDataString<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__getStoryAssignee"><span class="type-signature">&lt;static> </span>__getStoryAssignee<span class="signature">(story)</span><span class="type-signature"> &rarr; {Object}</span></h4>
 
+    
+    <p class="summary">Return the assignee of a story.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Return the assignee of a story
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>story</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A GitHub issue JSON object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -517,7 +1747,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1490">line 1490</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1531">line 1531</a>
     </li></ul></dd>
     
 
@@ -540,6 +1770,28 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Object containing information on the story assignee
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
 
     
 </dd>
@@ -547,18 +1799,67 @@
         
             
 <dt>
-    <h4 class="name" id="__createEpic"><span class="type-signature">&lt;static> </span>__createEpic<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__getStoryEpic"><span class="type-signature">&lt;static> </span>__getStoryEpic<span class="signature">(story)</span><span class="type-signature"> &rarr; {String}</span></h4>
 
+    
+    <p class="summary">Return the epic the story belongs to.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Return the epic the story belongs to
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>story</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A GitHub issue JSON object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -584,7 +1885,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line728">line 728</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1549">line 1549</a>
     </li></ul></dd>
     
 
@@ -607,6 +1908,28 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The name of the epic the story belongs to
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+        
 
     
 </dd>
@@ -614,18 +1937,67 @@
         
             
 <dt>
-    <h4 class="name" id="__createSprint"><span class="type-signature">&lt;static> </span>__createSprint<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__getStoryLabels"><span class="type-signature">&lt;static> </span>__getStoryLabels<span class="signature">(story)</span><span class="type-signature"> &rarr; {Array}</span></h4>
 
+    
+    <p class="summary">Get the labels associated with a story.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Get the labels associated with a story
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>story</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A GitHub issue JSON object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -651,7 +2023,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line740">line 740</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1581">line 1581</a>
     </li></ul></dd>
     
 
@@ -674,6 +2046,28 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Array of labels associated with the story
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+        
 
     
 </dd>
@@ -681,18 +2075,67 @@
         
             
 <dt>
-    <h4 class="name" id="__createStory"><span class="type-signature">&lt;static> </span>__createStory<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__getStorySprint"><span class="type-signature">&lt;static> </span>__getStorySprint<span class="signature">(story)</span><span class="type-signature"> &rarr; {String}</span></h4>
 
+    
+    <p class="summary">Return the sprint the story belongs to.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Return the sprint the story belongs to
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>story</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A GitHub issue JSON object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -718,7 +2161,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line700">line 700</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1566">line 1566</a>
     </li></ul></dd>
     
 
@@ -741,6 +2184,28 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The name of the sprint the story belongs to
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+        
 
     
 </dd>
@@ -748,14 +2213,18 @@
         
             
 <dt>
-    <h4 class="name" id="__deleteStoryLabel"><span class="type-signature">&lt;static> </span>__deleteStoryLabel<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__getStoryState"><span class="type-signature">&lt;static> </span>__getStoryState<span class="signature">(story)</span><span class="type-signature"> &rarr; {Object}</span></h4>
 
+    
+    <p class="summary">Return the state of a story.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Return the state of a story
+    </div>
     
 
     
@@ -763,137 +2232,48 @@
     
 
     
-<dl class="details">
-    
+        <h5>Parameters:</h5>
+        
 
-    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line433">line 433</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
+        <th>Type</th>
 
         
-            
-<dt>
-    <h4 class="name" id="__getEpicObject"><span class="type-signature">&lt;static> </span>__getEpicObject<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1476">line 1476</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-<dt>
-    <h4 class="name" id="__getStoryAssignee"><span class="type-signature">&lt;static> </span>__getStoryAssignee<span class="signature">()</span><span class="type-signature"></span></h4>
+                <td class="name"><code>story</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A GitHub issue JSON object</td>
+        </tr>
 
     
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
+    </tbody>
+</table>
     
 
     
@@ -919,7 +2299,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1371">line 1371</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1508">line 1508</a>
     </li></ul></dd>
     
 
@@ -942,274 +2322,28 @@
     
 
     
-
+    <h5>Returns:</h5>
     
-</dd>
+            
+<div class="param-desc">
+    Object containing information on the story state
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
 
         
-            
-<dt>
-    <h4 class="name" id="__getStoryEpic"><span class="type-signature">&lt;static> </span>__getStoryEpic<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1387">line 1387</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__getStoryLabels"><span class="type-signature">&lt;static> </span>__getStoryLabels<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1415">line 1415</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__getStorySprint"><span class="type-signature">&lt;static> </span>__getStorySprint<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1402">line 1402</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__getStoryState"><span class="type-signature">&lt;static> </span>__getStoryState<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1350">line 1350</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
     
 </dd>
@@ -1220,15 +2354,15 @@
     <h4 class="name" id="__gitinit"><span class="type-signature">&lt;static> </span>__gitinit<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
 
     
-    <p class="summary">Github.js Object intializaion.</p>
+    <p class="summary">Github.js Object initialization.</p>
     
 </dt>
 <dd>
 
     
     <div class="description">
-        Intialization of the Github.js object which is used to 
-      communicate with the github.com api.
+        Initialization of the Github.js object which is used to 
+      communicate with the github.com API.
     </div>
     
 
@@ -1306,6 +2440,125 @@
 </dl>
 
         
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__initMetaLabels"><span class="type-signature">&lt;static> </span>__initMetaLabels<span class="signature">(Github)</span><span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Intialization call to verify basic meta-data exists
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Github</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Github.issue</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">issue namespace.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line241">line 241</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     
 </dd>
@@ -1405,7 +2658,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line267">line 267</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line307">line 307</a>
     </li></ul></dd>
     
 
@@ -1457,18 +2710,72 @@
         
             
 <dt>
-    <h4 class="name" id="__loadCreateEpicModal"><span class="type-signature">&lt;static> </span>__loadCreateEpicModal<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__loadCreateEpicModal"><span class="type-signature">&lt;static> </span>__loadCreateEpicModal<span class="signature">(Github)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Loads the create epic modal.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Loads the create epic modal
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Github</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Github.issue</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">issue namespace.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -1494,7 +2801,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line630">line 630</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line684">line 684</a>
     </li></ul></dd>
     
 
@@ -1524,18 +2831,72 @@
         
             
 <dt>
-    <h4 class="name" id="__loadCreateSprintModal"><span class="type-signature">&lt;static> </span>__loadCreateSprintModal<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__loadCreateSprintModal"><span class="type-signature">&lt;static> </span>__loadCreateSprintModal<span class="signature">(Github)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Loads the create sprint modal.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Loads the create sprint modal
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Github</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Github.issue</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">issue namespace.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -1561,7 +2922,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line756">line 756</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line827">line 827</a>
     </li></ul></dd>
     
 
@@ -1591,18 +2952,67 @@
         
             
 <dt>
-    <h4 class="name" id="__loadEditEpicModal"><span class="type-signature">&lt;static> </span>__loadEditEpicModal<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__loadEditEpicModal"><span class="type-signature">&lt;static> </span>__loadEditEpicModal<span class="signature">(el)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Loads the edit epic modal.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Loads the edit epic modal
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>el</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Dom element of the epic to be loaded</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -1628,7 +3038,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line651">line 651</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line710">line 710</a>
     </li></ul></dd>
     
 
@@ -1658,18 +3068,67 @@
         
             
 <dt>
-    <h4 class="name" id="__loadEditSprintModal"><span class="type-signature">&lt;static> </span>__loadEditSprintModal<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__loadEditSprintModal"><span class="type-signature">&lt;static> </span>__loadEditSprintModal<span class="signature">(el)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Loads the edit sprint modal.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Loads the edit sprint modal
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>el</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Dom element of the sprint to be loaded</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -1695,7 +3154,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line777">line 777</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line853">line 853</a>
     </li></ul></dd>
     
 
@@ -1816,7 +3275,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line301">line 301</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line341">line 341</a>
     </li></ul></dd>
     
 
@@ -1868,12 +3327,257 @@
         
             
 <dt>
-    <h4 class="name" id="__loadStory"><span class="type-signature">&lt;static> </span>__loadStory<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__loadStory"><span class="type-signature">&lt;static> </span>__loadStory<span class="signature">(el)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Loads the story modal popup</p>
     
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Helper function for StoryMap.__loadStoryModal that looks the story from 
+      the internal story mapping.
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>el</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Dom element</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line558">line 558</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__loadStoryModal"><span class="type-signature">&lt;static> </span>__loadStoryModal<span class="signature">(obj)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary">Loads the story modal</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Heavy method that loads the story modal with data from the story object. 
+      This includes click listeners and the Bloodhound label drop down setup.
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Object representing a Story (github issue)</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line572">line 572</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__parseEpicModalFields"><span class="type-signature">&lt;static> </span>__parseEpicModalFields<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+    <p class="summary">Parse the input fields within the epic modal</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Parse the input fields within the epic modal
+    </div>
     
 
     
@@ -1905,7 +3609,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line509">line 509</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line750">line 750</a>
     </li></ul></dd>
     
 
@@ -1928,6 +3632,28 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Object containing the parsed values
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
 
     
 </dd>
@@ -1935,12 +3661,156 @@
         
             
 <dt>
-    <h4 class="name" id="__loadStoryModal"><span class="type-signature">&lt;static> </span>__loadStoryModal<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__parseSprintDescription"><span class="type-signature">&lt;static> </span>__parseSprintDescription<span class="signature">(sprint)</span><span class="type-signature"> &rarr; {Object}</span></h4>
 
+    
+    <p class="summary">Parse the sprint description for any metadata</p>
     
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Parse the sprint description for any metadata
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>sprint</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A GitHub milestone JSON object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1626">line 1626</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Object containing the parsed metadata
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__parseSprintModalFields"><span class="type-signature">&lt;static> </span>__parseSprintModalFields<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+    <p class="summary">Parse the input fields within the sprint modal</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Parse the input fields within the sprint modal
+    </div>
     
 
     
@@ -1972,7 +3842,860 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line520">line 520</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line897">line 897</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Object containing the parsed values
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__parseStoryBody"><span class="type-signature">&lt;static> </span>__parseStoryBody<span class="signature">(story)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+
+    
+    <p class="summary">Parse the body of a story for any metadata.</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Parse the body of a story for any metadata
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>story</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A GitHub issue JSON object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1601">line 1601</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Object containing the parsed metadata
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__populateAssigneesList"><span class="type-signature">&lt;static> </span>__populateAssigneesList<span class="signature">(Github)</span><span class="type-signature"> &rarr; {Deferred}</span></h4>
+
+    
+    <p class="summary">Retrieve the list of assignees for a repository.</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Retrieve the list of assignees for a repository
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Github</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Github.issue</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">issue namespace.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1355">line 1355</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Promise for when the assignees have been retrieved
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Deferred</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__populateEpicsList"><span class="type-signature">&lt;static> </span>__populateEpicsList<span class="signature">(Github)</span><span class="type-signature"> &rarr; {Deferred}</span></h4>
+
+    
+    <p class="summary">Retrieve the list of epics for a repository.</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Retrieve the list of epics for a repository
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Github</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Github.issue</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">issue namespace.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1391">line 1391</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Promise for when the epics have been retrieved
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Deferred</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__populateLabelsList"><span class="type-signature">&lt;static> </span>__populateLabelsList<span class="signature">(Github)</span><span class="type-signature"> &rarr; {Deferred}</span></h4>
+
+    
+    <p class="summary">Retrieve the list of labels for a repository.</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Retrieve the list of labels for a repository
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Github</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Github.issue</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">issue namespace.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1374">line 1374</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Promise for when the labels have been retrieved
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Deferred</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__populateSprintsList"><span class="type-signature">&lt;static> </span>__populateSprintsList<span class="signature">(Github)</span><span class="type-signature"> &rarr; {Deferred}</span></h4>
+
+    
+    <p class="summary">Retrieve the list of sprints for a repository.</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Retrieve the list of sprints for a repository
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Github</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Github.issue</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">issue namespace.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1414">line 1414</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Promise for when the sprints have been retrieved
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Deferred</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__populateStateList"><span class="type-signature">&lt;static> </span>__populateStateList<span class="signature">(Array)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary">Retrieve the list of states for a repository by looking through its labels.</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Retrieve the list of states for a repository by looking through its labels
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Array</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">of GitHub labels</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1461">line 1461</a>
     </li></ul></dd>
     
 
@@ -2002,12 +4725,161 @@
         
             
 <dt>
-    <h4 class="name" id="__parseEpicModalFields"><span class="type-signature">&lt;static> </span>__parseEpicModalFields<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__populateStoriesList"><span class="type-signature">&lt;static> </span>__populateStoriesList<span class="signature">(Github)</span><span class="type-signature"> &rarr; {Deferred}</span></h4>
 
+    
+    <p class="summary">Retrieve the list of stories for a repository.</p>
     
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Retrieve the list of stories for a repository
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Github</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Github.issue</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">issue namespace.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1440">line 1440</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Promise for when the stories have been retrieved
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Deferred</span>
+
+
+    </dd>
+</dl>
+
+        
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__processEpics"><span class="type-signature">&lt;static> </span>__processEpics<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary">Process the cached StoryMap epics, and filter out where applicable.</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Process the cached StoryMap epics, and filter out where applicable
+    </div>
     
 
     
@@ -2039,7 +4911,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line686">line 686</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1268">line 1268</a>
     </li></ul></dd>
     
 
@@ -2069,548 +4941,18 @@
         
             
 <dt>
-    <h4 class="name" id="__parseSprintDescription"><span class="type-signature">&lt;static> </span>__parseSprintDescription<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__processSprints"><span class="type-signature">&lt;static> </span>__processSprints<span class="signature">()</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Process the cached StoryMap sprints, and filter out where applicable.</p>
     
 </dt>
 <dd>
 
     
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1456">line 1456</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__parseSprintModalFields"><span class="type-signature">&lt;static> </span>__parseSprintModalFields<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line815">line 815</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__parseStoryBody"><span class="type-signature">&lt;static> </span>__parseStoryBody<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1433">line 1433</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__populateAssigneesList"><span class="type-signature">&lt;static> </span>__populateAssigneesList<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1212">line 1212</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__populateEpicsList"><span class="type-signature">&lt;static> </span>__populateEpicsList<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1244">line 1244</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__populateLabelsList"><span class="type-signature">&lt;static> </span>__populateLabelsList<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1229">line 1229</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__populateSprintsList"><span class="type-signature">&lt;static> </span>__populateSprintsList<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1265">line 1265</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__populateStateList"><span class="type-signature">&lt;static> </span>__populateStateList<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1308">line 1308</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__populateStoriesList"><span class="type-signature">&lt;static> </span>__populateStoriesList<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
+    <div class="description">
+        Process the cached StoryMap sprints, and filter out where applicable
+    </div>
     
 
     
@@ -2672,146 +5014,18 @@
         
             
 <dt>
-    <h4 class="name" id="__processEpics"><span class="type-signature">&lt;static> </span>__processEpics<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1128">line 1128</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="__processSprints"><span class="type-signature">&lt;static> </span>__processSprints<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1149">line 1149</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
     <h4 class="name" id="__processStories"><span class="type-signature">&lt;static> </span>__processStories<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
+    <p class="summary">Process the cached StoryMap stories, and filter out where applicable.</p>
+    
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Process the cached StoryMap stories, and filter out where applicable
+    </div>
     
 
     
@@ -2843,7 +5057,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1172">line 1172</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1315">line 1315</a>
     </li></ul></dd>
     
 
@@ -2873,18 +5087,72 @@
         
             
 <dt>
-    <h4 class="name" id="__removeMetaDataStrings"><span class="type-signature">&lt;static> </span>__removeMetaDataStrings<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__removeMetaDataStrings"><span class="type-signature">&lt;static> </span>__removeMetaDataStrings<span class="signature">(string)</span><span class="type-signature"> &rarr; {String}</span></h4>
 
+    
+    <p class="summary">Remove all metadata from a string.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Remove all metadata from a string
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>string</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">String to clean</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -2910,7 +5178,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1501">line 1501</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1677">line 1677</a>
     </li></ul></dd>
     
 
@@ -2933,6 +5201,28 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The cleaned string
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+    </dd>
+</dl>
+
+        
 
     
 </dd>
@@ -2943,9 +5233,15 @@
     <h4 class="name" id="__renderMap"><span class="type-signature">&lt;static> </span>__renderMap<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
+    <p class="summary">Render the map using the cached StoryMap data.</p>
+    
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Render the map using the cached StoryMap data
+    </div>
     
 
     
@@ -2977,7 +5273,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1091">line 1091</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1231">line 1231</a>
     </li></ul></dd>
     
 
@@ -3010,9 +5306,15 @@
     <h4 class="name" id="__resetStoryModal"><span class="type-signature">&lt;static> </span>__resetStoryModal<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
+    <p class="summary">Update the fields of the create story modal with the latest data.</p>
+    
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Update the fields of the create story modal with the latest data
+    </div>
     
 
     
@@ -3044,7 +5346,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line872">line 872</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line990">line 990</a>
     </li></ul></dd>
     
 
@@ -3074,18 +5376,72 @@
         
             
 <dt>
-    <h4 class="name" id="__setupCreateStoryModal"><span class="type-signature">&lt;static> </span>__setupCreateStoryModal<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__setupCreateStoryModal"><span class="type-signature">&lt;static> </span>__setupCreateStoryModal<span class="signature">(Github)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Setup the create story modal.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Setup the create story modal
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Github</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Github.issue</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">issue namespace.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -3111,7 +5467,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line887">line 887</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1005">line 1005</a>
     </li></ul></dd>
     
 
@@ -3144,9 +5500,15 @@
     <h4 class="name" id="__setupDragAndDrop"><span class="type-signature">&lt;static> </span>__setupDragAndDrop<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
+    <p class="summary">Setup the drag and drop feature of the map.</p>
+    
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Setup the drag and drop feature of the map
+    </div>
     
 
     
@@ -3178,7 +5540,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line999">line 999</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1137">line 1137</a>
     </li></ul></dd>
     
 
@@ -3208,18 +5570,72 @@
         
             
 <dt>
-    <h4 class="name" id="__setupEpicModal"><span class="type-signature">&lt;static> </span>__setupEpicModal<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__setupEpicModal"><span class="type-signature">&lt;static> </span>__setupEpicModal<span class="signature">(Github)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Setup the epic modal.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Setup the epic modal
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Github</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Github.issue</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">issue namespace.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -3245,7 +5661,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line857">line 857</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line971">line 971</a>
     </li></ul></dd>
     
 
@@ -3278,9 +5694,15 @@
     <h4 class="name" id="__setupFiltersModal"><span class="type-signature">&lt;static> </span>__setupFiltersModal<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
+    <p class="summary">Setup the filters modal.</p>
+    
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Setup the filters modal
+    </div>
     
 
     
@@ -3312,7 +5734,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line940">line 940</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1068">line 1068</a>
     </li></ul></dd>
     
 
@@ -3345,9 +5767,15 @@
     <h4 class="name" id="__setupMapListeners"><span class="type-signature">&lt;static> </span>__setupMapListeners<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
+    <p class="summary">Setup the persistent map listeners</p>
+    
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Setup the persistent map listeners
+    </div>
     
 
     
@@ -3379,7 +5807,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line966">line 966</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line1094">line 1094</a>
     </li></ul></dd>
     
 
@@ -3450,7 +5878,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line239">line 239</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line278">line 278</a>
     </li></ul></dd>
     
 
@@ -3480,18 +5908,72 @@
         
             
 <dt>
-    <h4 class="name" id="__setupSprintModal"><span class="type-signature">&lt;static> </span>__setupSprintModal<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__setupSprintModal"><span class="type-signature">&lt;static> </span>__setupSprintModal<span class="signature">(Github)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Setup the sprint modal.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Setup the sprint modal
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Github</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Github.issue</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">issue namespace.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -3517,7 +5999,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line839">line 839</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line946">line 946</a>
     </li></ul></dd>
     
 
@@ -3547,18 +6029,92 @@
         
             
 <dt>
-    <h4 class="name" id="__updateStoryLabels"><span class="type-signature">&lt;static> </span>__updateStoryLabels<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__updateStory"><span class="type-signature">&lt;static> </span>__updateStory<span class="signature">(id, el)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Story modal submit to github.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Submission method on the Story modal that updates an edited issue and posts it
+      to github. The github response is used to do an inplace replacment of the story
+      in the internal mapping.
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The github issue id</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>el</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Dom element</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -3584,7 +6140,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line459">line 459</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line361">line 361</a>
     </li></ul></dd>
     
 
@@ -3614,18 +6170,119 @@
         
             
 <dt>
-    <h4 class="name" id="__updateStoryState"><span class="type-signature">&lt;static> </span>__updateStoryState<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="__updateStoryLabels"><span class="type-signature">&lt;static> </span>__updateStoryLabels<span class="signature">(id, data, modal)</span><span class="type-signature"></span></h4>
 
+    
+    <p class="summary">Add a label to a story.</p>
     
 </dt>
 <dd>
 
     
-
+    <div class="description">
+        Adds a specific label to a story by calling github with the name (data.name)
+      and updating it against github.
+    </div>
     
 
     
 
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Github issue id.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">representing a label {name:'', color:''}.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>modal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Flag to indicate if this was triggered from a modal.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
     
 
     
@@ -3651,7 +6308,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line391">line 391</a>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line501">line 501</a>
     </li></ul></dd>
     
 
@@ -3674,6 +6331,289 @@
     
 
     
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__updateStoryState"><span class="type-signature">&lt;static> </span>__updateStoryState<span class="signature">(id, state)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary">Change the state of a Github issue.</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Method call that rebuilds an internal story with the new state and updates it
+      against Github. The Github response is paresed and updates the internal map.
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Github issue id.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Issue state one of; open, closed, in progress, blocked</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line425">line 425</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="__validateRequiredFields"><span class="type-signature">&lt;static> </span>__validateRequiredFields<span class="signature">(element)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+
+    
+    <p class="summary">Validate that the required fields within the element are filled.</p>
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Validate that the required fields within the element are filled
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Dom element with the input fields to be validated</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="storymap.js.html">storymap.js</a>, <a href="storymap.js.html#line922">line 922</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    True if all required fields are filled, otherwise false
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+        
 
     
 </dd>
@@ -4142,7 +7082,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Apr 02 2014 21:16:21 GMT-0600 (MDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Apr 07 2014 23:13:22 GMT-0600 (Mountain Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
