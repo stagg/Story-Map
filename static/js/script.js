@@ -97,7 +97,7 @@ routie({
     StoryMap.util.cookie.__erase('access_token');
     StoryMap.util.cookie.__erase('clientid');
     $('#nav').html(Handlebars.getTemplate('nav'));
-    routie('');
+    window.location.href = "/";
   },
   '*': function() {
     $('#content').removeClass('container-large');
