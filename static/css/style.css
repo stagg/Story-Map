@@ -11,15 +11,19 @@
 }
 body {
   padding-bottom: 40px;
-  background-color: #eee;
+  background-color: #fff;
   height: 80%; 
   padding-top: 50px;
 }
+
 .signin {
-  max-width: 330px;
+  max-width: 430px;
   padding: 15px;
-  margin: 0 auto;
+  margin: auto;
   margin-bottom: 10px;
+}
+.jumbotron {
+  background-color: #fff;
 }
 .label-cloud {
   margin: 5px;
@@ -35,17 +39,19 @@ a:hover.nolink {
 .odd {
   padding-top: 20px;
   margin-bottom: 20px;
-  background-color: #DDD;
+  background-color: #F3F3FF;
 }
 .profile {
   float:left;
   padding: 5px 15px;
   font-size: 18px;
   line-height: 20px;
-  margin-right: 20px;
 }
 .profile span{
   padding-left: 5px;
+}
+.profile a.navbar-link {
+  color: #428BCA;
 }
 .avatar {
   max-height: 40px;
@@ -61,12 +67,13 @@ a:hover.nolink {
 
 /* Features */
 #story-map-headers {
-  background-color: #eee;
+  background-color: #F3F3F3;
   position: fixed;
-  margin-left: -20px;
-  padding-left: 20px;
-  border-bottom: 3px #CCC solid;
+  padding-left: 15px;
+  border-bottom: 8px #ACC3D6 solid;
   z-index: 100;
+  width: 100%;
+  margin-top: -150px;
 }
 .feature {
   height: 4em;
@@ -215,14 +222,16 @@ a:hover.nolink {
   ;
 }
 .horizontal {
-  overflow: scroll;
-  padding-left: 10px;
+  margin-left: 215px;
 }
 .horizontal-inner {
   margin-top: 150px;
+  width:98%;
 }
 .horizontal-inner .row {
   min-height: 100px;
+  margin-left: 0;
+  margin-right: 0;
 }
 .row .closed {
   opacity: 0.7;
@@ -231,16 +240,24 @@ a:hover.nolink {
 .epic {
   min-height: 50px;
 }
+.epic .panel {
+  margin-bottom: 5px;
+}
 #menu {
   position: fixed;
   z-index: 1010;
   padding: 10px;
   width:215px;
-  background-color: #eee;
-  margin-left: -20px;
+  background-image: linear-gradient(to left, #e6e6e6 0%, #FFF 10px);
+  background-image: -webkit-linear-gradient(right, #e6e6e6 0%, #fff 10px);
+  background-image: -moz-linear-gradient(right, #e6e6e6 0%, #fff 10px);
+  margin-left: -15px;
   overflow-y: scroll;
   height: 100%;
   padding-bottom: 50px;
+}
+#menu .nav-pills>li>a {
+  border-radius: 2px;
 }
 .sprint-link {
   white-space: nowrap;

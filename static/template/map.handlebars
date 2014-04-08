@@ -57,9 +57,8 @@
         </ul>
       </nav>
 <div id="scroll-map" class="row">
-  <div class="col-map col-sprint"></div>  
   <div class="horizontal">
-    <div id="story-map-headers" style="width:{{style.width}}px;">
+    <div id="story-map-headers" style="min-width:{{style.width}}px;">
       <div class="row heading">        
         <div class="col">
           <h3 class="features-title">Features</p></h3>
@@ -78,7 +77,7 @@
         {{/each}}
       </div>
     </div>
-    <div style="width:{{style.innerwidth}}px;" class="horizontal-inner">                 
+    <div style="min-width:{{style.innerwidth}}px;" class="horizontal-inner">                 
         {{#each sprint}}
         <div id="nav{{id}}" class="row{{#if_odd @index}} odd{{/if_odd}} break-word {{#if closed}}closed{{/if}}">
           {{#each epic}}

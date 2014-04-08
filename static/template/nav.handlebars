@@ -12,12 +12,18 @@
   </div>
   <div class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
-      <li id="projects" class="">
+      <li id="projects">
         <a href="/#/projects">Repositories</a>
       </li>
-      <li id="about" class="">
+      <li id="about">
         <a href="/#/about">About</a>
       </li>
     </ul>
+       <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://github.com/stagg/Story-Map" target="_blank">View on Github</a></li>
+        {{#if login}}
+        <li class="logout"><a href="/#/logout">Logout</a></li>
+        {{/if}}
+      </ul>
   </div>
 </div>

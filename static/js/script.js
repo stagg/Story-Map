@@ -84,12 +84,20 @@ routie({
     $('#content').html(Handlebars.getTemplate('usermanual'));
   },
   '/projects/:username?': function(username) {
+    $('#content').html('');
     $('#content').removeClass('container-large');
     StoryMap.projects(username);
   },
   '/storymap/:user/repo/:project': function(user, project) {
     $('#content').addClass('container-large');
     StoryMap.issues(user, project);
+  },
+  '/logout' : function() {
+    StoryMap.util.cookie.__erase('auth_code');
+    StoryMap.util.cookie.__erase('access_token');
+    StoryMap.util.cookie.__erase('clientid');
+    $('#nav').html(Handlebars.getTemplate('nav'));
+    routie('');
   },
   '*': function() {
     $('#content').removeClass('container-large');

@@ -147,7 +147,7 @@
           user.orgs(orgList);          
           user.repos(repolist);
         }
-        $.when(usrRepo, orgRepo).done( function() {
+        $.when(usrRepo, orgRepo).done( function() {          
           $('#content').html(project_tmpl(context));
           StoryMap.user();   
         }); 
@@ -1238,15 +1238,9 @@
       NProgress.done();
       StoryMap.__setupDragAndDrop();
       $('body').scrollspy({target: '#sprint-menu', offset:200});
-      $('.horizontal').scroll(function(event) {
-        var offset = ($('.horizontal').scrollLeft()+20)*-1;
+      $(window).scroll(function(event) {
+        var offset = ($('body').scrollLeft())*-1;
         $('#story-map-headers').css('margin-left', offset);
-      });
-      $(".horizontal").scroll(function(){
-        $(".horizontal-scroll").scrollLeft($(".horizontal").scrollLeft());
-      });
-      $(".horizontal-scroll").scroll(function(){
-        $(".horizontal").scrollLeft($(".horizontal-scroll").scrollLeft());
       });
       $('a.sprint-link').click(function (e) {
         e.preventDefault();
