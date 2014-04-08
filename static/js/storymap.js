@@ -40,11 +40,11 @@
     assigneesList: [],
     labelsList: [],
     /**
-      Intialization of the Github.js object which is used to 
-      communicate with the github.com api.
+      Initialization of the Github.js object which is used to 
+      communicate with the github.com API.
 
       @method __gitinit
-      @summary Github.js Object intializaion.
+      @summary Github.js Object initialization.
       @returns {boolean} If the Github.js object has been created.
       @memberof StoryMap  
     */
@@ -240,7 +240,8 @@
     },
     /**
       Intialization call to verify basic meta-data exists
-      @method __setupProject
+      @method __initMetaLabels
+      @param {Github.issue} Github issue namespace.
       @memberof StoryMap 
     */
     __initMetaLabels: function(issue) {
@@ -685,7 +686,7 @@
       @method __loadCreateEpicModal
       @summary Loads the create epic modal.
       @param {Github.issue} Github issue namespace.
-      @memberof StoryMap 
+      @memberof StoryMap
     */
     __loadCreateEpicModal: function(issue) {
       $('#epicLabel').html('Create Feature');
@@ -707,10 +708,11 @@
       });
     },
     /**
-
+      Loads the edit epic modal
       @method __loadEditEpicModal
-      @summary 
-      @memberof StoryMap 
+      @summary Loads the edit epic modal.
+      @param el Dom element of the epic to be loaded
+      @memberof StoryMap
     */
     __loadEditEpicModal: function(el) {
       var id = $(el).attr('id');
@@ -746,10 +748,11 @@
       });
     },
     /**
-
+      Parse the input fields within the epic modal
       @method __parseEpicModalFields
-      @summary 
-      @memberof StoryMap 
+      @summary Parse the input fields within the epic modal
+      @returns {Object} Object containing the parsed values
+      @memberof StoryMap
     */
     __parseEpicModalFields: function() {
       var data = {}
@@ -760,10 +763,12 @@
       return data;
     },
     /**
-
+      Create a StoryMap story object from a GitHub issue JSON object
       @method __createStory
-      @summary 
-      @memberof StoryMap 
+      @summary Create a StoryMap story object from a GitHub issue JSON object
+      @param {Object} story A GitHub issue JSON object
+      @returns {Object} A StoryMap story object
+      @memberof StoryMap
     */
     __createStory: function(story) {
       var body = StoryMap.__parseStoryBody(story);
@@ -788,10 +793,12 @@
       };
     },
     /**
-
+      Create a StoryMap epic object from a GitHub label JSON object
       @method __createEpic
-      @summary 
-      @memberof StoryMap 
+      @summary Create a StoryMap epic object from a GitHub label JSON object
+      @param {Object} epic A GitHub epic JSON object
+      @returns {Object} A StoryMap epic object
+      @memberof StoryMap
     */
     __createEpic: function(epic) {
       var epicName = epic.name.match(StoryMap.metaRegexp)[0];
@@ -800,10 +807,12 @@
       return {name: epicName, id: epicId, color: epicColor};
     },
     /**
-
+      Create a StoryMap sprint object from a GitHub milestone JSON object
       @method __createSprint
-      @summary 
-      @memberof StoryMap 
+      @summary Create a StoryMap sprint object from a GitHub milestone JSON object
+      @param {Object} sprint A GitHub milestone JSON object
+      @returns {Object} A StoryMap sprint object
+      @memberof StoryMap
     */
     __createSprint: function(sprint) {
       var description = StoryMap.__parseSprintDescription(sprint);
@@ -816,10 +825,11 @@
       };
     },
     /**
-
+      Loads the create sprint modal 
       @method __loadCreateSprintModal
-      @summary 
-      @memberof StoryMap 
+      @summary Loads the create sprint modal.
+      @param {Github.issue} Github issue namespace.
+      @memberof StoryMap
     */
     __loadCreateSprintModal: function(issue) {
       $('#sprintLabel').html('Create Sprint');
@@ -841,10 +851,11 @@
       });
     },
     /**
-
+      Loads the edit sprint modal
       @method __loadEditSprintModal
-      @summary 
-      @memberof StoryMap 
+      @summary Loads the edit sprint modal.
+      @param el Dom element of the sprint to be loaded
+      @memberof StoryMap
     */
     __loadEditSprintModal: function(el) {
       var id = $(el).attr('id').split("-")[1];
@@ -884,10 +895,11 @@
       });
     },
     /**
-
+      Parse the input fields within the sprint modal
       @method __parseSprintModalFields
-      @summary 
-      @memberof StoryMap 
+      @summary Parse the input fields within the sprint modal
+      @returns {Object} Object containing the parsed values
+      @memberof StoryMap
     */
     __parseSprintModalFields: function() {
       var data = {};
@@ -908,9 +920,11 @@
       return data;
     },
     /**
-
+      Validate that the required fields within the element are filled
       @method __validateRequiredFields
-      @summary 
+      @summary Validate that the required fields within the element are filled.
+      @param element Dom element with the input fields to be validated
+      @returns {Boolean} True if all required fields are filled, otherwise false
       @memberof StoryMap 
     */
     __validateRequiredFields: function(element) {
@@ -930,9 +944,10 @@
       return false;
     },
     /**
-
+      Setup the sprint modal
       @method __setupSprintModal
-      @summary 
+      @summary Setup the sprint modal.
+      @param {Github.issue} Github issue namespace.
       @memberof StoryMap 
     */
     __setupSprintModal: function(issue) {
@@ -954,9 +969,10 @@
       });
     },
     /**
-
+      Setup the epic modal
       @method __setupEpicModal
-      @summary 
+      @summary Setup the epic modal.
+      @param {Github.issue} Github issue namespace.
       @memberof StoryMap 
     */
     __setupEpicModal: function(issue) {
@@ -972,9 +988,9 @@
       });
     },
     /**
-
+      Update the fields of the create story modal with the latest data
       @method __resetStoryModal
-      @summary 
+      @summary Update the fields of the create story modal with the latest data.
       @memberof StoryMap 
     */
     __resetStoryModal: function() {
@@ -987,9 +1003,10 @@
       $('#createStoryModal').html(modal_tmpl(context));
     },
     /**
-
+      Setup the create story modal
       @method __setupCreateStoryModal
-      @summary 
+      @summary Setup the create story modal.
+      @param {Github.issue} Github issue namespace.
       @memberof StoryMap 
     */
     __setupCreateStoryModal: function(issue) {
@@ -1049,9 +1066,9 @@
       });
     },
     /**
-
+      Setup the filters modal
       @method __setupFiltersModal
-      @summary 
+      @summary Setup the filters modal.
       @memberof StoryMap 
     */
     __setupFiltersModal: function() {
@@ -1075,9 +1092,9 @@
       });
     },
     /**
-
+      Setup the persistent map listeners
       @method __setupMapListeners
-      @summary 
+      @summary Setup the persistent map listeners
       @memberof StoryMap 
     */
     __setupMapListeners: function() {
@@ -1118,9 +1135,9 @@
       });
     },
     /**
-
+      Setup the drag and drop feature of the map
       @method __setupDragAndDrop
-      @summary 
+      @summary Setup the drag and drop feature of the map.
       @memberof StoryMap 
     */
     __setupDragAndDrop: function () {
@@ -1212,9 +1229,9 @@
       });
     },
     /**
-
+      Render the map using the cached StoryMap data
       @method __renderMap
-      @summary 
+      @summary Render the map using the cached StoryMap data.
       @memberof StoryMap 
     */
     __renderMap: function() {
@@ -1249,9 +1266,9 @@
       });
     },
     /**
-
+      Process the cached StoryMap epics, and filter out where applicable
       @method __processEpics
-      @summary 
+      @summary Process the cached StoryMap epics, and filter out where applicable.
       @memberof StoryMap 
     */
     __processEpics: function(epicsMap, context) {
@@ -1270,9 +1287,9 @@
       }
     },
     /**
-
+      Process the cached StoryMap sprints, and filter out where applicable
       @method __processSprints
-      @summary 
+      @summary Process the cached StoryMap sprints, and filter out where applicable.
       @memberof StoryMap 
     */
     __processSprints: function(sprintsMap, context) {
@@ -1296,9 +1313,9 @@
       }
     },
     /**
-
+      Process the cached StoryMap stories, and filter out where applicable
       @method __processStories
-      @summary 
+      @summary Process the cached StoryMap stories, and filter out where applicable.
       @memberof StoryMap 
     */
     __processStories: function(epicsMap, sprintsMap, context) {
@@ -1336,10 +1353,12 @@
       }
     },
     /**
-
+      Retrieve the list of assignees for a repository
       @method __populateAssigneesList
-      @summary 
-      @memberof StoryMap 
+      @summary Retrieve the list of assignees for a repository.
+      @param {Github.issue} Github issue namespace.
+      @returns {Deferred} Promise for when the assignees have been retrieved 
+      @memberof StoryMap
     */
     __populateAssigneesList: function(issue) {
       StoryMap.assigneesList = [];
@@ -1353,9 +1372,11 @@
       return dfd.promise();
     },
     /**
-
+      Retrieve the list of labels for a repository
       @method __populateLabelsList
-      @summary 
+      @summary Retrieve the list of labels for a repository.
+      @param {Github.issue} Github issue namespace.
+      @returns {Deferred} Promise for when the labels have been retrieved 
       @memberof StoryMap 
     */
     __populateLabelsList: function(issue) {
@@ -1368,9 +1389,11 @@
       return dfd.promise();
     },
     /**
-
+      Retrieve the list of epics for a repository
       @method __populateEpicsList
-      @summary 
+      @summary Retrieve the list of epics for a repository.
+      @param {Github.issue} Github issue namespace.
+      @returns {Deferred} Promise for when the epics have been retrieved 
       @memberof StoryMap 
     */
     __populateEpicsList: function(issue) {
@@ -1389,9 +1412,11 @@
       return dfd.promise();
     },
     /**
-
+      Retrieve the list of sprints for a repository
       @method __populateSprintsList
-      @summary 
+      @summary Retrieve the list of sprints for a repository.
+      @param {Github.issue} Github issue namespace.
+      @returns {Deferred} Promise for when the sprints have been retrieved 
       @memberof StoryMap 
     */
     __populateSprintsList: function(issue) {
@@ -1413,9 +1438,11 @@
       return dfd.promise();
     },
     /**
-
+      Retrieve the list of stories for a repository
       @method __populateStoriesList
-      @summary 
+      @summary Retrieve the list of stories for a repository.
+      @param {Github.issue} Github issue namespace.
+      @returns {Deferred} Promise for when the stories have been retrieved 
       @memberof StoryMap 
     */
     __populateStoriesList: function(issue) {
@@ -1432,9 +1459,10 @@
       return dfd.promise();
     },
     /**
-
+      Retrieve the list of states for a repository by looking through its labels
       @method __populateStateList
-      @summary 
+      @summary Retrieve the list of states for a repository by looking through its labels.
+      @param {Array} Array of GitHub labels
       @memberof StoryMap 
     */
     __populateStateList: function(labels) {
@@ -1448,9 +1476,10 @@
       }
     },
     /**
-
+      Convert a list of GitHub issue JSON objects to StoryMap story objects, and cache them
       @method __addStoriesToList
-      @summary 
+      @summary Convert a list of GitHub issue JSON objects to StoryMap story objects, and cache them.
+      @param {Array} Array of GitHub issue JSON objects
       @memberof StoryMap 
     */
     __addStoriesToList: function(stories) {
@@ -1460,9 +1489,12 @@
       }
     },
     /**
-
+      Check if an assignee is assigned to a story in a sprint
       @method __assigneeInSprint
-      @summary 
+      @summary Check if an assignee is assigned to a story in a sprint.
+      @param assignee An assignee
+      @param sprint A sprint
+      @returns {Boolean} True if the assignee is in the sprint, otherwise false
       @memberof StoryMap 
     */
     __assigneeInSprint: function(assignee, sprint) {
@@ -1474,9 +1506,11 @@
       return false;
     },
     /**
-
+      Return the state of a story
       @method __getStoryState
-      @summary 
+      @summary Return the state of a story.
+      @param story A GitHub issue JSON object
+      @returns {Object} Object containing information on the story state
       @memberof StoryMap 
     */
     __getStoryState: function(story) {
@@ -1495,9 +1529,11 @@
       return {state:"open", color:"5CB85C"};
     },
     /**
-
+      Return the assignee of a story
       @method __getStoryAssignee
-      @summary 
+      @summary Return the assignee of a story.
+      @param story A GitHub issue JSON object
+      @returns {Object} Object containing information on the story assignee
       @memberof StoryMap 
     */
     __getStoryAssignee: function(story) {
@@ -1511,9 +1547,11 @@
       };
     },
     /**
-
+      Return the epic the story belongs to
       @method __getStoryEpic
-      @summary 
+      @summary Return the epic the story belongs to.
+      @param story A GitHub issue JSON object
+      @returns {String} The name of the epic the story belongs to
       @memberof StoryMap 
     */
     __getStoryEpic: function(story) {
@@ -1526,9 +1564,11 @@
       return "unspecified";
     },
     /**
-
+      Return the sprint the story belongs to
       @method __getStorySprint
-      @summary 
+      @summary Return the sprint the story belongs to.
+      @param story A GitHub issue JSON object
+      @returns {String} The name of the sprint the story belongs to
       @memberof StoryMap 
     */
     __getStorySprint: function(story) {
@@ -1539,9 +1579,11 @@
       return "backlog";
     },
     /**
-
+      Get the labels associated with a story
       @method __getStoryLabels
-      @summary 
+      @summary Get the labels associated with a story.
+      @param story A GitHub issue JSON object
+      @returns {Array} Array of labels associated with the story
       @memberof StoryMap 
     */
     __getStoryLabels: function(story) {
@@ -1557,9 +1599,11 @@
       return labels; 
     },
     /**
-
+      Parse the body of a story for any metadata
       @method __parseStoryBody
-      @summary 
+      @summary Parse the body of a story for any metadata.
+      @param story A GitHub issue JSON object
+      @returns {Object} Object containing the parsed metadata
       @memberof StoryMap 
     */
     __parseStoryBody: function(story) {
@@ -1580,9 +1624,11 @@
       return bodyData;
     },
     /**
-
+      Parse the sprint description for any metadata
       @method __parseSprintDescription
-      @summary 
+      @summary Parse the sprint description for any metadata
+      @param sprint A GitHub milestone JSON object
+      @returns {Object} Object containing the parsed metadata
       @memberof StoryMap 
     */
     __parseSprintDescription: function(sprint) {
@@ -1600,9 +1646,11 @@
       return descData;
     },
     /**
-
+      Get the StoryMap epic object with a particular name
       @method __getEpicObject
-      @summary 
+      @summary Get the StoryMap epic object with a particular name
+      @param {String} epicName A name of an epic
+      @returns {Object} The StoryMap epic object
       @memberof StoryMap 
     */
     __getEpicObject: function(epicName) {
@@ -1614,9 +1662,11 @@
       return {};
     },
     /**
-
+      Convert a string into a metadata string
       @method __convertToMetaDataString
-      @summary 
+      @summary Convert a string into a metadata string.
+      @param {String} string The string to be converted
+      @returns {String} The converted string
       @memberof StoryMap 
     */
     __convertToMetaDataString: function(string) {
@@ -1625,9 +1675,11 @@
       return "[" + string + "]";
     },
     /**
-
+      Remove all metadata from a string
       @method __removeMetaDataStrings
-      @summary 
+      @summary Remove all metadata from a string.
+      @param {String} string String to clean
+      @returns {String} The cleaned string
       @memberof StoryMap 
     */
      __removeMetaDataStrings: function(string) {
@@ -1636,9 +1688,12 @@
       return string.replace(/\[(\w+:\s[^\]]+)]/g, "").replace(/^\r?\n|\r$/g, "");
     },
     /**
-
+      Compare method used to order the sprints
       @method __compareSprints
-      @summary 
+      @summary Compare method used to order the sprints
+      @param {Object} a The first sprint object
+      @param {Object} b The second sprint object
+      @returns {number} 0 if equal, -1 if less than, 1 if greater than
       @memberof StoryMap 
     */
     __compareSprints: function (a, b) {
