@@ -15,7 +15,9 @@ body {
   height: 80%; 
   padding-top: 50px;
 }
-
+.cursor {
+  cursor: pointer;
+}
 .signin {
   max-width: 430px;
   padding: 15px;
