@@ -67,8 +67,10 @@ Simply add this new label on the issues that belong in this feature.
 
 ###Prerequisites###
 
-- npm is installed with node 0.10.+
+- npm is installed with Node.js 0.10.xx+
 - You have ssl certs to use.
+
+If you are using Ubuntu, do not use ```sudo apt-get install nodejs```.  It installs a very old version of Node.js, so follow instructions [here](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager#ubuntu-mint-elementary-os) to get the latest version of Node.js.
 
 Clone the repository onto your server install all of the projects dependecies with
 
