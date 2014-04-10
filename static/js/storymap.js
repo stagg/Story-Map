@@ -205,7 +205,7 @@
         'json'
       ));
     },
-    /*
+    /**
       Main call for populating the Story Map with github issues.
       @method issues
       @param {string} user Github username 
